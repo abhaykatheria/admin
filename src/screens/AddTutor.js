@@ -109,7 +109,8 @@ function AddTutor(props) {
             db.collection("tutors").add({
                 name: name,
                 email: email,
-                country: country.label
+                country: country.label,
+                dues: 0
             })
         } catch (error) {
             alert(error.message)
