@@ -105,7 +105,7 @@ function AddAssignment(props) {
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                    Add Tutor
+                    Add Assignment
        			</Typography>
                 <form className={classes.form} onSubmit={e => e.preventDefault() && false}>
                     <FormControl margin="normal" required fullWidth>
