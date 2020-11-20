@@ -25,11 +25,11 @@ const styles = theme => ({
         },
     },
     paper: {
-        marginTop: theme.spacing.unit * 8,
+        backgroundColor: "lightBlue",
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
+        padding: `${theme.spacing.unit * 5}px ${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
     },
     avatar: {
         margin: theme.spacing.unit,
@@ -70,6 +70,7 @@ function AddAssignment(props) {
 
     useEffect(() => {
         const db = app.firestore();
+        window.scrollTo(0,0);
         return db.collection('tutors').onSnapshot((snapshot) => {
             const data = [];
             snapshot.forEach((doc) => data.push({ ...doc.data() }));
@@ -99,6 +100,7 @@ function AddAssignment(props) {
 
 
     return (
+        <div style = {{backgroundColor: "#dee4e3"}}>
         <main className={classes.main}>
             <Paper className={classes.paper}>
                 <Avatar className={classes.avatar}>
@@ -169,6 +171,7 @@ function AddAssignment(props) {
                 </form>
             </Paper>
         </main>
+        </div>
     )
 
     async function upload() {
