@@ -1,29 +1,37 @@
-import logo from './logo.svg';
-import firebase from "firebase";
-import './App.css';
+import React from "react";
+import { CssBaseline, CircularProgress } from "@material-ui/core";
+
+import Front from "./screens/index";
+import AddTutor from "./screens/AddTutor";
+import AddAssignment from "./screens/AddAssignment";
+import InProgressAssignment from "./screens/InProgressAssignment";
+import ViewTutor from "./screens/ViewTutor";
+import DuePast from "./screens/DuePast";
+import DoneAssignment from "./screens/DoneAssignment";
+import DueToday from "./screens/DueToday";
+import UpcomingAssignment from "./screens/UpcomingAssignment";
+
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
 
 function App() {
-  const firebaseApp = firebase.apps[0];
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <code>
-          <pre>{JSON.stringify(firebaseApp.options, null, 2)}</pre>
-        </code>
-      </header>
-    </div>
+    <Router>
+      <Switch>
+        <Route exact path="/" component={Front} />
+        <Route exact path="/addTutor" component={AddTutor} />
+        <Route exact path="/viewTutor" component={ViewTutor} />
+        <Route exact path="/doneAss" component={DoneAssignment} />
+        <Route exact path="/dueToday" component={DueToday} />
+        <Route exact path="/duePast" component={DuePast} />
+        <Route exact path="/addAss" component={AddAssignment} />
+        <Route exact path="/upAss" component={UpcomingAssignment} />
+        <Route exact path="/inProgress" component={InProgressAssignment} />
+      </Switch>
+    </Router>
   );
 }
 
