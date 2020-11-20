@@ -1,0 +1,12 @@
+.body{
+    background-color:black;
+    min-height:100vh;
+}
+.wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    width: 100%;
+    max-width: 95%;
+    padding : 20px 20px 20px 20px;
+  }
