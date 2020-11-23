@@ -52,9 +52,9 @@ function AddAssignment(props) {
     const [tutor, setTutor] = useState('')
     const [allTutors, setAllTutors] = useState([])
     const [subject, setSubject] = useState('')
-    const [price, setPrice] = useState('')
-    const [amount_paid, setAmountPaid] = useState()
-    const [tutor_fee, setTutorFee] = useState('')
+    const [price, setPrice] = useState(0)
+    const [amount_paid, setAmountPaid] = useState(0)
+    const [tutor_fee, setTutorFee] = useState(0)
     const [due_date, setDueDate] = useState(new Date())
     const [comments, setComments] = useState('')
     const [assigned_date, setAssignedDate] = useState(new Date())
@@ -62,6 +62,8 @@ function AddAssignment(props) {
     const [satus, setStatus] = useState("ongoing")
     const [assURL, setAssURL] = useState('')
     const [file, setFile] = useState('')
+    const [tutorId, setTutorId] = useState('')
+    const [dues, setDues] = useState(0)
 
     const changeHandler = value => {
         setTutor(value)
@@ -177,7 +179,7 @@ function AddAssignment(props) {
         await fileRef.put(file).then((url) => {
         });
         const url = await fileRef.getDownloadURL().catch((error) => { throw error });
-        if(url!=''){
+        if (url != '') {
             setAssURL(url)
             console.log(url);
         }
@@ -193,31 +195,59 @@ function AddAssignment(props) {
         // console.log(name, email, country.label)
         try {
             upload();
-            if(assURL!=''){
+            if (assURL != '') {
                 const db = app.firestore()
-                try{
-                await db.collection('assignments').add({
-                    amount_paid: amount_paid,
-                    assigned_date: assigned_date,
-                    comments: comments,
-                    due_date: due_date,
-                    payment_pending: payment_pending,
-                    price: price,
-                    satus: satus,
-                    student: student,
-                    subject: subject,
-                    tutor: tutor.value,
-                    tutor_fee: tutor_fee,
-                    assURL: assURL
-                })
-            } catch(error){
-                alert(error.message)
-            }
+                try {
+                    await db.collection('assignments').add({
+                        amount_paid: parseInt(amount_paid),
+                        assigned_date: assigned_date,
+                        comments: comments,
+                        due_date: due_date,
+                        payment_pending: payment_pending,
+                        price: parseInt(price),
+                        satus: satus,
+                        student: student,
+                        subject: subject,
+                        tutor: tutor.value,
+                        tutor_fee: parseInt(tutor_fee),
+                        assURL: assURL
+                    })
+
+                    db.collection('tutors').onSnapshot((snapshot) => {
+                        snapshot.forEach((doc) => {
+                            if (doc.data().name === tutor.value) {
+                                var temp = doc.data()
+                                temp.dues += parseInt(tutor_fee)
+                                setTutorId(doc.id)
+                                setDues(temp.dues)
+                            }
+                            console.log(doc.id, doc.data(), tutor.value);
+                        });
+                    })
+                } catch (error) {
+                    alert(error.message)
+                }
             }
         } catch (error) {
             alert(error.message)
         }
+        updateDues()
     }
+
+    function updateDues() {
+        try{
+            if(tutorId != ''){
+                console.log(dues);
+                app.firestore().collection('tutors').doc(tutorId).update({
+                    dues: dues
+                })
+            }
+        }
+        catch(error){
+            alert(error.message)
+        }
+    }
+
 }
 
 export default withStyles(styles)(AddAssignment)
