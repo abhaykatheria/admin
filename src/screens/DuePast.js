@@ -13,6 +13,7 @@ import Button from "@material-ui/core/Button";
 import DeleteIcon from "@material-ui/icons/Delete";
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
+import moment from 'moment';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function DuePast() {
-    const [assignments, setAssignments] = useState();
+  const [assignments, setAssignments] = useState();
   const classes = useStyles();
 
   useEffect(() => {
@@ -51,7 +52,11 @@ function DuePast() {
       console.log(data);
       const data1 = [];
       for (var i = 0; i < data.length; i++) {
-        if (data[i].satus === "ongoing") data1.push(data[i]);
+        if (data[i].satus === "ongoing") {
+          console.log(moment(data[i].due_date.seconds * 1000).format("DD/MM/YYYY"), moment(new Date()).format("DD/MM/YYYY"));
+          if (moment(data[i].due_date.seconds * 1000).format("DD/MM/YYYY")< moment(new Date()).format("DD/MM/YYYY"))
+            data1.push(data[i]);
+        }
       }
 
       setAssignments(data1);
@@ -119,17 +124,17 @@ function DuePast() {
             </Card>
           ))
         ) : (
-          <div
-            style={{
-              position: "absolute",
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%, -50%)",
-            }}
-          >
-            <CircularProgress />
-          </div>
-        )}
+            <div
+              style={{
+                position: "absolute",
+                left: "50%",
+                top: "50%",
+                transform: "translate(-50%, -50%)",
+              }}
+            >
+              <CircularProgress />
+            </div>
+          )}
       </div>
     </div>
   );

@@ -13,6 +13,7 @@ import Button from "@material-ui/core/Button";
 import DeleteIcon from "@material-ui/icons/Delete";
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
+import moment from 'moment';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,85 +41,63 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function DueToday() {
-    const [assignments, setAssignments] = useState();
-    const classes = useStyles();
-  
-    useEffect(() => {
-      const db = app.firestore();
-      return db.collection("assignments").onSnapshot((snapshot) => {
-        const data = [];
-        snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
-        console.log(data);
-        const data1 = [];
-        for (var i = 0; i < data.length; i++) {
-          if (data[i].satus === "ongoing") data1.push(data[i]);
+  const [assignments, setAssignments] = useState();
+  const classes = useStyles();
+
+  useEffect(() => {
+    const db = app.firestore();
+    return db.collection("assignments").onSnapshot((snapshot) => {
+      const data = [];
+      snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
+      console.log(data);
+      const data1 = [];
+      for (var i = 0; i < data.length; i++) {
+        if (data[i].satus === "ongoing") {
+          console.log(moment(data[i].due_date.seconds * 1000).format("DD/MM/YYYY"), moment(new Date()).format("DD/MM/YYYY"));
+          if (moment(data[i].due_date.seconds * 1000).format("DD/MM/YYYY")== moment(new Date()).format("DD/MM/YYYY"))
+            data1.push(data[i]);
         }
-  
-        setAssignments(data1);
-        // setTutors(data);
-      });
-    }, []);
-  
-    if (assignments) console.log(assignments);
-  
-    return (
-      <div className="body">
-        <div className="wrapper">
-          {assignments !== undefined ? (
-            assignments.map((assignment) => (
-              <Card className={classes.root} variant="outlined">
-                <CardContent>
-                  <Typography variant="body2" component="p">
-                    Student = {assignment.student}
-                    <br />
+      }
+
+      setAssignments(data1);
+      // setTutors(data);
+    });
+  }, []);
+
+  if (assignments) console.log(assignments);
+
+  return (
+    <div className="body">
+      <div className="wrapper">
+        {assignments !== undefined ? (
+          assignments.map((assignment) => (
+            <Card className={classes.root} variant="outlined">
+              <CardContent>
+                <Typography variant="body2" component="p">
+                  Student = {assignment.student}
+                  <br />
                     Subject = {assignment.subject}
-                    <br />
+                  <br />
                     Tutor = {assignment.tutor}
-                    <br />
+                  <br />
                     Price = {assignment.price}$<br />
                     Amount Paid = {assignment.amount_paid}$<br />
                     Tutor fee = {assignment.tutor_fee}$<br />
                     Assigned Date ={" "}
-                    {assignment.assigned_date.toDate().toDateString()} at{" "}
-                    {assignment.assigned_date.toDate().toLocaleTimeString()}
-                    <br />
+                  {assignment.assigned_date.toDate().toDateString()} at{" "}
+                  {assignment.assigned_date.toDate().toLocaleTimeString()}
+                  <br />
                     Due Date = {assignment.due_date
-                      .toDate()
-                      .toDateString()} at{" "}
-                    {assignment.assigned_date.toDate().toLocaleTimeString()}
-                    <br />
+                    .toDate()
+                    .toDateString()} at{" "}
+                  {assignment.assigned_date.toDate().toLocaleTimeString()}
+                  <br />
                     Status = {assignment.satus}
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    className={classes.button}
-                    startIcon={<DeleteIcon />}
-                  >
-                    Delete
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    className={classes.button}
-                    startIcon={<PriorityHighIcon />}
-                  >
-                    Change
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    startIcon={<CheckCircleIcon />}
-                  >
-                    Completed
-                  </Button>
-                </CardActions>
-              </Card>
-            ))
-          ) : (
+                </Typography>
+              </CardContent>
+            </Card>
+          ))
+        ) : (
             <div
               style={{
                 position: "absolute",
@@ -130,10 +109,11 @@ function DueToday() {
               <CircularProgress />
             </div>
           )}
-        </div>
       </div>
-    );
-  }
-  
+    </div>
+  );
+}
+
 
 export default DueToday
+

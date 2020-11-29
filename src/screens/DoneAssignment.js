@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function DoneAssignment() {
-    const [assignments, setAssignments] = useState();
+  const [assignments, setAssignments] = useState();
   const classes = useStyles();
 
   useEffect(() => {
@@ -53,7 +53,7 @@ function DoneAssignment() {
       for (var i = 0; i < data.length; i++) {
         if (data[i].satus === "completed") data1.push(data[i]);
       }
-
+      data1.sort((a, b) => (a.due_date > b.due_date) ? 1 : ((b.due_date > a.due_date) ? -1 : 0))
       setAssignments(data1);
       // setTutors(data);
     });
@@ -90,30 +90,20 @@ function DoneAssignment() {
                   Status = {assignment.satus}
                 </Typography>
               </CardContent>
-              <CardActions>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  className={classes.button}
-                  startIcon={<DeleteIcon />}
-                >
-                  Delete
-                </Button>
-              </CardActions>
             </Card>
           ))
         ) : (
-          <div
-            style={{
-              position: "absolute",
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%, -50%)",
-            }}
-          >
-            <CircularProgress />
-          </div>
-        )}
+            <div
+              style={{
+                position: "absolute",
+                left: "50%",
+                top: "50%",
+                transform: "translate(-50%, -50%)",
+              }}
+            >
+              <CircularProgress />
+            </div>
+          )}
       </div>
     </div>
   );
