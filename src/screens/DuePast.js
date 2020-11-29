@@ -95,32 +95,6 @@ function DuePast() {
                   Status = {assignment.satus}
                 </Typography>
               </CardContent>
-              <CardActions>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  className={classes.button}
-                  startIcon={<DeleteIcon />}
-                >
-                  Delete
-                </Button>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  className={classes.button}
-                  startIcon={<PriorityHighIcon />}
-                >
-                  Change
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  startIcon={<CheckCircleIcon />}
-                >
-                  Completed
-                </Button>
-              </CardActions>
             </Card>
           ))
         ) : (
