@@ -13,11 +13,12 @@ import Button from "@material-ui/core/Button";
 import DeleteIcon from "@material-ui/icons/Delete";
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
+import Tooltip from '@material-ui/core/Tooltip';
 import moment from 'moment'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    minWidth: 275,
+    minWidth: "50%",
     backgroundColor: "lightBlue",
     boxShadow: "3px 3px 5px 6px rgba(255,255,255,0.6)",
     "&:hover": {
@@ -25,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   button: {
-    margin: theme.spacing(1),
+    margin: theme.spacing(2),
   },
   bullet: {
     display: "inline-block",
@@ -45,6 +46,7 @@ function InProgressAssignment() {
   const classes = useStyles();
 
   useEffect(() => {
+    window.scrollTo(0, 0)
     const db = app.firestore();
     return db.collection("assignments").onSnapshot((snapshot) => {
       const data = [];
@@ -94,6 +96,8 @@ function InProgressAssignment() {
                 </Typography>
               </CardContent>
               <CardActions>
+              <div style={{display: 'flex',justifyContent: 'center'}}>
+              <Tooltip title="Delete" arrow>
                 <Button
                   variant="contained"
                   color="secondary"
@@ -105,8 +109,9 @@ function InProgressAssignment() {
                     console.log(assignment)
                   }}
                 >
-                  Delete
                 </Button>
+                </Tooltip>
+                <Tooltip title="Change Due Date" arrow>
                 <Button
                   variant="contained"
                   color="secondary"
@@ -117,7 +122,7 @@ function InProgressAssignment() {
                     if (dateString == null)
                       return
                     var dateObj = moment(dateString, "DD/MM/YYYY")._d;
-                    if (dateString == '' || dateObj == 'Invalid Date')
+                    if (dateString === '' || dateObj === 'Invalid Date')
                       alert('Enter a valid date')
                     const db = app.firestore()
                     console.log(dateString, dateObj);
@@ -126,8 +131,9 @@ function InProgressAssignment() {
                     })
                   }}
                 >
-                  Change due date
                 </Button>
+                </Tooltip>
+                <Tooltip title="Mark As Completed" arrow>
                 <Button
                   variant="contained"
                   color="primary"
@@ -141,8 +147,9 @@ function InProgressAssignment() {
                     console.log(assignment)
                   }}
                 >
-                  Mark as completed
                 </Button>
+                </Tooltip>
+                </div>
               </CardActions>
             </Card>
           ))

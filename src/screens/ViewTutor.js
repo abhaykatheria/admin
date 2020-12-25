@@ -60,6 +60,7 @@ export default function ViewTutor() {
 
   useEffect(() => {
     const db = app.firestore();
+    window.scrollTo(0, 0);
     return db.collection("tutors").onSnapshot((snapshot) => {
       const data = [];
       snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));

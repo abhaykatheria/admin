@@ -44,6 +44,7 @@ function DoneAssignment() {
   const classes = useStyles();
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const db = app.firestore();
     return db.collection("assignments").onSnapshot((snapshot) => {
       const data = [];

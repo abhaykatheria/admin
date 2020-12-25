@@ -1,11 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import ButtonBase from "@material-ui/core/ButtonBase";
 import Typography from "@material-ui/core/Typography";
 import { Link } from "react-router-dom";
-import image1 from "../images/tutor.jpg"
-import image2 from "../images/teacher.png"
-import image3 from "../images/book.png"
+import image1 from "../images/blue.jpeg";
 
 const images = [
   {
@@ -15,13 +13,13 @@ const images = [
     width: "30%",
   },
   {
-    url: image3,
+    url: image1,
     title: "View Tutor",
     route: "/viewTutor",
     width: "30%",
   },
   {
-    url: image2,
+    url: image1,
     title: "Add Assignment",
     route: "/addAss",
     width: "30%",
@@ -33,13 +31,13 @@ const images = [
     width: "30%",
   },
   {
-    url: image3,
+    url: image1,
     title: "Done Assignment",
     route: "/doneAss",
     width: "30%",
   },
   {
-    url: image2,
+    url: image1,
     title: "Upcoming Assignment",
     route: "/upAss",
     width: "30%",
@@ -51,9 +49,15 @@ const images = [
     width: "30%",
   },
   {
-    url: image3,
+    url: image1,
     title: "Due Past",
     route: "/duePast",
+    width: "30%",
+  },
+  {
+    url: image1,
+    title: "Analytics",
+    route: "/analytics",
     width: "30%",
   },
 ];
@@ -139,42 +143,47 @@ export default function ButtonBases() {
   const onClickHandler = () => {
     console.log("Hello");
   };
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  });
 
   return (
-    <div className={classes.root}>
-      {images.map((image) => (
-        <ButtonBase
-          focusRipple
-          key={image.title}
-          className={classes.image}
-          focusVisibleClassName={classes.focusVisible}
-          onClick={onClickHandler}
-          component={Link}
-          to={image.route}
-          style={{
-            width: image.width,
-          }}
-        >
-          <span
-            className={classes.imageSrc}
+    <div>
+      <div className={classes.root}>
+        {images.map((image) => (
+          <ButtonBase
+            focusRipple
+            key={image.title}
+            className={classes.image}
+            focusVisibleClassName={classes.focusVisible}
+            onClick={onClickHandler}
+            component={Link}
+            to={image.route}
             style={{
-              backgroundImage: `url(${image.url})`,
+              width: image.width,
             }}
-          />
-          <span className={classes.imageBackdrop} />
-          <span className={classes.imageButton}>
-            <Typography
-              component="span"
-              variant="subtitle1"
-              color="inherit"
-              className={classes.imageTitle}
-            >
-              {image.title}
-              <span className={classes.imageMarked} />
-            </Typography>
-          </span>
-        </ButtonBase>
-      ))}
+          >
+            <span
+              className={classes.imageSrc}
+              style={{
+                backgroundImage: `url(${image.url})`,
+              }}
+            />
+            <span className={classes.imageBackdrop} />
+            <span className={classes.imageButton}>
+              <Typography
+                component="span"
+                variant="subtitle1"
+                color="inherit"
+                className={classes.imageTitle}
+              >
+                {image.title}
+                <span className={classes.imageMarked} />
+              </Typography>
+            </span>
+          </ButtonBase>
+        ))}
+      </div>
     </div>
   );
 }
