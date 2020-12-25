@@ -9,14 +9,26 @@ import DuePast from "./screens/DuePast";
 import DoneAssignment from "./screens/DoneAssignment";
 import DueToday from "./screens/DueToday";
 import UpcomingAssignment from "./screens/UpcomingAssignment";
+<<<<<<< HEAD
 import Analytics from "./screens/Analytics";
 import AppBar from "./screens/AppBar";
 import ViewStudentSearch from "./screens/ViewStudentSearch";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+=======
+import AddStudent from "./screens/AddStudent";
+import ViewStudent from "./screens/ViewStudent"
+
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
+>>>>>>> added extra functionalities
 
 function App() {
   return (
     <Router>
+<<<<<<< HEAD
       <div>
         <AppBar />
         <Switch>
@@ -33,6 +45,21 @@ function App() {
           <Route exact path="/viewStud" component={ViewStudentSearch} />          
         </Switch>
       </div>
+=======
+      <Switch>
+        <Route exact path="/" component={Front} />
+        <Route exact path="/addTutor" component={AddTutor} />
+        <Route exact path="/viewTutor" component={ViewTutor} />
+        <Route exact path="/doneAss" component={DoneAssignment} />
+        <Route exact path="/dueToday" component={DueToday} />
+        <Route exact path="/duePast" component={DuePast} />
+        <Route exact path="/addAss" component={AddAssignment} />
+        <Route exact path="/upAss" component={UpcomingAssignment} />
+        <Route exact path="/inProgress" component={InProgressAssignment} />
+        <Route exact path="/addStudent" component={AddStudent} />
+        {/* <Route exact path="/viewStudent" component={ViewStudent} /> */}
+      </Switch>
+>>>>>>> added extra functionalities
     </Router>
   );
 }

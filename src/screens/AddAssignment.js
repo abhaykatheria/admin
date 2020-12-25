@@ -48,9 +48,10 @@ function AddAssignment(props) {
     const { classes } = props
 
 
-    const [student, setstudent] = useState('')
     const [tutor, setTutor] = useState('')
     const [allTutors, setAllTutors] = useState([])
+    const [student, setstudent] = useState('')
+    const [allStudents, setAllStudents] = useState([])
     const [subject, setSubject] = useState('')
     const [price, setPrice] = useState(0)
     const [amount_paid, setAmountPaid] = useState(0)
@@ -65,17 +66,21 @@ function AddAssignment(props) {
     const [tutorId, setTutorId] = useState('')
     const [dues, setDues] = useState(0)
     const [assId, setAssId] = useState('')
+    const [studentCollections,setStudentCollections] = useState('')
 
-
-    const changeHandler = value => {
+    const changeTutorHandler = value => {
         setTutor(value)
+    }
+
+    const changeStudentHandler = value => {
+        setstudent(value)
     }
 
 
     useEffect(() => {
         const db = app.firestore();
         window.scrollTo(0, 0);
-        return db.collection('tutors').onSnapshot((snapshot) => {
+        db.collection('tutors').onSnapshot((snapshot) => {
             const data = [];
             const ids = [];
             snapshot.forEach((doc) => {
@@ -98,6 +103,32 @@ function AddAssignment(props) {
             })
             // console.log(data1);
             setAllTutors(data1);
+        });
+    
+        db.collection('students').onSnapshot((snapshot) => {
+            const data = [];
+            const ids = [];
+            snapshot.forEach((doc) => {
+                data.push({ ...doc.data() })
+                ids.push(doc.id)
+                // console.log(doc.id);
+            }
+            );
+            console.log(ids);
+            let data1 = []
+            for (var i = 0; i < data.length; i++) {
+                data1.push({ name: data[i].name, id: ids[i],collections: data[i].collections });
+                // console.log(data[i]);
+            }
+            data1 = data1.map((dat) => {
+                return {
+                    value: dat.id,
+                    label: dat.name,
+                    collections: dat.collections
+                }
+            })
+            console.log(data1);
+            setAllStudents(data1);
         });
     }, []);
 
@@ -122,16 +153,20 @@ function AddAssignment(props) {
                         Add Assignment
        			</Typography>
                     <form className={classes.form} onSubmit={e => e.preventDefault() && false}>
-                        <FormControl margin="normal" required fullWidth>
-                            <InputLabel htmlFor="name">Student's name</InputLabel>
-                            <Input id="name" name="name" autoComplete="off" autoFocus value={student} onChange={e => setstudent(e.target.value)} />
+                    <FormControl margin="normal" required fullWidth>
+                            <p>Student</p>
+                            <Select
+                                options={allStudents}
+                                value={student}
+                                onChange={changeStudentHandler}
+                            />
                         </FormControl>
                         <FormControl margin="normal" required fullWidth>
                             <p>Tutor</p>
                             <Select
                                 options={allTutors}
                                 value={tutor}
-                                onChange={changeHandler}
+                                onChange={changeTutorHandler}
                             />
                         </FormControl>
                         <FormControl margin="normal" required fullWidth>
@@ -228,7 +263,7 @@ function AddAssignment(props) {
                         payment_pending: payment_pending,
                         price: parseInt(price),
                         satus: satus,
-                        student: student,
+                        student: student.label,
                         subject: subject,
                         tutor: tutor.label,
                         tutor_fee: parseInt(tutor_fee),
@@ -260,6 +295,7 @@ function AddAssignment(props) {
         updateDues()
         updateDuesCollection()
         updatePayment()
+        updateStudentCollection()
     }
 
     async function updateDues() {
@@ -302,7 +338,7 @@ function AddAssignment(props) {
                 due_date: due_date,
                 pending: price-amount_paid,
                 status: "pending",
-                student: student
+                student: student.label
             })
         }
         catch (error) {
@@ -310,6 +346,17 @@ function AddAssignment(props) {
         }
     }
 
+    async function updateStudentCollection() {
+        try {
+            // console.log(dues);
+            await app.firestore().collection('students').doc(student.value).update({
+                collections: parseInt(student.collections) + parseInt(price)
+            })
+        }
+        catch (error) {
+            alert(error.message)
+        }
+    }
 
 }
 
