@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import app from "firebase/app";
@@ -11,9 +11,9 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import DeleteIcon from "@material-ui/icons/Delete";
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
-import moment from 'moment';
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import PriorityHighIcon from "@material-ui/icons/PriorityHigh";
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,8 +54,14 @@ function DuePast() {
       const data1 = [];
       for (var i = 0; i < data.length; i++) {
         if (data[i].satus === "ongoing") {
-          console.log(moment(data[i].due_date.seconds * 1000).format("DD/MM/YYYY"), moment(new Date()).format("DD/MM/YYYY"));
-          if (moment(data[i].due_date.seconds * 1000).format("DD/MM/YYYY")< moment(new Date()).format("DD/MM/YYYY"))
+          console.log(
+            moment(data[i].due_date.seconds * 1000).format("DD/MM/YYYY"),
+            moment(new Date()).format("DD/MM/YYYY")
+          );
+          if (
+            moment(data[i].due_date.seconds * 1000).format("DD/MM/YYYY") <
+            moment(new Date()).format("DD/MM/YYYY")
+          )
             data1.push(data[i]);
         }
       }
@@ -99,19 +105,19 @@ function DuePast() {
             </Card>
           ))
         ) : (
-            <div
-              style={{
-                position: "absolute",
-                left: "50%",
-                top: "50%",
-                transform: "translate(-50%, -50%)",
-              }}
-            >
-              <CircularProgress />
-            </div>
-          )}
+          <div
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
+          >
+            <CircularProgress />
+          </div>
+        )}
       </div>
     </div>
   );
 }
-export default DuePast
+export default DuePast;

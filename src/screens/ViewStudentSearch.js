@@ -28,7 +28,9 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   button: {
-    margin: theme.spacing(1),
+    margin: theme.spacing(2),
+    display: "inline-flex",
+    horizontalAlign: "middle"
   },
   bullet: {
     display: "inline-block",
@@ -50,7 +52,7 @@ function ViewStudentSearch() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  })
+  });
 
   const onSearch = (name) => {
     if (name !== undefined) {
@@ -110,19 +112,13 @@ function ViewStudentSearch() {
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "center",
-                    }}
-                  >
+                  <div style={{ margin: "0 auto", textAlign: "center" }}>
                     <Tooltip title="Delete" arrow>
                       <Button
                         variant="contained"
                         color="secondary"
                         className={classes.button}
-                        startIcon={<DeleteIcon />}
+                        children={<DeleteIcon />}
                         onClick={() => {
                           const db = app.firestore();
                           db.collection("assignments")
@@ -137,7 +133,7 @@ function ViewStudentSearch() {
                         variant="contained"
                         color="secondary"
                         className={classes.button}
-                        startIcon={<PriorityHighIcon />}
+                        children={<PriorityHighIcon />}
                         onClick={() => {
                           var dateString = window.prompt(
                             "Enter the new due date in this format:- DD/MM/YYY"
@@ -161,7 +157,7 @@ function ViewStudentSearch() {
                         variant="contained"
                         color="primary"
                         className={classes.button}
-                        startIcon={<CheckCircleIcon />}
+                        children={<CheckCircleIcon />}
                         onClick={() => {
                           const db = app.firestore();
                           db.collection("assignments")

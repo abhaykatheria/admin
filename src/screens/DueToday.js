@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import app from "firebase/app";
@@ -11,9 +11,9 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import DeleteIcon from "@material-ui/icons/Delete";
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
-import moment from 'moment';
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import PriorityHighIcon from "@material-ui/icons/PriorityHigh";
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,8 +54,14 @@ function DueToday() {
       const data1 = [];
       for (var i = 0; i < data.length; i++) {
         if (data[i].satus === "ongoing") {
-          console.log(moment(data[i].due_date.seconds * 1000).format("DD/MM/YYYY"), moment(new Date()).format("DD/MM/YYYY"));
-          if (moment(data[i].due_date.seconds * 1000).format("DD/MM/YYYY")== moment(new Date()).format("DD/MM/YYYY"))
+          console.log(
+            moment(data[i].due_date.seconds * 1000).format("DD/MM/YYYY"),
+            moment(new Date()).format("DD/MM/YYYY")
+          );
+          if (
+            moment(data[i].due_date.seconds * 1000).format("DD/MM/YYYY") ==
+            moment(new Date()).format("DD/MM/YYYY")
+          )
             data1.push(data[i]);
         }
       }
@@ -77,44 +83,42 @@ function DueToday() {
                 <Typography variant="body2" component="p">
                   Student = {assignment.student}
                   <br />
-                    Subject = {assignment.subject}
+                  Subject = {assignment.subject}
                   <br />
-                    Tutor = {assignment.tutor}
+                  Tutor = {assignment.tutor}
                   <br />
-                    Price = {assignment.price}$<br />
-                    Amount Paid = {assignment.amount_paid}$<br />
-                    Tutor fee = {assignment.tutor_fee}$<br />
-                    Assigned Date ={" "}
+                  Price = {assignment.price}$<br />
+                  Amount Paid = {assignment.amount_paid}$<br />
+                  Tutor fee = {assignment.tutor_fee}$<br />
+                  Assigned Date ={" "}
                   {assignment.assigned_date.toDate().toDateString()} at{" "}
                   {assignment.assigned_date.toDate().toLocaleTimeString()}
                   <br />
-                    Due Date = {assignment.due_date
+                  Due Date = {assignment.due_date
                     .toDate()
                     .toDateString()} at{" "}
                   {assignment.assigned_date.toDate().toLocaleTimeString()}
                   <br />
-                    Status = {assignment.satus}
+                  Status = {assignment.satus}
                 </Typography>
               </CardContent>
             </Card>
           ))
         ) : (
-            <div
-              style={{
-                position: "absolute",
-                left: "50%",
-                top: "50%",
-                transform: "translate(-50%, -50%)",
-              }}
-            >
-              <CircularProgress />
-            </div>
-          )}
+          <div
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
+          >
+            <CircularProgress />
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
-
-export default DueToday
-
+export default DueToday;
