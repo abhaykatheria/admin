@@ -20,8 +20,26 @@ const images = [
   },
   {
     url: image1,
+    title: "Add Student",
+    route: "/addStudent",
+    width: "30%",
+  },
+  {
+    url: image1,
+    title: "View Student",
+    route: "/viewStudent",
+    width: "30%",
+  },
+  {
+    url: image1,
     title: "Add Assignment",
     route: "/addAss",
+    width: "30%",
+  },
+  {
+    url: image1,
+    title: "All Assignment",
+    route: "/allAss",
     width: "30%",
   },
   {
@@ -188,3 +206,9 @@ export default function ButtonBases() {
     </div>
   );
 }
+
+
+
+
+
+

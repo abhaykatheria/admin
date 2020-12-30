@@ -14,11 +14,14 @@ import { Link, withRouter } from "react-router-dom";
 import Select from "react-select";
 import countryList from "react-select-country-list";
 import firebase from "firebase";
-import "firebase/firebase-firestore";
-import app from "firebase/app";
-import { useEffect } from "react";
-import DateTimePicker from "react-datetime-picker";
-import "firebase/firebase-storage";
+import 'firebase/firebase-firestore'
+import app from 'firebase/app'
+import { useEffect } from 'react'
+import DateTimePicker from 'react-datetime-picker';
+import 'firebase/firebase-storage'
+import { FilePond, File, registerPlugin } from 'react-filepond'
+import TimezoneSelect from 'react-timezone-select'
+
 
 const styles = (theme) => ({
   main: {
@@ -57,282 +60,287 @@ const styles = (theme) => ({
 function AddAssignment(props) {
   const { classes } = props;
 
-  const [student, setstudent] = useState("");
-  const [tutor, setTutor] = useState("");
-  const [allTutors, setAllTutors] = useState([]);
-  const [subject, setSubject] = useState("");
-  const [price, setPrice] = useState(0);
-  const [amount_paid, setAmountPaid] = useState(0);
-  const [tutor_fee, setTutorFee] = useState(0);
-  const [due_date, setDueDate] = useState(new Date());
-  const [comments, setComments] = useState("");
-  const [assigned_date, setAssignedDate] = useState(new Date());
-  const [payment_pending, setPaymentPending] = useState(true);
-  const [satus, setStatus] = useState("ongoing");
-  const [assURL, setAssURL] = useState("");
-  const [file, setFile] = useState("");
-  const [tutorId, setTutorId] = useState("");
-  const [dues, setDues] = useState(0);
-  const [assId, setAssId] = useState("");
-
-  const changeHandler = (value) => {
-    setTutor(value);
-  };
-
-  useEffect(() => {
-    const db = app.firestore();
-    window.scrollTo(0, 0);
-    return db.collection("tutors").onSnapshot((snapshot) => {
-      const data = [];
-      const ids = [];
-      snapshot.forEach((doc) => {
-        data.push({ ...doc.data() });
-        ids.push(doc.id);
-        // console.log(doc.id);
-      });
-      console.log(ids);
-      let data1 = [];
-      for (var i = 0; i < data.length; i++) {
-        data1.push({ name: data[i].name, id: ids[i] });
-        // console.log(data[i]);
-      }
-      data1 = data1.map((dat) => {
-        return {
-          value: dat.id,
-          label: dat.name,
-        };
-      });
-      // console.log(data1);
-      setAllTutors(data1);
-    });
-  }, []);
-
-  // console.log(allTutors);
-
-  const onChange = (e) => {
-    const file = e.target.files[0];
-    setFile(file);
-    // console.log(file)
-  };
-
-  return (
-    <div style={{ backgroundColor: "#dee4e3" }}>
-      <main className={classes.main}>
-        <Paper className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Add Assignment
-          </Typography>
-          <form
-            className={classes.form}
-            onSubmit={(e) => e.preventDefault() && false}
-          >
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="name">Student's name</InputLabel>
-              <Input
-                id="name"
-                name="name"
-                autoComplete="off"
-                autoFocus
-                value={student}
-                onChange={(e) => setstudent(e.target.value)}
-              />
-            </FormControl>
-            <FormControl margin="normal" required fullWidth>
-              <p>Tutor</p>
-              <Select
-                options={allTutors}
-                value={tutor}
-                onChange={changeHandler}
-              />
-            </FormControl>
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="name">Subject</InputLabel>
-              <Input
-                id="name"
-                name="name"
-                autoComplete="off"
-                autoFocus
-                value={subject}
-                onChange={(e) => setSubject(e.target.value)}
-              />
-            </FormControl>
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="name">Price</InputLabel>
-              <Input
-                id="name"
-                name="name"
-                autoComplete="off"
-                autoFocus
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-              />
-            </FormControl>
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="name">Amount Paid</InputLabel>
-              <Input
-                id="name"
-                name="name"
-                autoComplete="off"
-                autoFocus
-                value={amount_paid}
-                onChange={(e) => setAmountPaid(e.target.value)}
-              />
-            </FormControl>
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="name">Tutor Fee</InputLabel>
-              <Input
-                id="name"
-                name="name"
-                autoComplete="off"
-                autoFocus
-                value={tutor_fee}
-                onChange={(e) => setTutorFee(e.target.value)}
-              />
-            </FormControl>
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="name">Comments</InputLabel>
-              <Input
-                id="name"
-                name="name"
-                autoComplete="off"
-                autoFocus
-                value={comments}
-                onChange={(e) => setComments(e.target.value)}
-              />
-            </FormControl>
-            <FormControl margin="normal" required fullWidth>
-              <p>Due Date</p>
-              <DateTimePicker onChange={setDueDate} value={due_date} />
-            </FormControl>
-            <Button variant="contained" component="label">
-              Upload File
-              <input type="file" hidden onChange={onChange} />
-            </Button>
-            {file && <p>{file.name}</p>}
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              onClick={onRegister}
-              // component={Link}
-              // to="/register"
-              className={classes.submit}
-            >
-              Register
-            </Button>
-          </form>
-        </Paper>
-      </main>
-    </div>
-  );
-
-  async function upload() {
-    const storageRef = app.storage().ref("assignments");
-    const fileRef = storageRef.child(file.name);
-    await fileRef.put(file).then((url) => {});
-    const url = await fileRef.getDownloadURL().catch((error) => {
-      throw error;
-    });
-    if (url != "") {
-      setAssURL(url);
-      // console.log(url);
-    }
-  }
-
-  async function onRegister() {
-    if (
-      tutor == "" ||
-      tutor == "" ||
-      subject == "" ||
-      price == "" ||
-      amount_paid == "" ||
-      tutor_fee == "" ||
-      comments == "" ||
-      due_date == "" ||
-      file == ""
-    ) {
-      alert("Please Fill All Required Field");
-      return;
-    }
-    console.log(
-      student,
-      tutor.label,
-      subject,
-      price,
-      amount_paid,
-      tutor_fee,
-      comments
-    );
-    console.log(allTutors);
-    for (var i = 0; i < allTutors.length; i++) {
-      if (allTutors[i].label === tutor.label) {
-        setTutorId(allTutors[i].value);
-        console.log(tutorId);
-        break;
-      }
+    const [tutor, setTutor] = useState('')
+    const [allTutors, setAllTutors] = useState([])
+    const [student, setstudent] = useState('')
+    const [allStudents, setAllStudents] = useState([])
+    const [subject, setSubject] = useState('')
+    const [price, setPrice] = useState(0)
+    const [amount_paid, setAmountPaid] = useState(0)
+    const [tutor_fee, setTutorFee] = useState(0)
+    const [due_date, setDueDate] = useState(new Date())
+    const [comments, setComments] = useState('')
+    const [assigned_date, setAssignedDate] = useState(new Date())
+    const [payment_pending, setPaymentPending] = useState(true)
+    const [satus, setStatus] = useState("ongoing")
+    const [assURL, setAssURL] = useState('')
+    const [file, setFile] = useState('')
+    const [tutorId, setTutorId] = useState('')
+    const [dues, setDues] = useState(0)
+    const [assId, setAssId] = useState('')
+    const [studentCollections, setStudentCollections] = useState('')
+    const [files, setFiles] = useState([])
+    const [fileAr,setFileAr] = useState([])
+    const [selectedTimezone, setSelectedTimezone] = useState({})
+    
+    const changeTutorHandler = value => {
+        setTutor(value)
     }
 
-    // console.log(name, email, country.label)
-    try {
-      upload();
-      if (assURL != "") {
+    const changeStudentHandler = value => {
+        setstudent(value)
+    }
+
+
+    useEffect(() => {
         const db = app.firestore();
-        try {
-          await db
-            .collection("assignments")
-            .add({
-              amount_paid: parseInt(amount_paid),
-              assigned_date: assigned_date,
-              comments: comments,
-              due_date: due_date,
-              payment_pending: payment_pending,
-              price: parseInt(price),
-              satus: satus,
-              student: student,
-              subject: subject,
-              tutor: tutor.label,
-              tutor_fee: parseInt(tutor_fee),
-              assURL: assURL,
-            })
-            .then((doc) => {
-              console.log(doc.id, due_date, price - amount_paid, student);
-              console.log(
-                doc.id,
-                due_date,
-                "pending",
-                tutor.label,
-                tutor_fee,
-                tutorId
-              );
-              setAssId(doc.id);
-            });
-
-          db.collection("tutors").onSnapshot((snapshot) => {
+        window.scrollTo(0, 0);
+        db.collection('tutors').onSnapshot((snapshot) => {
+            const data = [];
+            const ids = [];
             snapshot.forEach((doc) => {
-              if (doc.data().name === tutor.label) {
-                var temp = doc.data();
-                temp.dues += parseInt(tutor_fee);
-                setTutorId(doc.id);
-                setDues(temp.dues);
-              }
-              // console.log(doc.id, doc.data(), tutor.value);
-            });
-          });
+                data.push({ ...doc.data() })
+                ids.push(doc.id)
+                // console.log(doc.id);
+            }
+            );
+            console.log(ids);
+            let data1 = []
+            for (var i = 0; i < data.length; i++) {
+                data1.push({ name: data[i].name, id: ids[i] });
+                // console.log(data[i]);
+            }
+            data1 = data1.map((dat) => {
+                return {
+                    value: dat.id,
+                    label: dat.name
+                }
+            })
+            // console.log(data1);
+            setAllTutors(data1);
+        });
+
+        db.collection('students').onSnapshot((snapshot) => {
+            const data = [];
+            const ids = [];
+            snapshot.forEach((doc) => {
+                data.push({ ...doc.data() })
+                ids.push(doc.id)
+                // console.log(doc.id);
+            }
+            );
+            console.log(ids);
+            let data1 = []
+            for (var i = 0; i < data.length; i++) {
+                data1.push({ name: data[i].name, id: ids[i], collections: data[i].collections });
+                // console.log(data[i]);
+            }
+            data1 = data1.map((dat) => {
+                return {
+                    value: dat.id,
+                    label: dat.name,
+                    collections: dat.collections
+                }
+            })
+            console.log(data1);
+            setAllStudents(data1);
+        });
+    }, []);
+
+ 
+
+
+    return (
+        <div style={{ backgroundColor: "#dee4e3" }}>
+            <main className={classes.main}>
+                <Paper className={classes.paper}>
+                    <Avatar className={classes.avatar}>
+                        <LockOutlinedIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Add Assignment
+       			</Typography>
+                    <form className={classes.form} onSubmit={e => e.preventDefault() && false}>
+                        <FormControl margin="normal" required fullWidth>
+                            <p>Student</p>
+                            <Select
+                                options={allStudents}
+                                value={student}
+                                onChange={changeStudentHandler}
+                            />
+                        </FormControl>
+                        <FormControl margin="normal" required fullWidth>
+                            <p>Tutor</p>
+                            <Select
+                                options={allTutors}
+                                value={tutor}
+                                onChange={changeTutorHandler}
+                            />
+                        </FormControl>
+                        <p>Time zone</p>
+                        <div className='select-wrapper'>
+                            <TimezoneSelect
+                                value={selectedTimezone}
+                                onChange={setSelectedTimezone}
+                            />
+                        </div>
+
+                        <FormControl margin="normal" required fullWidth>
+                            <InputLabel htmlFor="name">Subject</InputLabel>
+                            <Input id="name" name="name" autoComplete="off" autoFocus value={subject} onChange={e => setSubject(e.target.value)} />
+                        </FormControl>
+                        <FormControl margin="normal" required fullWidth>
+                            <InputLabel htmlFor="name">Price</InputLabel>
+                            <Input id="name" name="name" autoComplete="off" autoFocus value={price} onChange={e => setPrice(e.target.value)} />
+                        </FormControl>
+                        <FormControl margin="normal" required fullWidth>
+                            <InputLabel htmlFor="name">Amount Paid</InputLabel>
+                            <Input id="name" name="name" autoComplete="off" autoFocus value={amount_paid} onChange={e => setAmountPaid(e.target.value)} />
+                        </FormControl>
+                        <FormControl margin="normal" required fullWidth>
+                            <InputLabel htmlFor="name">Tutor Fee</InputLabel>
+                            <Input id="name" name="name" autoComplete="off" autoFocus value={tutor_fee} onChange={e => setTutorFee(e.target.value)} />
+                        </FormControl>
+                        <FormControl margin="normal" required fullWidth>
+                            <InputLabel htmlFor="name">Comments</InputLabel>
+                            <Input id="name" name="name" autoComplete="off" autoFocus value={comments} onChange={e => setComments(e.target.value)} />
+                        </FormControl>
+                        <FormControl margin="normal" required fullWidth>
+                            <p>Due Date</p>
+                            <DateTimePicker
+                                onChange={setDueDate}
+                                value={due_date}
+                            />
+                        </FormControl>
+                        <FilePond
+                            files={files}
+                            allowMultiple={true}
+                            maxFiles={15}
+                            onupdatefiles={setFiles}
+                        />
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            onClick={onRegister}
+                            // component={Link}
+                            // to="/register"
+                            className={classes.submit}>
+                            Register
+          			</Button>
+                    </form>
+                </Paper>
+            </main>
+        </div>
+    )
+
+    async function upload(tempar) {
+        console.log(tempar);
+        firebase.storage().ref('files/name').constructor.prototype.putFiles = function (tempar) {
+            var ref = this;
+            return Promise.all(tempar.map(function (file) {
+                return ref.child(file.name).put(file);
+            }));
+        }
+
+        // use it!
+        let s ='files/'+assId.toString()
+        console.log('huehue ' + s);
+        firebase.storage().ref(s).putFiles(tempar).then((snapshot) => {
+            console.log(snapshot);
+        });
+    }
+
+    async function onRegister() {
+        console.log(files);
+        const tempar = []
+        for(let i=0;i<files.length;i++){
+            tempar.push(files[i].file)
+        }
+        
+        // setFileAr(tempar)
+        console.log(tempar);
+        const crypto = require('crypto'),
+            hash = crypto.getHashes();
+        let x = student + tutor + assigned_date
+        let hashPwd = crypto.createHash('sha1').update(x).digest('hex'); 
+        setAssId(hashPwd.slice(hashPwd.length-10))
+        upload(tempar);
+
+        
+
+        console.log(hashPwd);
+
+
+        if (tutor == '' || student == '' || subject == '' || price == '' || amount_paid == ''
+            || tutor_fee == '' || comments == '' || due_date == '' || tempar == '' || selectedTimezone=='') {
+            alert("Please Fill All Required Field");
+            return;
+        }
+        console.log(student, tutor.label, subject, price, amount_paid, tutor_fee, comments);
+        console.log(allTutors);
+        for (var i = 0; i < allTutors.length; i++) {
+            if (allTutors[i].label == tutor.label) {
+                setTutorId(allTutors[i].value)
+                console.log(tutorId);
+                break
+            }
+        }
+
+        // console.log(name, email, country.label)
+        try {
+
+
+                const db = app.firestore()
+                try {
+                    await db.collection('assignments').add({
+                        amount_paid: parseInt(amount_paid),
+                        assigned_date: assigned_date,
+                        comments: comments,
+                        due_date: due_date,
+                        payment_pending: payment_pending,
+                        price: parseInt(price),
+                        satus: satus,
+                        student: student.label,
+                        subject: subject,
+                        tutor: tutor.label,
+                        tutor_fee: parseInt(tutor_fee),
+                        ass_id: hashPwd.slice(hashPwd.length - 10),
+                        time_zone: selectedTimezone.value,
+                    }).then((doc) => {
+                        console.log(doc.id, due_date, price - amount_paid, student);
+                        console.log(doc.id, due_date, "pending", tutor.label, tutor_fee, tutorId);
+                        setAssId(doc.id)
+                    })
+
+                    db.collection('tutors').onSnapshot((snapshot) => {
+                        snapshot.forEach((doc) => {
+                            if (doc.data().name === tutor.label) {
+                                var temp = doc.data()
+                                temp.dues += parseInt(tutor_fee)
+                                setTutorId(doc.id)
+                                setDues(temp.dues)
+                            }
+                            // console.log(doc.id, doc.data(), tutor.value);
+                        });
+                    })
+                } catch (error) {
+                    alert(error.message)
+                }
+            
         } catch (error) {
           alert(error.message);
         }
-      }
-    } catch (error) {
-      alert(error.message);
+        updateDues()
+        // updateDuesCollection()
+        // updatePayment()
+        updateStudentCollection()
     }
-    updateDues();
-    updateDuesCollection();
-    updatePayment();
-  }
+    // updateDues();
+    // updateDuesCollection();
+    // updatePayment();
+  
 
   async function updateDues() {
     try {
@@ -363,23 +371,34 @@ function AddAssignment(props) {
     }
   }
 
-  async function updatePayment() {
-    try {
-      // console.log(dues);
-      await app
-        .firestore()
-        .collection("payment_collection")
-        .add({
-          assg_id: assId,
-          due_date: due_date,
-          pending: price - amount_paid,
-          status: "pending",
-          student: student,
-        });
-    } catch (error) {
-      alert(error.message);
+    async function updatePayment() {
+        try {
+            // console.log(dues);
+            await app.firestore().collection('payment_collection').add({
+                assg_id: assId,
+                due_date: due_date,
+                pending: price - amount_paid,
+                status: "pending",
+                student: student.label
+            })
+        }
+        catch (error) {
+            alert(error.message)
+        }
     }
+
+    async function updateStudentCollection() {
+        try {
+            // console.log(dues);
+            await app.firestore().collection('students').doc(student.value).update({
+                collections: parseInt(student.collections) + parseInt(price)
+            })
+        }
+        catch (error) {
+            alert(error.message)
+        }
+    }
+
   }
-}
 
 export default withStyles(styles)(AddAssignment);

@@ -12,7 +12,18 @@ import UpcomingAssignment from "./screens/UpcomingAssignment";
 import Analytics from "./screens/Analytics";
 import AppBar from "./screens/AppBar";
 import ViewStudentSearch from "./screens/ViewStudentSearch";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+// import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import AddStudent from "./screens/AddStudent";
+import ViewStudent from "./screens/ViewStudent"
+import { FilePond } from 'react-filepond';
+import 'filepond/dist/filepond.min.css';
+import AllAssignment from './screens/AllAssignment'
+
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
 
 function App() {
   return (
@@ -30,7 +41,9 @@ function App() {
           <Route exact path="/upAss" component={UpcomingAssignment} />
           <Route exact path="/inProgress" component={InProgressAssignment} />
           <Route exact path="/analytics" component={Analytics} />
-          <Route exact path="/viewStud" component={ViewStudentSearch} />                    
+          <Route exact path="/viewStud" component={ViewStudentSearch} />        
+          <Route exact path="/addStudent" component={AddStudent} />        
+          <Route exact path="/allAss" component={AllAssignment} />
         </Switch>
       </div>
     </Router>
