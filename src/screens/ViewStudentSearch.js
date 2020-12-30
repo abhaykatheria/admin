@@ -17,8 +17,8 @@ import PriorityHighIcon from "@material-ui/icons/PriorityHigh";
 import moment from "moment";
 import SearchBar from "material-ui-search-bar";
 import SearchIcon from "@material-ui/icons/Search";
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(2),
     display: "inline-flex",
-    horizontalAlign: "middle"
+    horizontalAlign: "middle",
   },
   bullet: {
     display: "inline-block",
@@ -54,38 +54,50 @@ const useStyles = makeStyles((theme) => ({
 function ViewStudentSearch() {
   const [name, setName] = useState();
   const [assignments, setAssignments] = useState();
-  const [open,setOpen] = useState(false);
+  const [student, setStudent] = useState();
+  const [open, setOpen] = useState(false);
   const classes = useStyles();
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  });
+  }, []);
 
   const onSearch = (name) => {
-    var temp = []
-    if (name !== undefined) {
-      const db = app.firestore();
-      return db
-        .collection("assignments")
-        .where("student", "==", name)
-        .onSnapshot((snapshot) => {
-          const data = [];
-          snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
-          setAssignments(data);
-          temp = data
-          if (temp.length===0){
-            setOpen(true)
-          }
-        }) 
+    const db = app.firestore();
+    console.log(name)
+    if (name !== undefined || name === "") {
+      return (
+        db
+          .collection("students")
+          .where("name", "==", name)
+          .onSnapshot((snapshot) => {
+            const data = [];
+            snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
+            console.log(data);
+            setStudent(data);
+            if (student === undefined) setOpen(true);
+          }),
+        db
+          .collection("assignments")
+          .where("student", "==", name)
+          .onSnapshot((snapshot) => {
+            const data2 = [];
+            snapshot.forEach((doc) =>
+              data2.push({ ...doc.data(), id: doc.id })
+            );
+            console.log(data2);
+            setAssignments(data2);
+          })
+      );
     } else {
-      setOpen(true)
-      return console.log("Nothing");
+      setOpen(true);
+      console.log("None");
     }
   };
   if (assignments) console.log(assignments);
 
   const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
 
@@ -93,7 +105,7 @@ function ViewStudentSearch() {
   };
 
   return (
-    <div style = {{background:"white"}}>
+    <div style={{ background: "white" }}>
       <div style={{ margin: "10px" }}>
         <SearchBar
           value={name}
@@ -105,12 +117,33 @@ function ViewStudentSearch() {
         />
       </div>
       <div>
-      <Snackbar open={open} autoHideDuration={1400} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="error">
-          No Search Found!!
-        </Alert>
-      </Snackbar>
+        <Snackbar open={open} autoHideDuration={1400} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="error">
+            No Search Found!!
+          </Alert>
+        </Snackbar>
       </div>
+      {student !== undefined ? (
+        student.map((stud) => (
+          <div classname = "wrapper">
+            <Card className={classes.root} variant="outlined">
+              <CardContent>
+                <Typography variant="body2" component="p">
+                  Name = {stud.name}
+                  <br />
+                  Email = {stud.email}
+                  <br />
+                  Collection = {stud.collection}$
+                  <br />
+                  Timezone = {stud.timezone}<br />
+                </Typography>
+              </CardContent>
+            </Card>
+          </div>
+        ))
+      ) : (
+        <div> </div>
+      )}
       <div className="body">
         <div className="wrapper">
           {assignments !== undefined ? (
@@ -210,7 +243,7 @@ function ViewStudentSearch() {
                 transform: "translate(-50%, -50%)",
               }}
             >
-             <p> Begin Searching ...</p>
+              <p> Begin Searching ...</p>
             </div>
           )}
         </div>

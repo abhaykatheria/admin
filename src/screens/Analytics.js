@@ -50,32 +50,38 @@ function Analytics() {
         snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
         for (var key in data) {
           var date = moment(data[key].assigned_date.toDate().toDateString());
+          var weekDay = moment()
+            .day("Monday")
+            .year(date.year())
+            .week(date.isoWeek())
+            .format("MMM DD");
+
           if (datePrice[date.format("MMM DD YYYY")] !== undefined) {
             datePrice[date.format("MMM DD YYYY")] += data[key].price;
-            dayPrice[date.format("dddd")] += data[key].price;
-            weekPrice[
-              moment()
-                .day("Monday")
-                .year(date.year())
-                .week(date.isoWeek())
-                .format("MMM DD")
-            ] += data[key].price;
-            monthPrice[date.format("MMM YY")] += data[key].price;
-            console.log(monthPrice[date.format("MMM YY")]);
           } else {
             datePrice[date.format("MMM DD YYYY")] = data[key].price;
+          }
+
+          if (dayPrice[date.format("dddd")] !== undefined) {
+            dayPrice[date.format("dddd")] += data[key].price;
+          } else {
             dayPrice[date.format("dddd")] = data[key].price;
-            weekPrice[
-              moment()
-                .day("Monday")
-                .year(date.year())
-                .week(date.isoWeek())
-                .format("MMM DD")
-            ] = data[key].price;
+          }
+
+          if (weekPrice[weekDay] !== undefined) {
+            weekPrice[weekDay] += data[key].price;
+          } else {
+            weekPrice[weekDay] = data[key].price;
+          }
+
+          if (monthPrice[date.format("MMM YY")] !== undefined) {
+            monthPrice[date.format("MMM YY")] += data[key].price;
+          } else {
             monthPrice[date.format("MMM YY")] = data[key].price;
             console.log(date.format("MMM YY"));
           }
         }
+        
         for (var key2 in datePrice) {
           data1.push({ x: new Date(key2), y: datePrice[key2] });
         }
@@ -89,7 +95,11 @@ function Analytics() {
           console.log(key5);
           temp3.push({ label: key5, y: monthPrice[key5] });
         }
-        console.log(temp);
+        console.log("day", temp);
+        console.log(data1);
+        console.log("week", temp2);
+        console.log("month", temp3);
+
         setDailyCollection(data1);
         setDayWiseCollection(temp);
         setWeeklyCollection(temp2);
@@ -190,50 +200,70 @@ function Analytics() {
     margin: "auto",
   };
 
-  const onDefaultClick = () =>{
-    setDefaultGraph(true)
-    setDayGraph(false)
-    setWeeklyGraph(false)
-    setMonthlyGraph(false)
-  }
+  const onDefaultClick = () => {
+    setDefaultGraph(true);
+    setDayGraph(false);
+    setWeeklyGraph(false);
+    setMonthlyGraph(false);
+  };
 
   const onDayWiseCollectionClick = () => {
-    setDefaultGraph(false)
-    setDayGraph(true)
-    setWeeklyGraph(false)
-    setMonthlyGraph(false)
-  }
+    setDefaultGraph(false);
+    setDayGraph(true);
+    setWeeklyGraph(false);
+    setMonthlyGraph(false);
+  };
 
   const onWeeklyCollectionClick = () => {
-    setDefaultGraph(false)
-    setDayGraph(false)
-    setWeeklyGraph(true)
-    setMonthlyGraph(false)
-  }
+    setDefaultGraph(false);
+    setDayGraph(false);
+    setWeeklyGraph(true);
+    setMonthlyGraph(false);
+  };
 
   const onMonthlyCollectionClick = () => {
-    setDefaultGraph(false)
-    setDayGraph(false)
-    setWeeklyGraph(false)
-    setMonthlyGraph(true)
-  }
+    setDefaultGraph(false);
+    setDayGraph(false);
+    setWeeklyGraph(false);
+    setMonthlyGraph(true);
+  };
 
   return (
     <div>
-      <div className={classes.root} style={{ margin: "0 auto", textAlign: "center" }}>
-        <Button variant="contained" onClick = {onDefaultClick}>Default</Button>
-        <Button variant="contained" color="primary" onClick = {onDayWiseCollectionClick}>
+      <div
+        className={classes.root}
+        style={{ margin: "0 auto", textAlign: "center" }}
+      >
+        <Button variant="contained" onClick={onDefaultClick}>
+          Default
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={onDayWiseCollectionClick}
+        >
           Day Wise Collection
         </Button>
-        <Button variant="contained" color="secondary" onClick = {onWeeklyCollectionClick}>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={onWeeklyCollectionClick}
+        >
           Weekly Collection
         </Button>
-        <Button variant="contained" color="primary" onClick = {onMonthlyCollectionClick}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={onMonthlyCollectionClick}
+        >
           Monthly Collection
         </Button>
       </div>
       {defaultGraph ? (
-        <CanvasJSStockChart containerProps={containerProps} options = {defaultCollection}/>
+        <CanvasJSStockChart
+          containerProps={containerProps}
+          options={defaultCollection}
+        />
       ) : dayGraph ? (
         <CanvasJSChart options={dayCollection} />
       ) : weeklyGraph ? (
@@ -241,8 +271,7 @@ function Analytics() {
       ) : monthlyGraph ? (
         <CanvasJSChart options={monthCollection} />
       ) : (
-        <div>
-        </div>
+        <div></div>
       )}
     </div>
   );
