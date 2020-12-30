@@ -17,6 +17,12 @@ import PriorityHighIcon from "@material-ui/icons/PriorityHigh";
 import moment from "moment";
 import SearchBar from "material-ui-search-bar";
 import SearchIcon from "@material-ui/icons/Search";
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,6 +54,7 @@ const useStyles = makeStyles((theme) => ({
 function ViewStudentSearch() {
   const [name, setName] = useState();
   const [assignments, setAssignments] = useState();
+  const [open,setOpen] = useState(false);
   const classes = useStyles();
 
   useEffect(() => {
@@ -55,6 +62,7 @@ function ViewStudentSearch() {
   });
 
   const onSearch = (name) => {
+    var temp = []
     if (name !== undefined) {
       const db = app.firestore();
       return db
@@ -64,15 +72,28 @@ function ViewStudentSearch() {
           const data = [];
           snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
           setAssignments(data);
-        });
+          temp = data
+          if (temp.length===0){
+            setOpen(true)
+          }
+        }) 
     } else {
+      setOpen(true)
       return console.log("Nothing");
     }
   };
   if (assignments) console.log(assignments);
 
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
   return (
-    <div>
+    <div style = {{background:"white"}}>
       <div style={{ margin: "10px" }}>
         <SearchBar
           value={name}
@@ -82,6 +103,13 @@ function ViewStudentSearch() {
           onCancelSearch={() => onSearch(name)}
           onRequestSearch={() => onSearch(name)}
         />
+      </div>
+      <div>
+      <Snackbar open={open} autoHideDuration={1400} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="error">
+          No Search Found!!
+        </Alert>
+      </Snackbar>
       </div>
       <div className="body">
         <div className="wrapper">
@@ -182,7 +210,7 @@ function ViewStudentSearch() {
                 transform: "translate(-50%, -50%)",
               }}
             >
-              <CircularProgress />
+             <p> Begin Searching ...</p>
             </div>
           )}
         </div>

@@ -269,7 +269,7 @@ function AddAssignment(props) {
     );
     console.log(allTutors);
     for (var i = 0; i < allTutors.length; i++) {
-      if (allTutors[i].label == tutor.label) {
+      if (allTutors[i].label === tutor.label) {
         setTutorId(allTutors[i].value);
         console.log(tutorId);
         break;

@@ -30,7 +30,7 @@ function App() {
           <Route exact path="/upAss" component={UpcomingAssignment} />
           <Route exact path="/inProgress" component={InProgressAssignment} />
           <Route exact path="/analytics" component={Analytics} />
-          <Route exact path="/viewStud" component={ViewStudentSearch} />          
+          <Route exact path="/viewStud" component={ViewStudentSearch} />                    
         </Switch>
       </div>
     </Router>
