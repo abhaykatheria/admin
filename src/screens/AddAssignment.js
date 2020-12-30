@@ -1,10 +1,18 @@
-import React, { useState } from 'react'
-import { Typography, Paper, Avatar, Button, FormControl, Input, InputLabel } from '@material-ui/core'
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
-import withStyles from '@material-ui/core/styles/withStyles'
-import { Link, withRouter } from 'react-router-dom'
-import Select from 'react-select'
-import countryList from 'react-select-country-list'
+import React, { useState } from "react";
+import {
+  Typography,
+  Paper,
+  Avatar,
+  Button,
+  FormControl,
+  Input,
+  InputLabel,
+} from "@material-ui/core";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import withStyles from "@material-ui/core/styles/withStyles";
+import { Link, withRouter } from "react-router-dom";
+import Select from "react-select";
+import countryList from "react-select-country-list";
 import firebase from "firebase";
 import 'firebase/firebase-firestore'
 import app from 'firebase/app'
@@ -15,41 +23,42 @@ import { FilePond, File, registerPlugin } from 'react-filepond'
 import TimezoneSelect from 'react-timezone-select'
 
 
-const styles = theme => ({
-    main: {
-        width: 'auto',
-        display: 'block', // Fix IE 11 issue.
-        marginLeft: theme.spacing.unit * 3,
-        marginRight: theme.spacing.unit * 3,
-        [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
-            width: 400,
-            marginLeft: 'auto',
-            marginRight: 'auto',
-        },
+const styles = (theme) => ({
+  main: {
+    width: "auto",
+    display: "block", // Fix IE 11 issue.
+    marginLeft: theme.spacing.unit * 3,
+    marginRight: theme.spacing.unit * 3,
+    [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
+      width: 400,
+      marginLeft: "auto",
+      marginRight: "auto",
     },
-    paper: {
-        backgroundColor: "lightBlue",
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        padding: `${theme.spacing.unit * 5}px ${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
-    },
-    avatar: {
-        margin: theme.spacing.unit,
-        backgroundColor: theme.palette.secondary.main,
-    },
-    form: {
-        width: '100%', // Fix IE 11 issue.
-        marginTop: theme.spacing.unit,
-    },
-    submit: {
-        marginTop: theme.spacing.unit * 3,
-    },
-})
+  },
+  paper: {
+    backgroundColor: "lightBlue",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    padding: `${theme.spacing.unit * 5}px ${theme.spacing.unit * 2}px ${
+      theme.spacing.unit * 3
+    }px ${theme.spacing.unit * 3}px`,
+  },
+  avatar: {
+    margin: theme.spacing.unit,
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing.unit,
+  },
+  submit: {
+    marginTop: theme.spacing.unit * 3,
+  },
+});
 
 function AddAssignment(props) {
-    const { classes } = props
-
+  const { classes } = props;
 
     const [tutor, setTutor] = useState('')
     const [allTutors, setAllTutors] = useState([])
@@ -138,14 +147,7 @@ function AddAssignment(props) {
         });
     }, []);
 
-    // console.log(allTutors);
-
-    const onChange = (e) => {
-        const file = e.target.files[0];
-        setFile(file);
-        // console.log(file)
-    }
-
+ 
 
 
     return (
@@ -328,45 +330,46 @@ function AddAssignment(props) {
                 }
             
         } catch (error) {
-            alert(error.message)
+          alert(error.message);
         }
         updateDues()
         // updateDuesCollection()
         // updatePayment()
         updateStudentCollection()
     }
+    // updateDues();
+    // updateDuesCollection();
+    // updatePayment();
+  
 
-    async function updateDues() {
-        try {
-            if (tutorId != '') {
-                // console.log(dues);
-                await app.firestore().collection('tutors').doc(tutorId).update({
-                    dues: dues
-                })
-
-            }
-        }
-        catch (error) {
-            alert(error.message)
-        }
+  async function updateDues() {
+    try {
+      if (tutorId != "") {
+        // console.log(dues);
+        await app.firestore().collection("tutors").doc(tutorId).update({
+          dues: dues,
+        });
+      }
+    } catch (error) {
+      alert(error.message);
     }
+  }
 
-    async function updateDuesCollection() {
-        try {
-            // console.log(dues);
-            await app.firestore().collection('dues').add({
-                assg_id: assId,
-                due_date: due_date,
-                status: "pending",
-                tutor: tutor.label,
-                tutor_fee: tutor_fee,
-                tutorId: tutorId
-            })
-        }
-        catch (error) {
-            alert(error.message)
-        }
+  async function updateDuesCollection() {
+    try {
+      // console.log(dues);
+      await app.firestore().collection("dues").add({
+        assg_id: assId,
+        due_date: due_date,
+        status: "pending",
+        tutor: tutor.label,
+        tutor_fee: tutor_fee,
+        tutorId: tutorId,
+      });
+    } catch (error) {
+      alert(error.message);
     }
+  }
 
     async function updatePayment() {
         try {
@@ -396,6 +399,6 @@ function AddAssignment(props) {
         }
     }
 
-}
+  }
 
-export default withStyles(styles)(AddAssignment)
+export default withStyles(styles)(AddAssignment);

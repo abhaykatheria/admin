@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import app from "firebase/app";
@@ -11,8 +11,8 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import DeleteIcon from "@material-ui/icons/Delete";
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import PriorityHighIcon from "@material-ui/icons/PriorityHigh";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,7 +54,9 @@ function DoneAssignment() {
       for (var i = 0; i < data.length; i++) {
         if (data[i].satus === "completed") data1.push(data[i]);
       }
-      data1.sort((a, b) => (a.due_date > b.due_date) ? 1 : ((b.due_date > a.due_date) ? -1 : 0))
+      data1.sort((a, b) =>
+        a.due_date > b.due_date ? 1 : b.due_date > a.due_date ? -1 : 0
+      );
       setAssignments(data1);
       // setTutors(data);
     });
@@ -94,21 +96,20 @@ function DoneAssignment() {
             </Card>
           ))
         ) : (
-            <div
-              style={{
-                position: "absolute",
-                left: "50%",
-                top: "50%",
-                transform: "translate(-50%, -50%)",
-              }}
-            >
-              <CircularProgress />
-            </div>
-          )}
+          <div
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
+          >
+            <CircularProgress />
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
-
-export default DoneAssignment
+export default DoneAssignment;

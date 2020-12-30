@@ -11,10 +11,10 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import DeleteIcon from "@material-ui/icons/Delete";
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
-import Tooltip from '@material-ui/core/Tooltip';
-import moment from 'moment'
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import PriorityHighIcon from "@material-ui/icons/PriorityHigh";
+import Tooltip from "@material-ui/core/Tooltip";
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,7 +46,7 @@ function InProgressAssignment() {
   const classes = useStyles();
 
   useEffect(() => {
-    window.scrollTo(0, 0)
+    window.scrollTo(0, 0);
     const db = app.firestore();
     return db.collection("assignments").onSnapshot((snapshot) => {
       const data = [];
@@ -57,7 +57,9 @@ function InProgressAssignment() {
         if (data[i].satus === "ongoing") data1.push(data[i]);
       }
 
-      data1.sort((a, b) => (a.due_date > b.due_date) ? 1 : ((b.due_date > a.due_date) ? -1 : 0))
+      data1.sort((a, b) =>
+        a.due_date > b.due_date ? 1 : b.due_date > a.due_date ? -1 : 0
+      );
 
       setAssignments(data1);
       // setTutors(data);
@@ -96,75 +98,75 @@ function InProgressAssignment() {
                 </Typography>
               </CardContent>
               <CardActions>
-              <div style={{display: 'flex',justifyContent: 'center'}}>
-              <Tooltip title="Delete" arrow>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  className={classes.button}
-                  startIcon={<DeleteIcon />}
-                  onClick={() => {
-                    const db = app.firestore()
-                    db.collection("assignments").doc(assignment.id).delete()
-                    console.log(assignment)
-                  }}
-                >
-                </Button>
-                </Tooltip>
-                <Tooltip title="Change Due Date" arrow>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  className={classes.button}
-                  startIcon={<PriorityHighIcon />}
-                  onClick={() => {
-                    var dateString = window.prompt("Enter the new due date in this format:- DD/MM/YYY")
-                    if (dateString == null)
-                      return
-                    var dateObj = moment(dateString, "DD/MM/YYYY")._d;
-                    if (dateString === '' || dateObj === 'Invalid Date')
-                      alert('Enter a valid date')
-                    const db = app.firestore()
-                    console.log(dateString, dateObj);
-                    db.collection("assignments").doc(assignment.id).update({
-                      due_date: dateObj
-                    })
-                  }}
-                >
-                </Button>
-                </Tooltip>
-                <Tooltip title="Mark As Completed" arrow>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  startIcon={<CheckCircleIcon />}
-                  onClick={() => {
-                    const db = app.firestore()
-                    db.collection("assignments").doc(assignment.id).update({
-                      satus: "completed"
-                    })
-                    console.log(assignment)
-                  }}
-                >
-                </Button>
-                </Tooltip>
+                <div style={{ margin: "0 auto", textAlign: "center" }}>
+                  <Tooltip title="Delete" arrow>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      className={classes.button}
+                      children={<DeleteIcon />}
+                      onClick={() => {
+                        const db = app.firestore();
+                        db.collection("assignments")
+                          .doc(assignment.id)
+                          .delete();
+                        console.log(assignment);
+                      }}
+                    ></Button>
+                  </Tooltip>
+                  <Tooltip title="Change Due Date" arrow>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      className={classes.button}
+                      startIcon={<PriorityHighIcon />}
+                      onClick={() => {
+                        var dateString = window.prompt(
+                          "Enter the new due date in this format:- DD/MM/YYY"
+                        );
+                        if (dateString == null) return;
+                        var dateObj = moment(dateString, "DD/MM/YYYY")._d;
+                        if (dateString === "" || dateObj === "Invalid Date")
+                          alert("Enter a valid date");
+                        const db = app.firestore();
+                        console.log(dateString, dateObj);
+                        db.collection("assignments").doc(assignment.id).update({
+                          due_date: dateObj,
+                        });
+                      }}
+                    ></Button>
+                  </Tooltip>
+                  <Tooltip title="Mark As Completed" arrow>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      className={classes.button}
+                      startIcon={<CheckCircleIcon />}
+                      onClick={() => {
+                        const db = app.firestore();
+                        db.collection("assignments").doc(assignment.id).update({
+                          satus: "completed",
+                        });
+                        console.log(assignment);
+                      }}
+                    ></Button>
+                  </Tooltip>
                 </div>
               </CardActions>
             </Card>
           ))
         ) : (
-            <div
-              style={{
-                position: "absolute",
-                left: "50%",
-                top: "50%",
-                transform: "translate(-50%, -50%)",
-              }}
-            >
-              <CircularProgress />
-            </div>
-          )}
+          <div
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
+          >
+            <CircularProgress />
+          </div>
+        )}
       </div>
     </div>
   );

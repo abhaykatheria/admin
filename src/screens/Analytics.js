@@ -13,30 +13,33 @@ function Analytics() {
   //const classes = useStyles();
 
   useEffect(() => {
-    window.scrollTo(0, 0)
+    window.scrollTo(0, 0);
     const db = app.firestore();
-    return db.collection("assignments").orderBy("assigned_date").onSnapshot((snapshot) => {
-      const data = [];
-      var dict = {};
-      const data1 = [];
-      snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
-      for (var key in data) {
-        if (
-          dict[data[key].assigned_date.toDate().toDateString()] !== undefined
-        ) {
-          dict[data[key].assigned_date.toDate().toDateString()] +=
-            data[key].price;
-        } else {
-          dict[data[key].assigned_date.toDate().toDateString()] =
-            data[key].price;
+    return db
+      .collection("assignments")
+      .orderBy("assigned_date")
+      .onSnapshot((snapshot) => {
+        const data = [];
+        var dict = {};
+        const data1 = [];
+        snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
+        for (var key in data) {
+          if (
+            dict[data[key].assigned_date.toDate().toDateString()] !== undefined
+          ) {
+            dict[data[key].assigned_date.toDate().toDateString()] +=
+              data[key].price;
+          } else {
+            dict[data[key].assigned_date.toDate().toDateString()] =
+              data[key].price;
+          }
         }
-      }
-      for (var key2 in dict) {
-        data1.push({ label: key2, y: dict[key2] });
-      }
-      console.log(data1);
-      setDailyCollection(data1);
-    });
+        for (var key2 in dict) {
+          data1.push({ label: key2, y: dict[key2] });
+        }
+        console.log(data1);
+        setDailyCollection(data1);
+      });
   }, []);
   const options = {
     title: {
