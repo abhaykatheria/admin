@@ -11,6 +11,9 @@ import app from 'firebase/app'
 import { useEffect } from 'react'
 import DateTimePicker from 'react-datetime-picker';
 import 'firebase/firebase-storage'
+import { FilePond, File, registerPlugin } from 'react-filepond'
+import TimezoneSelect from 'react-timezone-select'
+
 
 const styles = theme => ({
     main: {
@@ -66,8 +69,11 @@ function AddAssignment(props) {
     const [tutorId, setTutorId] = useState('')
     const [dues, setDues] = useState(0)
     const [assId, setAssId] = useState('')
-    const [studentCollections,setStudentCollections] = useState('')
-
+    const [studentCollections, setStudentCollections] = useState('')
+    const [files, setFiles] = useState([])
+    const [fileAr,setFileAr] = useState([])
+    const [selectedTimezone, setSelectedTimezone] = useState({})
+    
     const changeTutorHandler = value => {
         setTutor(value)
     }
@@ -104,7 +110,7 @@ function AddAssignment(props) {
             // console.log(data1);
             setAllTutors(data1);
         });
-    
+
         db.collection('students').onSnapshot((snapshot) => {
             const data = [];
             const ids = [];
@@ -117,7 +123,7 @@ function AddAssignment(props) {
             console.log(ids);
             let data1 = []
             for (var i = 0; i < data.length; i++) {
-                data1.push({ name: data[i].name, id: ids[i],collections: data[i].collections });
+                data1.push({ name: data[i].name, id: ids[i], collections: data[i].collections });
                 // console.log(data[i]);
             }
             data1 = data1.map((dat) => {
@@ -153,7 +159,7 @@ function AddAssignment(props) {
                         Add Assignment
        			</Typography>
                     <form className={classes.form} onSubmit={e => e.preventDefault() && false}>
-                    <FormControl margin="normal" required fullWidth>
+                        <FormControl margin="normal" required fullWidth>
                             <p>Student</p>
                             <Select
                                 options={allStudents}
@@ -169,6 +175,14 @@ function AddAssignment(props) {
                                 onChange={changeTutorHandler}
                             />
                         </FormControl>
+                        <p>Time zone</p>
+                        <div className='select-wrapper'>
+                            <TimezoneSelect
+                                value={selectedTimezone}
+                                onChange={setSelectedTimezone}
+                            />
+                        </div>
+
                         <FormControl margin="normal" required fullWidth>
                             <InputLabel htmlFor="name">Subject</InputLabel>
                             <Input id="name" name="name" autoComplete="off" autoFocus value={subject} onChange={e => setSubject(e.target.value)} />
@@ -196,14 +210,12 @@ function AddAssignment(props) {
                                 value={due_date}
                             />
                         </FormControl>
-                        <Button
-                            variant="contained"
-                            component="label"
-                        >
-                            Upload File
-                        <input type="file" hidden onChange={onChange} />
-                        </Button>
-                        {file && <p>{file.name}</p>}
+                        <FilePond
+                            files={files}
+                            allowMultiple={true}
+                            maxFiles={15}
+                            onupdatefiles={setFiles}
+                        />
                         <Button
                             type="submit"
                             fullWidth
@@ -221,21 +233,46 @@ function AddAssignment(props) {
         </div>
     )
 
-    async function upload() {
-        const storageRef = app.storage().ref('assignments')
-        const fileRef = storageRef.child(file.name)
-        await fileRef.put(file).then((url) => {
-        });
-        const url = await fileRef.getDownloadURL().catch((error) => { throw error });
-        if (url != '') {
-            setAssURL(url)
-            // console.log(url);
+    async function upload(tempar) {
+        console.log(tempar);
+        firebase.storage().ref('files/name').constructor.prototype.putFiles = function (tempar) {
+            var ref = this;
+            return Promise.all(tempar.map(function (file) {
+                return ref.child(file.name).put(file);
+            }));
         }
+
+        // use it!
+        let s ='files/'+assId.toString()
+        console.log('huehue ' + s);
+        firebase.storage().ref(s).putFiles(tempar).then((snapshot) => {
+            console.log(snapshot);
+        });
     }
 
     async function onRegister() {
-        if (tutor == '' || tutor == '' || subject == '' || price == '' || amount_paid == ''
-            || tutor_fee == '' || comments == '' || due_date == '' || file == '') {
+        console.log(files);
+        const tempar = []
+        for(let i=0;i<files.length;i++){
+            tempar.push(files[i].file)
+        }
+        
+        // setFileAr(tempar)
+        console.log(tempar);
+        const crypto = require('crypto'),
+            hash = crypto.getHashes();
+        let x = student + tutor + assigned_date
+        let hashPwd = crypto.createHash('sha1').update(x).digest('hex'); 
+        setAssId(hashPwd.slice(hashPwd.length-10))
+        upload(tempar);
+
+        
+
+        console.log(hashPwd);
+
+
+        if (tutor == '' || student == '' || subject == '' || price == '' || amount_paid == ''
+            || tutor_fee == '' || comments == '' || due_date == '' || tempar == '' || selectedTimezone=='') {
             alert("Please Fill All Required Field");
             return;
         }
@@ -251,8 +288,8 @@ function AddAssignment(props) {
 
         // console.log(name, email, country.label)
         try {
-            upload();
-            if (assURL != '') {
+
+
                 const db = app.firestore()
                 try {
                     await db.collection('assignments').add({
@@ -267,7 +304,8 @@ function AddAssignment(props) {
                         subject: subject,
                         tutor: tutor.label,
                         tutor_fee: parseInt(tutor_fee),
-                        assURL: assURL
+                        ass_id: hashPwd.slice(hashPwd.length - 10),
+                        time_zone: selectedTimezone.value,
                     }).then((doc) => {
                         console.log(doc.id, due_date, price - amount_paid, student);
                         console.log(doc.id, due_date, "pending", tutor.label, tutor_fee, tutorId);
@@ -288,13 +326,13 @@ function AddAssignment(props) {
                 } catch (error) {
                     alert(error.message)
                 }
-            }
+            
         } catch (error) {
             alert(error.message)
         }
         updateDues()
-        updateDuesCollection()
-        updatePayment()
+        // updateDuesCollection()
+        // updatePayment()
         updateStudentCollection()
     }
 
@@ -336,7 +374,7 @@ function AddAssignment(props) {
             await app.firestore().collection('payment_collection').add({
                 assg_id: assId,
                 due_date: due_date,
-                pending: price-amount_paid,
+                pending: price - amount_paid,
                 status: "pending",
                 student: student.label
             })
