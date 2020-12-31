@@ -11,6 +11,8 @@
     "@testing-library/user-event": "^12.1.10",
     "filepond": "^4.25.1",
     "firebase": "^8.0.2",
+    "jszip": "^3.5.0",
+    "jszip-utils": "^0.1.0",
     "material-ui-search-bar": "^1.0.0",
     "moment": "^2.29.1",
     "react": "^17.0.1",
@@ -22,6 +24,7 @@
     "react-select": "^3.1.0",
     "react-select-country-list": "^2.2.1",
     "react-timezone-select": "^0.9.9",
+    "save-as": "^0.1.8",
     "web-vitals": "^0.2.4"
   },
   "scripts": {

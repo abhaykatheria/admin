@@ -235,9 +235,10 @@ function AddAssignment(props) {
         </div>
     )
 
-    async function upload(tempar) {
+    async function upload(tempar,x) {
         console.log(tempar);
-        firebase.storage().ref('files/name').constructor.prototype.putFiles = function (tempar) {
+        let location = "files/" + x
+        firebase.storage().ref(location).constructor.prototype.putFiles = function (tempar) {
             var ref = this;
             return Promise.all(tempar.map(function (file) {
                 return ref.child(file.name).put(file);
@@ -245,7 +246,7 @@ function AddAssignment(props) {
         }
 
         // use it!
-        let s ='files/'+assId.toString()
+        let s ='files/'+x.toString()
         console.log('huehue ' + s);
         firebase.storage().ref(s).putFiles(tempar).then((snapshot) => {
             console.log(snapshot);
@@ -261,16 +262,11 @@ function AddAssignment(props) {
         
         // setFileAr(tempar)
         console.log(tempar);
-        const crypto = require('crypto'),
-            hash = crypto.getHashes();
-        let x = student + tutor + assigned_date
-        let hashPwd = crypto.createHash('sha1').update(x).digest('hex'); 
-        setAssId(hashPwd.slice(hashPwd.length-10))
-        upload(tempar);
+       
 
         
 
-        console.log(hashPwd);
+        // console.log(hashPwd);
 
 
         if (tutor == '' || student == '' || subject == '' || price == '' || amount_paid == ''
@@ -278,6 +274,13 @@ function AddAssignment(props) {
             alert("Please Fill All Required Field");
             return;
         }
+
+        let x = student.label + tutor.label + assigned_date.toISOString()
+        console.log("huehue       " + x)
+        setAssId(x)
+        
+        upload(tempar,x);
+
         console.log(student, tutor.label, subject, price, amount_paid, tutor_fee, comments);
         console.log(allTutors);
         for (var i = 0; i < allTutors.length; i++) {
@@ -306,7 +309,7 @@ function AddAssignment(props) {
                         subject: subject,
                         tutor: tutor.label,
                         tutor_fee: parseInt(tutor_fee),
-                        ass_id: hashPwd.slice(hashPwd.length - 10),
+                        ass_id: x   ,
                         time_zone: selectedTimezone.value,
                     }).then((doc) => {
                         console.log(doc.id, due_date, price - amount_paid, student);

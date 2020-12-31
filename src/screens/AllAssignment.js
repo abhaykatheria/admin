@@ -15,6 +15,9 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
 import Tooltip from '@material-ui/core/Tooltip';
 import moment from 'moment'
+import JSZip from 'jszip';
+import JSZipUtils from 'jszip-utils';
+import saveAs from 'save-as';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -44,6 +47,8 @@ const useStyles = makeStyles((theme) => ({
 function AllAssignment() {
     const [assignments, setAssignments] = useState();
     const classes = useStyles();
+    const [ar,setAr] = useState([])
+
 
     useEffect(() => {
         window.scrollTo(0, 0)
@@ -51,7 +56,7 @@ function AllAssignment() {
         return db.collection("assignments").onSnapshot((snapshot) => {
             const data = [];
             snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
-            console.log(data);
+            // console.log(data);
             const data1 = [];
             for (var i = 0; i < data.length; i++) {
                 data1.push(data[i]);
@@ -64,7 +69,9 @@ function AllAssignment() {
         });
     }, []);
 
-    if (assignments) console.log(assignments);
+    // if (assignments) console.log(assignments);
+
+
 
     return (
         <div className="body">
@@ -104,14 +111,18 @@ function AllAssignment() {
                                             className={classes.button}
                                             startIcon={<DeleteIcon />}
                                             onClick={() => {
-                                                let location = "/files/"+assignment.ass_id
+                                                let location = "/files/"+assignment.ass_id.toString()
                                                     // / files / 10bb02f7ae
+                                                // var ar = ["hello"]
+                                                var temp=[]
                                                 var storageRef = app.storage().ref(location);
-                                                console.log(storageRef)
+                                                // console.log(storageRef)
                                                 storageRef.listAll().then(function (result) {
                                                     result.items.forEach(function (imageRef) {
+                                                        // console.log(imageRef)
                                                         imageRef.getDownloadURL().then(function (url) {
-                                                            console.log(url)
+                                                            temp.push(url.toString())
+                                                            // console.log(ar)
                                                         }).catch(function (error) {
                                                             // Handle any errors
                                                         });
@@ -120,7 +131,13 @@ function AllAssignment() {
                                                     // Handle any errors
                                                 });
 
-                                                console.log(assignment.ass_id,location)
+                                                // console.log(location,ar,ar.length)
+                                                
+                                                setAr(temp)
+                                                // console.log(ar)
+                                                func(ar,assignment)
+                                                
+
                                             }}
                                         >
                                         </Button>
@@ -144,6 +161,47 @@ function AllAssignment() {
             </div>
         </div>
     );
+}
+
+function get_url_extension(url) {
+    return url.split(/[#?]/)[0].split('.').pop().trim();
+}
+
+async function func(ar,assignment){
+    const zip = new JSZip();
+    let count = 0;
+    const zipFilename = assignment.student + "-assignment.zip";
+    console.log(ar,typeof ar);
+
+
+    for (let [key, value] of Object.entries(ar)) {
+        let url = value;
+        console.log(url)
+        const file = await JSZipUtils.getBinaryContent(url)
+        // const ext=getExtension(url)
+        // console.log(ext)
+        const filename = key +"."+get_url_extension(url) ;
+        zip.file(filename, file, { binary: true });
+    }
+
+    // for (let i=0;i<ar.length;i++) {
+    //     let url = ar[i];
+    //     console.log(url);
+    //     // var xhr = new XMLHttpRequest();
+    //     // xhr.responseType = 'blob';
+    //     // xhr.onload = function (event) {
+    //     //     var blob = xhr.response;
+    //     // };
+    //     // xhr.open('GET', url);
+    //     // xhr.send();
+    //     const file = await JSZipUtils.getBinaryContent(url)
+    //     const filename = url;
+    //     zip.file(filename, file, { blob: true });
+    // }
+
+    zip.generateAsync({ type: 'blob' }).then(function (content) {
+        saveAs(content, zipFilename);
+    });
 }
 
 export default AllAssignment;
