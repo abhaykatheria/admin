@@ -119,7 +119,7 @@ function InProgressAssignment() {
                       variant="contained"
                       color="secondary"
                       className={classes.button}
-                      startIcon={<PriorityHighIcon />}
+                      children={<PriorityHighIcon />}
                       onClick={() => {
                         var dateString = window.prompt(
                           "Enter the new due date in this format:- DD/MM/YYY"
@@ -141,7 +141,7 @@ function InProgressAssignment() {
                       variant="contained"
                       color="primary"
                       className={classes.button}
-                      startIcon={<CheckCircleIcon />}
+                      children={<CheckCircleIcon />}
                       onClick={() => {
                         const db = app.firestore();
                         db.collection("assignments").doc(assignment.id).update({
