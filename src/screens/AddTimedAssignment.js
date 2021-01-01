@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import {
-  Typography,
-  Paper,
-  Avatar,
-  Button,
-  FormControl,
-  Input,
-  InputLabel,
+    Typography,
+    Paper,
+    Avatar,
+    Button,
+    FormControl,
+    Input,
+    InputLabel,
 } from "@material-ui/core";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -22,44 +22,45 @@ import 'firebase/firebase-storage'
 import { FilePond, File, registerPlugin } from 'react-filepond'
 import TimezoneSelect from 'react-timezone-select'
 import * as emailjs from 'emailjs-com'
+import DurationPicker from 'react-duration-picker'
+
 
 
 const styles = (theme) => ({
-  main: {
-    width: "auto",
-    display: "block", // Fix IE 11 issue.
-    marginLeft: theme.spacing.unit * 3,
-    marginRight: theme.spacing.unit * 3,
-    [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
-      width: 400,
-      marginLeft: "auto",
-      marginRight: "auto",
+    main: {
+        width: "auto",
+        display: "block", // Fix IE 11 issue.
+        marginLeft: theme.spacing.unit * 3,
+        marginRight: theme.spacing.unit * 3,
+        [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
+            width: 400,
+            marginLeft: "auto",
+            marginRight: "auto",
+        },
     },
-  },
-  paper: {
-    backgroundColor: "lightBlue",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    padding: `${theme.spacing.unit * 5}px ${theme.spacing.unit * 2}px ${
-      theme.spacing.unit * 3
-    }px ${theme.spacing.unit * 3}px`,
-  },
-  avatar: {
-    margin: theme.spacing.unit,
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing.unit,
-  },
-  submit: {
-    marginTop: theme.spacing.unit * 3,
-  },
+    paper: {
+        backgroundColor: "lightBlue",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        padding: `${theme.spacing.unit * 5}px ${theme.spacing.unit * 2}px ${theme.spacing.unit * 3
+            }px ${theme.spacing.unit * 3}px`,
+    },
+    avatar: {
+        margin: theme.spacing.unit,
+        backgroundColor: theme.palette.secondary.main,
+    },
+    form: {
+        width: "100%", // Fix IE 11 issue.
+        marginTop: theme.spacing.unit,
+    },
+    submit: {
+        marginTop: theme.spacing.unit * 3,
+    },
 });
 
-function AddAssignment(props) {
-  const { classes } = props;
+function AddTimedAssignment(props) {
+    const { classes } = props;
 
     const [tutor, setTutor] = useState('')
     const [allTutors, setAllTutors] = useState([])
@@ -81,20 +82,30 @@ function AddAssignment(props) {
     const [assId, setAssId] = useState('')
     const [studentCollections, setStudentCollections] = useState('')
     const [files, setFiles] = useState([])
-    const [fileAr,setFileAr] = useState([])
+    const [fileAr, setFileAr] = useState([])
     const [selectedTimezone, setSelectedTimezone] = useState({})
-    const [tutorEmail,setTutorEmail] = useState('')
+    const [tutorEmail, setTutorEmail] = useState('')
 
     const changeTutorHandler = value => {
         setTutor(value)
         console.log({ value })
-        
+
     }
 
     const changeStudentHandler = value => {
         setstudent(value)
-        
+
     }
+
+    const onChange = duration => {
+        const { hours, minutes, seconds } = duration;
+        // console.log(hours,minutes,seconds)
+        var dt = new Date()
+        dt.setHours(dt.getHours() + hours);
+        dt.setMinutes(dt.getMinutes() + minutes);
+        console.log(dt)
+        setDueDate(dt)
+    };
 
 
     useEffect(() => {
@@ -112,7 +123,7 @@ function AddAssignment(props) {
             console.log(ids);
             let data1 = []
             for (var i = 0; i < data.length; i++) {
-                data1.push({ name: data[i].name, id: ids[i],email: data[i].email });
+                data1.push({ name: data[i].name, id: ids[i], email: data[i].email });
                 // console.log(data[i]);
             }
             data1 = data1.map((dat) => {
@@ -211,13 +222,12 @@ function AddAssignment(props) {
                             <InputLabel htmlFor="name">Comments</InputLabel>
                             <Input id="name" name="name" autoComplete="off" autoFocus value={comments} onChange={e => setComments(e.target.value)} />
                         </FormControl>
-                        <FormControl margin="normal" required fullWidth>
-                            <p>Due Date</p>
-                            <DateTimePicker
-                                onChange={setDueDate}
-                                value={due_date}
+                            <DurationPicker
+                                onChange={onChange}
+                                initialDuration={{ hours: 0, minutes: 0, seconds: 0 }}
+                                maxHours={100}
                             />
-                        </FormControl>
+
                         <FilePond
                             files={files}
                             allowMultiple={true}
@@ -241,7 +251,7 @@ function AddAssignment(props) {
         </div>
     )
 
-    async function upload(tempar,x) {
+    async function upload(tempar, x) {
         console.log(tempar);
         let location = "files/" + x
         firebase.storage().ref(location).constructor.prototype.putFiles = function (tempar) {
@@ -252,7 +262,7 @@ function AddAssignment(props) {
         }
 
         // use it!
-        let s ='files/'+x.toString()
+        let s = 'files/' + x.toString()
         console.log('huehue ' + s);
         firebase.storage().ref(s).putFiles(tempar).then((snapshot) => {
             console.log(snapshot);
@@ -262,21 +272,21 @@ function AddAssignment(props) {
     async function onRegister() {
         console.log(files);
         const tempar = []
-        for(let i=0;i<files.length;i++){
+        for (let i = 0; i < files.length; i++) {
             tempar.push(files[i].file)
         }
-        
+
         // setFileAr(tempar)
         console.log(tempar);
-       
 
-        
+
+
 
         // console.log(hashPwd);
 
 
         if (tutor == '' || student == '' || subject == '' || price == '' || amount_paid == ''
-            || tutor_fee == '' || comments == '' || due_date == '' || tempar == '' || selectedTimezone=='') {
+            || tutor_fee == '' || comments == '' || due_date == '' || tempar == '' || selectedTimezone == '') {
             alert("Please Fill All Required Field");
             return;
         }
@@ -284,8 +294,8 @@ function AddAssignment(props) {
         let x = student.label + tutor.label + assigned_date.toISOString()
         console.log("huehue       " + x)
         setAssId(x)
-        
-        upload(tempar,x);
+
+        upload(tempar, x);
 
         console.log(student, tutor.label, subject, price, amount_paid, tutor_fee, comments);
         console.log(allTutors);
@@ -301,45 +311,45 @@ function AddAssignment(props) {
         try {
 
 
-                const db = app.firestore()
-                try {
-                    await db.collection('assignments').add({
-                        amount_paid: parseInt(amount_paid),
-                        assigned_date: assigned_date,
-                        comments: comments,
-                        due_date: due_date,
-                        payment_pending: payment_pending,
-                        price: parseInt(price),
-                        satus: satus,
-                        student: student.label,
-                        subject: subject,
-                        tutor: tutor.label,
-                        tutor_fee: parseInt(tutor_fee),
-                        ass_id: x   ,
-                        time_zone: selectedTimezone.value,
-                    }).then((doc) => {
-                        console.log(doc.id, due_date, price - amount_paid, student);
-                        console.log(doc.id, due_date, "pending", tutor.label, tutor_fee, tutorId);
-                        setAssId(doc.id)
-                    })
+            const db = app.firestore()
+            try {
+                await db.collection('assignments').add({
+                    amount_paid: parseInt(amount_paid),
+                    assigned_date: assigned_date,
+                    comments: comments,
+                    due_date: due_date,
+                    payment_pending: payment_pending,
+                    price: parseInt(price),
+                    satus: satus,
+                    student: student.label,
+                    subject: subject,
+                    tutor: tutor.label,
+                    tutor_fee: parseInt(tutor_fee),
+                    ass_id: x,
+                    time_zone: selectedTimezone.value,
+                }).then((doc) => {
+                    console.log(doc.id, due_date, price - amount_paid, student);
+                    console.log(doc.id, due_date, "pending", tutor.label, tutor_fee, tutorId);
+                    setAssId(doc.id)
+                })
 
-                    db.collection('tutors').onSnapshot((snapshot) => {
-                        snapshot.forEach((doc) => {
-                            if (doc.data().name === tutor.label) {
-                                var temp = doc.data()
-                                temp.dues += parseInt(tutor_fee)
-                                setTutorId(doc.id)
-                                setDues(temp.dues)
-                            }
-                            // console.log(doc.id, doc.data(), tutor.value);
-                        });
-                    })
-                } catch (error) {
-                    alert(error.message)
-                }
-            
+                db.collection('tutors').onSnapshot((snapshot) => {
+                    snapshot.forEach((doc) => {
+                        if (doc.data().name === tutor.label) {
+                            var temp = doc.data()
+                            temp.dues += parseInt(tutor_fee)
+                            setTutorId(doc.id)
+                            setDues(temp.dues)
+                        }
+                        // console.log(doc.id, doc.data(), tutor.value);
+                    });
+                })
+            } catch (error) {
+                alert(error.message)
+            }
+
         } catch (error) {
-          alert(error.message);
+            alert(error.message);
         }
         updateDues()
         // updateDuesCollection()
@@ -350,20 +360,20 @@ function AddAssignment(props) {
     // updateDues();
     // updateDuesCollection();
     // updatePayment();
-  
 
-    function sendEmail(){
+
+    function sendEmail() {
         console.log(tutor.email)
-        let message = "You got a new assignment for student " + student.label +" subject name is " + subject +". The due date is " + due_date +" and you will be paid "+ tutor_fee
+        let message = "You got a new assignment for student " + student.label + " subject name is " + subject + ". The due date is " + due_date + " and you will be paid " + tutor_fee
         console.log(message)
-        
+
         let templateParams = {
             to_name: tutor.email,
             from_name: 'chitransh.326@gmail.com',
             subject: "New Assignment Assigned",
             message_html: "message",
         }
-        
+
         emailjs.send(
             'service_5x2bgwj',
             'template_mdudrfo',
@@ -374,34 +384,34 @@ function AddAssignment(props) {
     }
 
 
-  async function updateDues() {
-    try {
-      if (tutorId != "") {
-        // console.log(dues);
-        await app.firestore().collection("tutors").doc(tutorId).update({
-          dues: dues,
-        });
-      }
-    } catch (error) {
-      alert(error.message);
+    async function updateDues() {
+        try {
+            if (tutorId != "") {
+                // console.log(dues);
+                await app.firestore().collection("tutors").doc(tutorId).update({
+                    dues: dues,
+                });
+            }
+        } catch (error) {
+            alert(error.message);
+        }
     }
-  }
 
-  async function updateDuesCollection() {
-    try {
-      // console.log(dues);
-      await app.firestore().collection("dues").add({
-        assg_id: assId,
-        due_date: due_date,
-        status: "pending",
-        tutor: tutor.label,
-        tutor_fee: tutor_fee,
-        tutorId: tutorId,
-      });
-    } catch (error) {
-      alert(error.message);
+    async function updateDuesCollection() {
+        try {
+            // console.log(dues);
+            await app.firestore().collection("dues").add({
+                assg_id: assId,
+                due_date: due_date,
+                status: "pending",
+                tutor: tutor.label,
+                tutor_fee: tutor_fee,
+                tutorId: tutorId,
+            });
+        } catch (error) {
+            alert(error.message);
+        }
     }
-  }
 
     async function updatePayment() {
         try {
@@ -431,6 +441,6 @@ function AddAssignment(props) {
         }
     }
 
-  }
+}
 
-export default withStyles(styles)(AddAssignment);
+export default withStyles(styles)(AddTimedAssignment);

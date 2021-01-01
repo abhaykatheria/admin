@@ -18,6 +18,7 @@ import ViewStudent from "./screens/ViewStudent"
 import { FilePond } from 'react-filepond';
 import 'filepond/dist/filepond.min.css';
 import AllAssignment from './screens/AllAssignment'
+import AddTimedAssignment from './screens/AddTimedAssignment'
 
 import {
   BrowserRouter as Router,
@@ -44,6 +45,7 @@ function App() {
           <Route exact path="/viewStud" component={ViewStudentSearch} />        
           <Route exact path="/addStudent" component={AddStudent} />        
           <Route exact path="/allAss" component={AllAssignment} />
+          <Route exact path="/addTimeAss" component={AddTimedAssignment} />
         </Switch>
       </div>
     </Router>

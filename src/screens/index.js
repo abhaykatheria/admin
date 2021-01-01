@@ -38,6 +38,12 @@ const images = [
   },
   {
     url: image1,
+    title: "Add Timed Assignment",
+    route: "/addTimeAss",
+    width: "30%",
+  },
+  {
+    url: image1,
     title: "All Assignment",
     route: "/allAss",
     width: "30%",
