@@ -50,6 +50,13 @@ const images = [
   },
   {
     url: image1,
+    title: "Timed Assignment",
+    route: "/timedAss",
+    width: "30%",
+  },
+
+  {
+    url: image1,
     title: "In Prgress Assignment",
     route: "/inProgress",
     width: "30%",
