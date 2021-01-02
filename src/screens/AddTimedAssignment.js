@@ -85,6 +85,7 @@ function AddTimedAssignment(props) {
     const [fileAr, setFileAr] = useState([])
     const [selectedTimezone, setSelectedTimezone] = useState({})
     const [tutorEmail, setTutorEmail] = useState('')
+    const [duration,setDuration] = useState()
 
     const changeTutorHandler = value => {
         setTutor(value)
@@ -97,14 +98,8 @@ function AddTimedAssignment(props) {
 
     }
 
-    const onChange = duration => {
-        const { hours, minutes, seconds } = duration;
-        // console.log(hours,minutes,seconds)
-        var dt = new Date()
-        dt.setHours(dt.getHours() + hours);
-        dt.setMinutes(dt.getMinutes() + minutes);
-        console.log(dt)
-        setDueDate(dt)
+    const onTimeChange = duration => {
+        
     };
 
 
@@ -222,12 +217,19 @@ function AddTimedAssignment(props) {
                             <InputLabel htmlFor="name">Comments</InputLabel>
                             <Input id="name" name="name" autoComplete="off" autoFocus value={comments} onChange={e => setComments(e.target.value)} />
                         </FormControl>
+                        <FormControl>
                             <DurationPicker
-                                onChange={onChange}
+                                 onChange={(duration) => {
+                                
+                                // console.log(hours,minutes,seconds)
+                                
+                                setDuration(duration)
+                                 }
+                                }
                                 initialDuration={{ hours: 0, minutes: 0, seconds: 0 }}
                                 maxHours={100}
                             />
-
+                        </FormControl>
                         <FilePond
                             files={files}
                             allowMultiple={true}
@@ -282,8 +284,13 @@ function AddTimedAssignment(props) {
 
 
 
-        // console.log(hashPwd);
-
+        console.log(duration);
+        const { hours, minutes, seconds } = duration;
+        var dt = new Date()
+                                dt.setHours(dt.getHours() + hours);
+                                dt.setMinutes(dt.getMinutes() + minutes);
+                                console.log(dt)
+                                setDueDate(dt)
 
         if (tutor == '' || student == '' || subject == '' || price == '' || amount_paid == ''
             || tutor_fee == '' || comments == '' || due_date == '' || tempar == '' || selectedTimezone == '') {
@@ -313,7 +320,7 @@ function AddTimedAssignment(props) {
 
             const db = app.firestore()
             try {
-                await db.collection('assignments').add({
+                await db.collection('timed').add({
                     amount_paid: parseInt(amount_paid),
                     assigned_date: assigned_date,
                     comments: comments,

@@ -260,7 +260,8 @@ function AddAssignment(props) {
     }
 
     async function onRegister() {
-        console.log(files);
+
+        console.log(selectedTimezone);
         const tempar = []
         for(let i=0;i<files.length;i++){
             tempar.push(files[i].file)

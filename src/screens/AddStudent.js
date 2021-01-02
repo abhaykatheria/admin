@@ -8,6 +8,9 @@ import countryList from 'react-select-country-list'
 import firebase from "firebase";
 import 'firebase/firebase-firestore'
 import app from 'firebase/app'
+import moment from "moment";
+import TimezoneSelect from 'react-timezone-select'
+
 
 const styles = theme => ({
     main: {
@@ -47,10 +50,9 @@ function AddStudent(props) {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [time_zone, setTime_Zone] = useState('')
+    const [selectedTimezone, setSelectedTimezone] = useState({})
 
     
-
-
 
     return (
         <main className={classes.main}>
@@ -70,10 +72,13 @@ function AddStudent(props) {
                         <InputLabel htmlFor="email">Email Address</InputLabel>
                         <Input id="email" name="email" autoComplete="off" value={email} onChange={e => setEmail(e.target.value)} />
                     </FormControl>
-                    <FormControl margin="normal" required fullWidth>
-                        <InputLabel htmlFor="email">Time Zone</InputLabel>
-                        <Input id="time_zone" name="time zone" autoComplete="off" value={time_zone} onChange={e => setTime_Zone(e.target.value)} />
-                    </FormControl>
+                        <p>Time zone</p>
+                        <div className='select-wrapper'>
+                            <TimezoneSelect
+                                value={selectedTimezone}
+                                onChange={setSelectedTimezone}
+                            />
+                        </div>
                     <Button
                         type="submit"
                         fullWidth
@@ -93,7 +98,7 @@ function AddStudent(props) {
 
     async function onRegister() {
         
-        if(name=='' || email=='' || time_zone==''){
+        if(name=='' || email=='' || selectedTimezone==''){
             return
         }
         console.log(name, email,time_zone)
@@ -102,7 +107,7 @@ function AddStudent(props) {
             db.collection("students").add({
                 name: name,
                 email: email,
-                time_zone: time_zone,
+                time_zone: selectedTimezone.value,
                 collections: 0
             })
         } catch (error) {
