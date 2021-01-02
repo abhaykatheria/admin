@@ -59,8 +59,8 @@ function UpcomingAssignment() {
             moment(new Date()).isoWeek()
           );
           if (
-            moment(data[i].due_date.seconds * 1000).isoWeek() ===
-            moment(new Date()).isoWeek()
+            moment(data[i].due_date.toDate().toDateString()) >
+            moment()
           )
             data1.push(data[i]);
         }

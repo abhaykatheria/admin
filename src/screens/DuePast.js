@@ -55,12 +55,12 @@ function DuePast() {
       for (var i = 0; i < data.length; i++) {
         if (data[i].satus === "ongoing") {
           console.log(
-            moment(data[i].due_date.seconds * 1000).format("DD/MM/YYYY"),
+            moment(data[i].due_date.toDate().toDateString()).format("DD/MM/YYYY"),
             moment(new Date()).format("DD/MM/YYYY")
           );
           if (
-            moment(data[i].due_date.seconds * 1000).format("DD/MM/YYYY") <
-            moment(new Date()).format("DD/MM/YYYY")
+            moment(data[i].due_date.toDate().toDateString()) <
+            moment()
           )
             data1.push(data[i]);
         }
@@ -81,25 +81,25 @@ function DuePast() {
             <Card className={classes.root} variant="outlined">
               <CardContent>
                 <Typography variant="body2" component="p">
-                  Student = {assignment.student}
+                  <b>Student</b> = {assignment.student}
                   <br />
-                  Subject = {assignment.subject}
+                  <b>Subject</b> = {assignment.subject}
                   <br />
-                  Tutor = {assignment.tutor}
+                  <b>Tutor</b> = {assignment.tutor}
                   <br />
-                  Price = {assignment.price}$<br />
-                  Amount Paid = {assignment.amount_paid}$<br />
-                  Tutor fee = {assignment.tutor_fee}$<br />
-                  Assigned Date ={" "}
+                  <b>Price</b> = {assignment.price}$<br />
+                  <b>Amount Paid</b> = {assignment.amount_paid}$<br />
+                  <b>Tutor fee</b> = {assignment.tutor_fee}$<br />
+                  <b>Assigned Date</b> ={" "}
                   {assignment.assigned_date.toDate().toDateString()} at{" "}
                   {assignment.assigned_date.toDate().toLocaleTimeString()}
                   <br />
-                  Due Date = {assignment.due_date
+                  <b>Due Date</b> = {assignment.due_date
                     .toDate()
                     .toDateString()} at{" "}
                   {assignment.assigned_date.toDate().toLocaleTimeString()}
                   <br />
-                  Status = {assignment.satus}
+                  <b>Status</b> = {assignment.satus}
                 </Typography>
               </CardContent>
             </Card>

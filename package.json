@@ -13,6 +13,7 @@
     "emailjs-com": "^2.6.4",
     "filepond": "^4.25.1",
     "firebase": "^8.0.2",
+    "fontsource-roboto": "^4.0.0",
     "jszip": "^3.5.0",
     "jszip-utils": "^0.1.0",
     "material-ui-search-bar": "^1.0.0",

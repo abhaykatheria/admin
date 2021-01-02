@@ -19,6 +19,7 @@ import { FilePond } from 'react-filepond';
 import 'filepond/dist/filepond.min.css';
 import AllAssignment from './screens/AllAssignment'
 import AddTimedAssignment from './screens/AddTimedAssignment'
+import 'fontsource-roboto';
 
 import {
   BrowserRouter as Router,

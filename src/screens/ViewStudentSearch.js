@@ -6,6 +6,7 @@ import "firebase/firebase-firestore";
 import Tooltip from "@material-ui/core/Tooltip";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import TextField from '@material-ui/core/TextField';
 import { CircularProgress } from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
@@ -65,7 +66,7 @@ function ViewStudentSearch() {
   const onSearch = (name) => {
     const db = app.firestore();
     console.log(name)
-    if (name !== undefined || name === "") {
+    if (name !== undefined ) {
       return (
         db
           .collection("students")
@@ -75,7 +76,8 @@ function ViewStudentSearch() {
             snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
             console.log(data);
             setStudent(data);
-            if (student === undefined) setOpen(true);
+            if (data === undefined || data.length === 0) setOpen(true);
+            else setOpen(false);
           }),
         db
           .collection("assignments")
@@ -98,6 +100,7 @@ function ViewStudentSearch() {
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
+      setOpen(false);
       return;
     }
 
@@ -129,13 +132,13 @@ function ViewStudentSearch() {
             <Card className={classes.root} variant="outlined">
               <CardContent>
                 <Typography variant="body2" component="p">
-                  Name = {stud.name}
+                  <b>Name</b> = {stud.name}
                   <br />
-                  Email = {stud.email}
+                  <b>Email</b> = {stud.email}
                   <br />
-                  Collection = {stud.collection}$
+                  <b>Collection</b> = {stud.collection}$
                   <br />
-                  Timezone = {stud.timezone}<br />
+                  <b>Timezone</b> = {stud.timezone}<br />
                 </Typography>
               </CardContent>
             </Card>
@@ -151,25 +154,25 @@ function ViewStudentSearch() {
               <Card className={classes.root} variant="outlined">
                 <CardContent>
                   <Typography variant="body2" component="p">
-                    Student = {assignment.student}
+                    <b>Student</b> = {assignment.student}
                     <br />
-                    Subject = {assignment.subject}
+                    <b>Subject</b> = {assignment.subject}
                     <br />
-                    Tutor = {assignment.tutor}
+                    <b>Tutor</b> = {assignment.tutor}
                     <br />
-                    Price = {assignment.price}$<br />
-                    Amount Paid = {assignment.amount_paid}$<br />
-                    Tutor fee = {assignment.tutor_fee}$<br />
-                    Assigned Date ={" "}
+                    <b>Price</b> = {assignment.price}$<br />
+                    <b>Amount Paid</b> = {assignment.amount_paid}$<br />
+                    <b>Tutor fee</b> = {assignment.tutor_fee}$<br />
+                    <b>Assigned Date</b> ={" "}
                     {assignment.assigned_date.toDate().toDateString()} at{" "}
                     {assignment.assigned_date.toDate().toLocaleTimeString()}
                     <br />
-                    Due Date = {assignment.due_date
+                    <b>Due Date</b> = {assignment.due_date
                       .toDate()
                       .toDateString()} at{" "}
                     {assignment.assigned_date.toDate().toLocaleTimeString()}
                     <br />
-                    Status = {assignment.satus}
+                    <b>Status</b> = {assignment.satus}
                   </Typography>
                 </CardContent>
                 <CardActions>
