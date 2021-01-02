@@ -3,19 +3,11 @@ import { useEffect } from "react";
 import { useState } from "react";
 import app from "firebase/app";
 import "firebase/firebase-firestore";
-import Tooltip from "@material-ui/core/Tooltip";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import TextField from '@material-ui/core/TextField';
-import { CircularProgress } from "@material-ui/core";
 import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
-import Button from "@material-ui/core/Button";
-import DeleteIcon from "@material-ui/icons/Delete";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import PriorityHighIcon from "@material-ui/icons/PriorityHigh";
-import moment from "moment";
+import Display from "./Display"
 import SearchBar from "material-ui-search-bar";
 import SearchIcon from "@material-ui/icons/Search";
 import Snackbar from "@material-ui/core/Snackbar";
@@ -76,7 +68,9 @@ function ViewStudentSearch() {
             snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
             console.log(data);
             setStudent(data);
-            if (data === undefined || data.length === 0) setOpen(true);
+            if (data === undefined || data.length === 0){
+               setOpen(true);
+              setAssignments([])}
             else setOpen(false);
           }),
         db
@@ -93,6 +87,7 @@ function ViewStudentSearch() {
       );
     } else {
       setOpen(true);
+      setAssignments([])
       console.log("None");
     }
   };
@@ -101,10 +96,12 @@ function ViewStudentSearch() {
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       setOpen(false);
+      setAssignments([])
       return;
     }
 
     setOpen(false);
+    setAssignments([])
   };
 
   return (
@@ -148,95 +145,8 @@ function ViewStudentSearch() {
         <div> </div>
       )}
       <div className="body">
-        <div className="wrapper">
           {assignments !== undefined ? (
-            assignments.map((assignment) => (
-              <Card className={classes.root} variant="outlined">
-                <CardContent>
-                  <Typography variant="body2" component="p">
-                    <b>Student</b> = {assignment.student}
-                    <br />
-                    <b>Subject</b> = {assignment.subject}
-                    <br />
-                    <b>Tutor</b> = {assignment.tutor}
-                    <br />
-                    <b>Price</b> = {assignment.price}$<br />
-                    <b>Amount Paid</b> = {assignment.amount_paid}$<br />
-                    <b>Tutor fee</b> = {assignment.tutor_fee}$<br />
-                    <b>Assigned Date</b> ={" "}
-                    {assignment.assigned_date.toDate().toDateString()} at{" "}
-                    {assignment.assigned_date.toDate().toLocaleTimeString()}
-                    <br />
-                    <b>Due Date</b> = {assignment.due_date
-                      .toDate()
-                      .toDateString()} at{" "}
-                    {assignment.assigned_date.toDate().toLocaleTimeString()}
-                    <br />
-                    <b>Status</b> = {assignment.satus}
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <div style={{ margin: "0 auto", textAlign: "center" }}>
-                    <Tooltip title="Delete" arrow>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        className={classes.button}
-                        children={<DeleteIcon />}
-                        onClick={() => {
-                          const db = app.firestore();
-                          db.collection("assignments")
-                            .doc(assignment.id)
-                            .delete();
-                          console.log(assignment);
-                        }}
-                      ></Button>
-                    </Tooltip>
-                    <Tooltip title="Change Due Date" arrow>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        className={classes.button}
-                        children={<PriorityHighIcon />}
-                        onClick={() => {
-                          var dateString = window.prompt(
-                            "Enter the new due date in this format:- DD/MM/YYY"
-                          );
-                          if (dateString == null) return;
-                          var dateObj = moment(dateString, "DD/MM/YYYY")._d;
-                          if (dateString === "" || dateObj === "Invalid Date")
-                            alert("Enter a valid date");
-                          const db = app.firestore();
-                          console.log(dateString, dateObj);
-                          db.collection("assignments")
-                            .doc(assignment.id)
-                            .update({
-                              due_date: dateObj,
-                            });
-                        }}
-                      ></Button>
-                    </Tooltip>
-                    <Tooltip title="Mark As Completed" arrow>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        className={classes.button}
-                        children={<CheckCircleIcon />}
-                        onClick={() => {
-                          const db = app.firestore();
-                          db.collection("assignments")
-                            .doc(assignment.id)
-                            .update({
-                              satus: "completed",
-                            });
-                          console.log(assignment);
-                        }}
-                      ></Button>
-                    </Tooltip>
-                  </div>
-                </CardActions>
-              </Card>
-            ))
+           <Display data={assignments}/>
           ) : (
             <div
               style={{
@@ -250,7 +160,6 @@ function ViewStudentSearch() {
             </div>
           )}
         </div>
-      </div>
     </div>
   );
 }

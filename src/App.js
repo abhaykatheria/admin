@@ -14,11 +14,12 @@ import AppBar from "./screens/AppBar";
 import ViewStudentSearch from "./screens/ViewStudentSearch";
 // import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import AddStudent from "./screens/AddStudent";
-import ViewStudent from "./screens/ViewStudent"
+import DisplayTutor from "./screens/DisplayTutor"
 import { FilePond } from 'react-filepond';
 import 'filepond/dist/filepond.min.css';
 import AllAssignment from './screens/AllAssignment'
 import AddTimedAssignment from './screens/AddTimedAssignment'
+import Display from './screens/Display'
 import 'fontsource-roboto';
 
 import {
@@ -46,7 +47,9 @@ function App() {
           <Route exact path="/viewStud" component={ViewStudentSearch} />        
           <Route exact path="/addStudent" component={AddStudent} />        
           <Route exact path="/allAss" component={AllAssignment} />
+          <Route exact path="/disTut" component={DisplayTutor} />
           <Route exact path="/addTimeAss" component={AddTimedAssignment} />
+          <Route exact path="/display" component={Display}/>
         </Switch>
       </div>
     </Router>
