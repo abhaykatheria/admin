@@ -87,8 +87,8 @@ function AddAssignment(props) {
 
     const changeTutorHandler = value => {
         setTutor(value)
-        console.log({ value })
-        
+        console.log({ value },value.dues)
+        setTutorId(value.id)
     }
 
     const changeStudentHandler = value => {
@@ -112,18 +112,21 @@ function AddAssignment(props) {
             console.log(ids);
             let data1 = []
             for (var i = 0; i < data.length; i++) {
-                data1.push({ name: data[i].name, id: ids[i],email: data[i].email });
+                data1.push({ ...data[i],id:ids[i]});
+                console.log(data[i],data1[i].dues)
                 // console.log(data[i]);
             }
             data1 = data1.map((dat) => {
                 return {
                     value: dat.id,
                     label: dat.name,
-                    email: dat.email
+                    email: dat.email,
+                    dues: dat.dues,
+                    id: dat.id
                 }
             })
-            console.log(data1);
             setAllTutors(data1);
+            console.log(allTutors);
         });
 
         db.collection('students').onSnapshot((snapshot) => {
@@ -338,15 +341,17 @@ function AddAssignment(props) {
                 } catch (error) {
                     alert(error.message)
                 }
-            
+
+            updateDues()
+            updateDuesCollection(x)
+            updatePayment(x)
+            updateStudentCollection()
         } catch (error) {
           alert(error.message);
         }
-        updateDues()
-        // updateDuesCollection()
-        // updatePayment()
+
         sendEmail()
-        updateStudentCollection()
+        // updateTutorDues()
     }
     // updateDues();
     // updateDuesCollection();
@@ -376,10 +381,12 @@ function AddAssignment(props) {
 
 
   async function updateDues() {
+      console.log(tutor.dues)
     try {
       if (tutorId != "") {
-        // console.log(dues);
-        await app.firestore().collection("tutors").doc(tutorId).update({
+        console.log(tutor);
+        let dues=tutor.dues + parseInt(tutor_fee)
+        await app.firestore().collection("tutors").doc(tutor.id).update({
           dues: dues,
         });
       }
@@ -388,15 +395,16 @@ function AddAssignment(props) {
     }
   }
 
-  async function updateDuesCollection() {
+  async function updateDuesCollection(x) {
     try {
       // console.log(dues);
+      console.log({assId})
       await app.firestore().collection("dues").add({
-        assg_id: assId,
+        assg_id: x,
         due_date: due_date,
         status: "pending",
         tutor: tutor.label,
-        tutor_fee: tutor_fee,
+        tutor_fee: parseInt(tutor_fee),
         tutorId: tutorId,
       });
     } catch (error) {
@@ -404,11 +412,12 @@ function AddAssignment(props) {
     }
   }
 
-    async function updatePayment() {
+
+    async function updatePayment(x) {
         try {
             // console.log(dues);
             await app.firestore().collection('payment_collection').add({
-                assg_id: assId,
+                assg_id: x,
                 due_date: due_date,
                 pending: price - amount_paid,
                 status: "pending",
