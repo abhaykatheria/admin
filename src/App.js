@@ -22,6 +22,8 @@ import AddTimedAssignment from './screens/AddTimedAssignment'
 import Display from './screens/Display'
 import 'fontsource-roboto';
 import TimedAssignment from './screens/TimedAssignment'
+import PaymentCollection from './screens/PaymentCollection'
+import Dues from './screens/Dues'
 
 import {
   BrowserRouter as Router,
@@ -51,7 +53,9 @@ function App() {
           <Route exact path="/disTut" component={DisplayTutor} />
           <Route exact path="/addTimeAss" component={AddTimedAssignment} />
           <Route exact path="/display" component={Display}/>
-          <Route exact path="/timedAss" component={TimedAssignment} />
+          <Route exact path="/timedAss" component={TimedAssignment} />          
+          <Route exact path="/payCol" component={PaymentCollection} />
+          <Route exact path="/dues" component={Dues} />
 
         </Switch>
       </div>

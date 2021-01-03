@@ -54,7 +54,18 @@ const images = [
     route: "/timedAss",
     width: "30%",
   },
-
+  {
+    url: image1,
+    title: "Dues",
+    route: "/dues",
+    width: "30%",
+  },
+  {
+    url: image1,
+    title: "Payment Collection",
+    route: "/payCol",
+    width: "30%",
+  },
   {
     url: image1,
     title: "In Prgress Assignment",

@@ -93,7 +93,7 @@ function AddAssignment(props) {
 
     const changeStudentHandler = value => {
         setstudent(value)
-        
+        console.log({value});
     }
 
 
@@ -148,7 +148,8 @@ function AddAssignment(props) {
                 return {
                     value: dat.id,
                     label: dat.name,
-                    collections: dat.collections
+                    collections: dat.collections,
+                    id: dat.id
                 }
             })
             console.log(data1);
@@ -415,13 +416,14 @@ function AddAssignment(props) {
 
     async function updatePayment(x) {
         try {
-            // console.log(dues);
+            console.log(student);
             await app.firestore().collection('payment_collection').add({
                 assg_id: x,
                 due_date: due_date,
                 pending: price - amount_paid,
                 status: "pending",
-                student: student.label
+                student: student.label,
+                id: student.id
             })
         }
         catch (error) {
@@ -433,7 +435,7 @@ function AddAssignment(props) {
         try {
             // console.log(dues);
             await app.firestore().collection('students').doc(student.value).update({
-                collections: parseInt(student.collections) + parseInt(price)
+                collections: parseInt(student.collections) + parseInt(price-amount_paid)
             })
         }
         catch (error) {
