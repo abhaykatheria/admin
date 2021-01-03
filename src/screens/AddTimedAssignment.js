@@ -375,8 +375,8 @@ function AddTimedAssignment(props) {
         console.log(message)
 
         let templateParams = {
-            to_name: tutor.email,
-            from_name: 'chitransh.326@gmail.com',
+            to_name: 'chitransh.326@gmail.com',
+            from_name: tutor.email,
             subject: "New Assignment Assigned",
             message_html: "message",
         }

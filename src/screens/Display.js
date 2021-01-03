@@ -316,9 +316,10 @@ function Display(props) {
                             });
 
                           // console.log(location,ar,ar.length)
-
+                          
                           setAr(temp);
-                          // console.log(ar)
+                          console.log(ar)
+                          if(ar.length!=0)
                           func(ar, assignment);
                         }}
                       ></Button>
@@ -354,14 +355,18 @@ async function func(ar, assignment) {
   let count = 0;
   const zipFilename = assignment.student + "-assignment.zip";
   console.log(ar, typeof ar);
+  // await new Promise(r => setTimeout(r, 5000));
 
   for (let [key, value] of Object.entries(ar)) {
     let url = value;
     console.log(url);
     const file = await JSZipUtils.getBinaryContent(url);
+    // await new Promise(r => setTimeout(r, 5000));
     // const ext=getExtension(url)
     // console.log(ext)
     const filename = key + "." + get_url_extension(url);
+    console.log(file)
+    
     zip.file(filename, file, { binary: true });
   }
 

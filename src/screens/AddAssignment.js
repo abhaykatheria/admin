@@ -362,7 +362,7 @@ function AddAssignment(props) {
             to_name: tutor.email,
             from_name: 'chitransh.326@gmail.com',
             subject: "New Assignment Assigned",
-            message_html: "message",
+            message: message,
         }
         
         emailjs.send(
