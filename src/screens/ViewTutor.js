@@ -21,6 +21,7 @@ import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
+import AssignmentRoundedIcon from "@material-ui/icons/AssignmentRounded";
 import { green, grey, red } from "@material-ui/core/colors";
 import "./tutor.css";
 
@@ -63,8 +64,18 @@ const useStyles2 = makeStyles((theme) => ({
   },
   green: {
     color: "#fff",
-    backgroundColor: green[500],
-  }
+    backgroundColor: green[700],
+    '&:hover': {
+      backgroundColor: green[800],
+  },
+},
+  grey: {
+    color: "#fff",
+    backgroundColor: grey[700],
+    '&:hover': {
+        backgroundColor: grey[800],
+    },
+  },
 }));
 
 export default function ViewTutor() {
@@ -82,7 +93,6 @@ export default function ViewTutor() {
       setTutors(data);
     });
   }, []);
-
 
   return (
     <div className="body">
@@ -118,32 +128,59 @@ export default function ViewTutor() {
               </CardContent>
               <CardActions>
                 <div style={{ margin: "0 auto", textAlign: "center" }}>
-                  <Tooltip title="Delete" arrow>
+                  <Tooltip title="All Assignment" arrow>
                     <Link
                       to={{
                         pathname: "/disTut",
                         aboutProps: {
                           name: tutor.name,
-                          status: "unchecked"
+                          status: "all",
+                        },
+                      }}
+                    >
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        className={classes2.button}
+                        children={<AssignmentRoundedIcon />}
+                      ></Button>
+                    </Link>
+                  </Tooltip>
+                  <Tooltip title="View Ongoing Assignment" arrow>
+                    <Link
+                      to={{
+                        pathname: "/disTut",
+                        aboutProps: {
+                          name: tutor.name,
+                          status: "ongoing",
                         },
                       }}
                     >
                       <Button
                         variant="contained"
                         color="secondary"
-                        className={classes2.button}
+                        className={`${classes2.button} ${classes2.grey}`}
                         children={<PriorityHighIcon />}
                       ></Button>
                     </Link>
                   </Tooltip>
-                  <Tooltip title="Mark As Completed" arrow>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      className={classes2.button && classes2.green }
-                      children={<CheckCircleIcon />}
-                      onClick={() => {}}
-                    ></Button>
+                  <Tooltip title="Completed Assignment" arrow>
+                    <Link
+                      to={{
+                        pathname: "/disTut",
+                        aboutProps: {
+                          name: tutor.name,
+                          status: "completed",
+                        },
+                      }}
+                    >
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        className={`${classes2.button} ${classes2.green}`}
+                        children={<CheckCircleIcon />}
+                      ></Button>
+                    </Link>
                   </Tooltip>
                 </div>
               </CardActions>
