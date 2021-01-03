@@ -158,7 +158,7 @@ function Analytics() {
 
   const dayCollection = {
     title: {
-      text: "Basic Column Chart",
+      text: "Day Wise Collection Graph",
     },
     data: [
       {
@@ -171,7 +171,7 @@ function Analytics() {
 
   const weekCollection = {
     title: {
-      text: "Basic Column Chart",
+      text: "Weekly Collection Chart",
     },
     data: [
       {
@@ -184,7 +184,7 @@ function Analytics() {
 
   const monthCollection = {
     title: {
-      text: "Basic Column Chart",
+      text: "Monthly Collection Chart",
     },
     data: [
       {
