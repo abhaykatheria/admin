@@ -6,6 +6,7 @@ import "firebase/firebase-firestore";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import { CircularProgress } from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
@@ -18,7 +19,7 @@ import JSZip from "jszip";
 import JSZipUtils from "jszip-utils";
 import saveAs from "save-as";
 import GetAppRoundedIcon from "@material-ui/icons/GetAppRounded";
-import { green,grey } from "@material-ui/core/colors";
+import { green, grey } from "@material-ui/core/colors";
 import Radio from "@material-ui/core/Radio";
 import DeleteIcon from "@material-ui/icons/Delete";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
@@ -62,18 +63,17 @@ const useStyles = makeStyles((theme) => ({
   green: {
     color: "#fff",
     backgroundColor: green[700],
-    '&:hover': {
-        backgroundColor: green[800],
+    "&:hover": {
+      backgroundColor: green[800],
     },
   },
   grey: {
     color: "#fff",
     backgroundColor: grey[700],
-    '&:hover': {
-        backgroundColor: grey[800],
+    "&:hover": {
+      backgroundColor: grey[800],
     },
-    
-  }
+  },
 }));
 
 function Display(props) {
@@ -82,13 +82,13 @@ function Display(props) {
   const [ar, setAr] = useState([]);
   const [currOption, setCurrOption] = useState("Due Date(Asc)");
 
-  if(props.data){
-      console.log(assignments)
+  if (props.data) {
+    console.log(assignments);
   }
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    setAssignments(props.data)
+    setAssignments(props.data);
   }, [props]);
 
   const handleDueDateAsc = () => {
@@ -162,10 +162,45 @@ function Display(props) {
     }
   };
 
+  const onSearchStudent = (event,value) => {
+    if(value===null) {
+      setAssignments(props.data)
+      console.log(props.data)
+    }else{
+      const data1 = [];
+      for (var i = 0; i < assignments.length; i++) {
+        if (assignments[i].student === value) data1.push(assignments[i]);
+      }
+      console.log(data1)
+      setAssignments(data1)
+    }
+  }
+
   return (
     <div className="body">
       <div style={{ paddingTop: "7px", paddingRight: "1px" }}>
-        <Grid container justify="flex-end">
+        <Grid
+          container
+          direction="row"
+          justify="space-between"
+          alignItems="center"
+        >
+        <div style={{ width: 300,paddingLeft:"5px" }}>
+          <Autocomplete
+            id="free-solo-demo"
+            freeSolo
+            options={assignments.map((assign)=>assign.student)}
+            onChange={onSearchStudent}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Search by student name .."
+                margin="normal"
+                variant="outlined"
+              />
+            )}
+          />
+          </div>
           <TextField
             id="outlined-select-currency-native"
             color="secondary"
@@ -316,11 +351,10 @@ function Display(props) {
                             });
 
                           // console.log(location,ar,ar.length)
-                          
+
                           setAr(temp);
-                          console.log(ar)
-                          if(ar.length!=0)
-                          func(ar, assignment);
+                          console.log(ar);
+                          if (ar.length !== 0) func(ar, assignment);
                         }}
                       ></Button>
                     </Tooltip>
@@ -365,8 +399,8 @@ async function func(ar, assignment) {
     // const ext=getExtension(url)
     // console.log(ext)
     const filename = key + "." + get_url_extension(url);
-    console.log(file)
-    
+    console.log(file);
+
     zip.file(filename, file, { binary: true });
   }
 
