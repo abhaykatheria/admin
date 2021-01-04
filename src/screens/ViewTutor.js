@@ -7,8 +7,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import { Link } from "react-router-dom";
+import DeleteIcon from "@material-ui/icons/Delete";
 import Divider from "@material-ui/core/Divider";
 import Tooltip from "@material-ui/core/Tooltip";
+import EditRoundedIcon from '@material-ui/icons/EditRounded';
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import PriorityHighIcon from "@material-ui/icons/PriorityHigh";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -146,31 +148,12 @@ export default function ViewTutor() {
                       ></Button>
                     </Link>
                   </Tooltip>
-                  <Tooltip title="View Ongoing Assignment" arrow>
+                  <Tooltip title="Edit Details" arrow>
                     <Link
                       to={{
-                        pathname: "/disTut",
+                        pathname: "/editTutor",
                         aboutProps: {
-                          name: tutor.name,
-                          status: "ongoing",
-                        },
-                      }}
-                    >
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        className={`${classes2.button} ${classes2.grey}`}
-                        children={<PriorityHighIcon />}
-                      ></Button>
-                    </Link>
-                  </Tooltip>
-                  <Tooltip title="Completed Assignment" arrow>
-                    <Link
-                      to={{
-                        pathname: "/disTut",
-                        aboutProps: {
-                          name: tutor.name,
-                          status: "completed",
+                          data: tutor
                         },
                       }}
                     >
@@ -178,9 +161,25 @@ export default function ViewTutor() {
                         variant="contained"
                         color="primary"
                         className={`${classes2.button} ${classes2.green}`}
-                        children={<CheckCircleIcon />}
+                        children={<EditRoundedIcon />}
                       ></Button>
                     </Link>
+                  </Tooltip>
+                  <Tooltip title="Delete Tutor" arrow>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        className={classes2.button}
+                        children={<DeleteIcon />}
+                        onClick={() => {
+                            const db = app.firestore();
+                            db.collection("tutors")
+                              .doc(tutor.id)
+                              .delete();
+                            console.log(tutors);
+                          }}
+                      ></Button>
+                    
                   </Tooltip>
                 </div>
               </CardActions>

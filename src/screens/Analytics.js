@@ -30,6 +30,11 @@ function Analytics() {
   const [weeklyGraph, setWeeklyGraph] = useState(false);
   const [dayGraph, setDayGraph] = useState(false);
   const classes = useStyles();
+  moment.updateLocale("en", {
+    week: {
+      dow: 1, // Monday is the first day of the week.
+    },
+  });
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -47,13 +52,16 @@ function Analytics() {
         const temp = [];
         const temp2 = [];
         const temp3 = [];
+        var daysCount = {};
         snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
         for (var key in data) {
           var date = moment(data[key].assigned_date.toDate().toDateString());
-          var weekDay = moment()
-            .day("Monday")
-            .year(date.year())
-            .week(date.isoWeek())
+          console.log(date);
+          var weekNumber = moment(date).format("w");
+          console.log(weekNumber);
+          var weekDay = moment(date)
+            .add(weekNumber - 1, "weeks")
+            .subtract(7, "days")
             .format("MMM DD");
 
           if (datePrice[date.format("MMM DD YYYY")] !== undefined) {
@@ -64,8 +72,10 @@ function Analytics() {
 
           if (dayPrice[date.format("dddd")] !== undefined) {
             dayPrice[date.format("dddd")] += data[key].price;
+            daysCount[date.format("dddd")] += 1;
           } else {
             dayPrice[date.format("dddd")] = data[key].price;
+            daysCount[date.format("dddd")] = 1;
           }
 
           if (weekPrice[weekDay] !== undefined) {
@@ -81,19 +91,22 @@ function Analytics() {
             console.log(date.format("MMM YY"));
           }
         }
-        
+
         for (var key2 in datePrice) {
-          data1.push({ x: new Date(key2), y: datePrice[key2] });
+          data1.push({ x: new Date(key2), y: datePrice[key2] / 72 });
         }
         for (var key3 in dayPrice) {
-          temp.push({ label: key3, y: dayPrice[key3] });
+          temp.push({
+            label: key3,
+            y: dayPrice[key3] / (72 * daysCount[key3]),
+          });
         }
         for (var key4 in weekPrice) {
-          temp2.push({ label: key4, y: weekPrice[key4] });
+          temp2.push({ label: key4, y: weekPrice[key4] / 72 });
         }
         for (var key5 in monthPrice) {
           console.log(key5);
-          temp3.push({ label: key5, y: monthPrice[key5] });
+          temp3.push({ label: key5, y: monthPrice[key5] / 72 });
         }
         console.log("day", temp);
         console.log(data1);
@@ -151,7 +164,7 @@ function Analytics() {
       ],
       slider: {
         minimum: new Date("2020-12-01"),
-        maximum: new Date("2020-12-31"),
+        maximum: new Date(),
       },
     },
   };
@@ -159,6 +172,13 @@ function Analytics() {
   const dayCollection = {
     title: {
       text: "Day Wise Collection Graph",
+    },
+    axisX: {
+      title: "Days",
+    },
+    axisY: {
+      title: "Collection ($)",
+      suffix: " $",
     },
     data: [
       {
@@ -173,6 +193,13 @@ function Analytics() {
     title: {
       text: "Weekly Collection Chart",
     },
+    axisX: {
+      title: "Weeks",
+    },
+    axisY: {
+      title: "Collection ($)",
+      suffix: " $",
+    },
     data: [
       {
         // Change type to "doughnut", "line", "splineArea", etc.
@@ -185,6 +212,13 @@ function Analytics() {
   const monthCollection = {
     title: {
       text: "Monthly Collection Chart",
+    },
+    axisX: {
+      title: "Months",
+    },
+    axisY: {
+      title: "Collection ($)",
+      suffix: " $",
     },
     data: [
       {

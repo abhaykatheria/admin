@@ -24,12 +24,6 @@ const images = [
     route: "/addStudent",
     width: "30%",
   },
-  // {
-  //   url: image1,
-  //   title: "View Student",
-  //   route: "/viewStudent",
-  //   width: "30%",
-  // },
   {
     url: image1,
     title: "Add Assignment",
@@ -68,32 +62,8 @@ const images = [
   },
   {
     url: image1,
-    title: "In Prgress Assignment",
-    route: "/inProgress",
-    width: "30%",
-  },
-  {
-    url: image1,
-    title: "Done Assignment",
-    route: "/doneAss",
-    width: "30%",
-  },
-  {
-    url: image1,
     title: "Upcoming Assignment",
     route: "/upAss",
-    width: "30%",
-  },
-  {
-    url: image1,
-    title: "Due Today",
-    route: "/dueToday",
-    width: "30%",
-  },
-  {
-    url: image1,
-    title: "Due Past",
-    route: "/duePast",
     width: "30%",
   },
   {
@@ -110,7 +80,6 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: "wrap",
     minWidth: 300,
     width: "100%",
-    paddingLeft: "20px",
   },
   image: {
     position: "relative",

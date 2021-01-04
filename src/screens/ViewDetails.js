@@ -64,11 +64,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TestDisplay(props) {
   const [assignment, setAssignment] = useState()
+  const[typeOfAssignment,setTypeOfAssignment] = useState()
   const classes = useStyles();
   const [ar, setAr] = useState([]);
 
   useEffect(() => {
       setAssignment(props.location.aboutProps.data)
+      setTypeOfAssignment(props.location.aboutProps.type)
   },[props])
 
   return (
@@ -109,10 +111,10 @@ export default function TestDisplay(props) {
                         children={<DeleteIcon />}
                         onClick={() => {
                           const db = app.firestore();
-                          db.collection("assignments")
+                          db.collection(typeOfAssignment)
                             .doc(assignment.id)
                             .delete();
-                          console.log(assignment);
+                          setAssignment();
                         }}
                       ></Button>
                     </Tooltip>
@@ -131,7 +133,7 @@ export default function TestDisplay(props) {
                             alert("Enter a valid date");
                           const db = app.firestore();
                           console.log(dateString, dateObj);
-                          db.collection("assignments")
+                          db.collection(typeOfAssignment)
                             .doc(assignment.id)
                             .update({
                               due_date: dateObj,
@@ -146,7 +148,7 @@ export default function TestDisplay(props) {
                         children={<CheckCircleIcon />}
                         onClick={() => {
                           const db = app.firestore();
-                          db.collection("assignments")
+                          db.collection(typeOfAssignment)
                             .doc(assignment.id)
                             .update({
                               satus: "completed",

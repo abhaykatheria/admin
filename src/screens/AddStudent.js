@@ -2,13 +2,8 @@ import React, { useState } from 'react'
 import { Typography, Paper, Avatar, Button, FormControl, Input, InputLabel } from '@material-ui/core'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import withStyles from '@material-ui/core/styles/withStyles'
-import { Link, withRouter } from 'react-router-dom'
-import Select from 'react-select'
-import countryList from 'react-select-country-list'
-import firebase from "firebase";
 import 'firebase/firebase-firestore'
 import app from 'firebase/app'
-import moment from "moment";
 import TimezoneSelect from 'react-timezone-select'
 
 

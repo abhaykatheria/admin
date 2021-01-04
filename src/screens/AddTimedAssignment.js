@@ -10,16 +10,13 @@ import {
 } from "@material-ui/core";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { Link, withRouter } from "react-router-dom";
 import Select from "react-select";
-import countryList from "react-select-country-list";
 import firebase from "firebase";
 import 'firebase/firebase-firestore'
 import app from 'firebase/app'
 import { useEffect } from 'react'
-import DateTimePicker from 'react-datetime-picker';
 import 'firebase/firebase-storage'
-import { FilePond, File, registerPlugin } from 'react-filepond'
+import { FilePond, } from 'react-filepond'
 import TimezoneSelect from 'react-timezone-select'
 import * as emailjs from 'emailjs-com'
 import DurationPicker from 'react-duration-picker'

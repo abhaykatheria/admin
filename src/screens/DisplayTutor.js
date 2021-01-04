@@ -9,23 +9,22 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import { Link } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import TabularDisplay from "./TabularDisplay";
+import DetailsRoundedIcon from "@material-ui/icons/DetailsRounded";
 
 function DisplayTutor(props) {
   const [assignments, setAssignments] = useState();
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    console.log(props.location.aboutProps.name);
     const db = app.firestore();
-    return db
-      .collection("assignments")
-      .where("tutor", "==", props.location.aboutProps.name)
-      .onSnapshot((snapshot) => {
-        const data = [];
-        snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
-        console.log(data);
-        const data1 = [];
-        if (props.location.aboutProps.status === "all") {
+    const data1 = [];
+    return (
+      db
+        .collection("assignments")
+        .where("tutor", "==", props.location.aboutProps.name)
+        .onSnapshot((snapshot) => {
+          const data = [];
+          snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
           for (var i = 0; i < data.length; i++) {
             data1.push([
               data[i].student,
@@ -34,6 +33,7 @@ function DisplayTutor(props) {
               data[i].price,
               data[i].amount_paid,
               data[i].tutor_fee,
+              "General",
               moment(data[i].assigned_date.toDate().toDateString()).format(
                 "DD/MM/YYYY"
               ),
@@ -44,59 +44,65 @@ function DisplayTutor(props) {
               data[i].id,
               <Link
                 to={{
-                  pathname: "/test",
+                  pathname: "/viewDetails",
                   aboutProps: {
                     data: data[i],
+                    type: "assignments",
+                  },
+                }}
+              >
+                <Button
+                  variant="contained"
+                  color="primary"
+                  children={<DetailsRoundedIcon />}
+                ></Button>
+              </Link>,
+            ]);
+          }
+        }),
+      db
+        .collection("timed")
+        .where("tutor", "==", props.location.aboutProps.name)
+        .onSnapshot((snapshot) => {
+          const data = [];
+          snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
+          for (var i = 0; i < data.length; i++) {
+            data1.push([
+              data[i].student,
+              data[i].subject,
+              data[i].tutor,
+              data[i].price,
+              data[i].amount_paid,
+              data[i].tutor_fee,
+              "Timed",
+              moment(data[i].assigned_date.toDate().toDateString()).format(
+                "DD/MM/YYYY"
+              ),
+              moment(data[i].due_date.toDate().toDateString()).format(
+                "DD/MM/YYYY"
+              ),
+              data[i].satus,
+              data[i].id,
+              <Link
+                to={{
+                  pathname: "/viewDetails",
+                  aboutProps: {
+                    data: data[i],
+                    type: "timed",
                   },
                 }}
               >
                 <Button
                   variant="contained"
                   color="secondary"
-                  children={<CheckCircleIcon />}
+                  children={<DetailsRoundedIcon />}
                 ></Button>
               </Link>,
             ]);
           }
           setAssignments(data1);
-        } else if (props.location.aboutProps.status === "ongoing") {
-          for (i = 0; i < data.length; i++) {
-            if (data[i].satus === "ongoing") {
-              data1.push([
-                data[i].student,
-                data[i].subject,
-                data[i].tutor,
-                data[i].price,
-                data[i].amount_paid,
-                data[i].tutor_fee,
-                moment(data[i].assigned_date.toDate().toDateString()).format(
-                  "DD/MM/YYYY"
-                ),
-                moment(data[i].due_date.toDate().toDateString()).format(
-                  "DD/MM/YYYY"
-                ),
-                data[i].satus,
-                data[i].id,
-                <Link
-                  to={{
-                    pathname: "/test",
-                    aboutProps: {
-                      data: data[i],
-                    },
-                  }}
-                >
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    children={<CheckCircleIcon />}
-                  ></Button>
-                </Link>,
-              ]);
-            }
-          }
-          setAssignments(data1);
-        }
-      });
+        })
+    );
   }, [props]);
 
   const columns = [
@@ -125,6 +131,10 @@ function DisplayTutor(props) {
       label: "Tutor Fee",
     },
     {
+      type: "type",
+      label: "Type",
+    },
+    {
       assigned_date: "assigned_date",
       label: "Assigned Date",
     },
@@ -146,14 +156,22 @@ function DisplayTutor(props) {
     },
     {
       icon: "icon",
-      label: "View",
+      label: "Edit",
+      options: {
+        sort: false,
+        filter: false,
+      },
     },
   ];
 
   return (
     <div className="body">
       {assignments !== undefined ? (
-        <TabularDisplay data={assignments} columns={columns} />
+        <TabularDisplay
+          title={"Details"}
+          data={assignments}
+          columns={columns}
+        />
       ) : (
         <div
           style={{

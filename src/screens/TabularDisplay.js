@@ -31,7 +31,7 @@ function TabularDisplay(props) {
     <div className="body">
       {assignments !== undefined ? (
         <MUIDataTable
-          title={"Data"}
+          title={props.title}
           data={assignments}
           columns={columns}
           options={options}

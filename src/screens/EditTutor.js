@@ -10,8 +10,10 @@ import {
 } from "@material-ui/core";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import withStyles from "@material-ui/core/styles/withStyles";
+import { Link, withRouter } from "react-router-dom";
 import Select from "react-select";
 import countryList from "react-select-country-list";
+import firebase from "firebase";
 import "firebase/firebase-firestore";
 import app from "firebase/app";
 
@@ -49,8 +51,10 @@ const styles = (theme) => ({
   },
 });
 
-function AddTutor(props) {
+function EditTutor(props) {
   const { classes } = props;
+  console.log(props.location.aboutProps.data)
+
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -59,7 +63,9 @@ function AddTutor(props) {
   const options = countryList().getData();
   useEffect(() => {
     window.scrollTo(0, 0);
-  });
+    setName(props.location.aboutProps.data.name)
+    setEmail(props.location.aboutProps.data.email)
+  },[props]);
 
   const changeHandler = (value) => {
     setCountry(value);
@@ -72,7 +78,7 @@ function AddTutor(props) {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Add Tutor
+          Edit Tutor
         </Typography>
         <form
           className={classes.form}
@@ -143,4 +149,4 @@ function AddTutor(props) {
   }
 }
 
-export default withStyles(styles)(AddTutor);
+export default withStyles(styles)(EditTutor);

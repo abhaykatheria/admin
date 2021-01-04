@@ -6,9 +6,9 @@ import app from "firebase/app";
 import "firebase/firebase-firestore";
 import { CircularProgress } from "@material-ui/core";
 import moment from "moment";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import Button from "@material-ui/core/Button";
-import TabularDisplay from "./TabularDisplay"
+import TabularDisplay from "./TabularDisplay";
+import DetailsRoundedIcon from '@material-ui/icons/DetailsRounded';
 
 function AllAssignments() {
   const [assignments, setAssignments] = useState();
@@ -16,43 +16,86 @@ function AllAssignments() {
   useEffect(() => {
     window.scrollTo(0, 0);
     const db = app.firestore();
-    return db.collection("assignments").onSnapshot((snapshot) => {
-      const data = [];
-      snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
-      const data1 = [];
-      for (var i = 0; i < data.length; i++) {
-        data1.push([
-          data[i].student,
-          data[i].subject,
-          data[i].tutor,
-          data[i].price,
-          data[i].amount_paid,
-          data[i].tutor_fee,
-          moment(data[i].assigned_date.toDate().toDateString()).format(
-            "DD/MM/YYYY"
-          ),
-          moment(data[i].due_date.toDate().toDateString()).format("DD/MM/YYYY"),
-          data[i].satus,
-          data[i].id,
-          <Link
-            to={{
-              pathname: "/test",
-              aboutProps: {
-                data: data[i],
-              },
-            }}
-          >
-            <Button
-              variant="contained"
-              color="secondary"
-              children={<CheckCircleIcon />}
-            ></Button>
-          </Link>,
-        ]);
-      }
-
-      setAssignments(data1);
-    });
+    const data1 = []
+    return (
+      db.collection("assignments").onSnapshot((snapshot) => {
+        const data = [];
+        snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
+        for (var i = 0; i < data.length; i++) {
+          data1.push([
+            data[i].student,
+            data[i].subject,
+            data[i].tutor,
+            data[i].price,
+            data[i].amount_paid,
+            data[i].tutor_fee,
+            "General",
+            moment(data[i].assigned_date.toDate().toDateString()).format(
+              "DD/MM/YYYY"
+            ),
+            moment(data[i].due_date.toDate().toDateString()).format(
+              "DD/MM/YYYY"
+            ),
+            data[i].satus,
+            data[i].id,
+            <Link
+              to={{
+                pathname: "/viewDetails",
+                aboutProps: {
+                  data: data[i],
+                  type: "assignments"
+                },
+              }}
+            >
+              <Button
+                variant="contained"
+                color="primary"
+                children={<DetailsRoundedIcon />}
+              ></Button>
+            </Link>,
+          ]);
+        }
+      }),
+      db.collection("timed").onSnapshot((snapshot) => {
+        const data = [];
+        snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
+        for (var i = 0; i < data.length; i++) {
+          data1.push([
+            data[i].student,
+            data[i].subject,
+            data[i].tutor,
+            data[i].price,
+            data[i].amount_paid,
+            data[i].tutor_fee,
+            "Timed",
+            moment(data[i].assigned_date.toDate().toDateString()).format(
+              "DD/MM/YYYY"
+            ),
+            moment(data[i].due_date.toDate().toDateString()).format(
+              "DD/MM/YYYY"
+            ),
+            data[i].satus,
+            data[i].id,
+            <Link
+              to={{
+                pathname: "/viewDetails",
+                aboutProps: {
+                  data: data[i],
+                  type: "timed"
+                },
+              }}
+            >
+              <Button
+                variant="contained"
+                color="secondary"
+                children={<DetailsRoundedIcon />}
+              ></Button>
+            </Link>,
+          ]);
+        }
+        setAssignments(data1);
+      })
+    );
   }, []);
 
   const columns = [
@@ -81,6 +124,10 @@ function AllAssignments() {
       label: "Tutor Fee",
     },
     {
+      type: "type",
+      label: "Type",
+    },
+    {
       assigned_date: "assigned_date",
       label: "Assigned Date",
     },
@@ -97,19 +144,23 @@ function AllAssignments() {
       options: {
         display: "excluded",
         sort: false,
-        filter: false
+        filter: false,
       },
     },
     {
       icon: "icon",
-      label: "View",
+      label: "Edit",
+      options: {
+        sort: false,
+        filter: false,
+      },
     },
   ];
 
   return (
     <div className="body">
       {assignments !== undefined ? (
-        <TabularDisplay data = {assignments} columns = {columns}/>
+        <TabularDisplay title = {"All Assignments"} data={assignments} columns={columns} />
       ) : (
         <div
           style={{
