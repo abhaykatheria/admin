@@ -8,7 +8,7 @@ import { CircularProgress } from "@material-ui/core";
 import moment from "moment";
 import Button from "@material-ui/core/Button";
 import TabularDisplay from "./TabularDisplay";
-import DetailsRoundedIcon from '@material-ui/icons/DetailsRounded';
+import DetailsRoundedIcon from "@material-ui/icons/DetailsRounded";
 
 function AllAssignments() {
   const [assignments, setAssignments] = useState();
@@ -16,7 +16,7 @@ function AllAssignments() {
   useEffect(() => {
     window.scrollTo(0, 0);
     const db = app.firestore();
-    const data1 = []
+    const data1 = [];
     return (
       db.collection("assignments").onSnapshot((snapshot) => {
         const data = [];
@@ -43,7 +43,13 @@ function AllAssignments() {
                 pathname: "/viewDetails",
                 state: {
                   data: data[i],
-                  type: "assignments"
+                  assigned_date: moment(
+                    data[i].assigned_date.toDate().toDateString()
+                  ).format("DD/MM/YYYY"),
+                  due_date: moment(
+                    data[i].due_date.toDate().toDateString()
+                  ).format("DD/MM/YYYY"),
+                  type: "assignments",
                 },
               }}
             >
@@ -81,7 +87,13 @@ function AllAssignments() {
                 pathname: "/viewDetails",
                 state: {
                   data: data[i],
-                  type: "timed"
+                  assigned_date: moment(
+                    data[i].assigned_date.toDate().toDateString()
+                  ).format("DD/MM/YYYY"),
+                  due_date: moment(
+                    data[i].due_date.toDate().toDateString()
+                  ).format("DD/MM/YYYY"),
+                  type: "timed",
                 },
               }}
             >
@@ -160,7 +172,11 @@ function AllAssignments() {
   return (
     <div className="body">
       {assignments !== undefined ? (
-        <TabularDisplay title = {"All Assignments"} data={assignments} columns={columns} />
+        <TabularDisplay
+          title={"All Assignments"}
+          data={assignments}
+          columns={columns}
+        />
       ) : (
         <div
           style={{
