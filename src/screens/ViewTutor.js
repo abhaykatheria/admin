@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Divider from "@material-ui/core/Divider";
 import Tooltip from "@material-ui/core/Tooltip";
-import EditRoundedIcon from '@material-ui/icons/EditRounded';
+import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import PriorityHighIcon from "@material-ui/icons/PriorityHigh";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -67,22 +67,22 @@ const useStyles2 = makeStyles((theme) => ({
   green: {
     color: "#fff",
     backgroundColor: green[700],
-    '&:hover': {
+    "&:hover": {
       backgroundColor: green[800],
+    },
   },
-},
   grey: {
     color: "#fff",
     backgroundColor: grey[700],
-    '&:hover': {
-        backgroundColor: grey[800],
+    "&:hover": {
+      backgroundColor: grey[800],
     },
   },
 }));
 
 export default function ViewTutor() {
   const [tutors, setTutors] = useState();
-  const [tutorName,setTutorName] = useState();
+  const [tutorName, setTutorName] = useState();
   const classes = useStyles();
   const classes2 = useStyles2();
 
@@ -133,9 +133,10 @@ export default function ViewTutor() {
                   <Tooltip title="All Assignment" arrow>
                     <Link
                       to={{
-                        pathname: "/disTut",
+                        pathname: "/dis",
                         state: {
-                          name: tutor.name
+                          name: tutor.name,
+                          fieldName: "tutor",
                         },
                       }}
                     >
@@ -152,7 +153,7 @@ export default function ViewTutor() {
                       to={{
                         pathname: "/editTutor",
                         state: {
-                          data: tutor
+                          data: tutor,
                         },
                       }}
                     >
@@ -165,20 +166,17 @@ export default function ViewTutor() {
                     </Link>
                   </Tooltip>
                   <Tooltip title="Delete Tutor" arrow>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        className={classes2.button}
-                        children={<DeleteIcon />}
-                        onClick={() => {
-                            const db = app.firestore();
-                            db.collection("tutors")
-                              .doc(tutor.id)
-                              .delete();
-                            console.log(tutors);
-                          }}
-                      ></Button>
-                    
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      className={classes2.button}
+                      children={<DeleteIcon />}
+                      onClick={() => {
+                        const db = app.firestore();
+                        db.collection("tutors").doc(tutor.id).delete();
+                        console.log(tutors);
+                      }}
+                    ></Button>
                   </Tooltip>
                 </div>
               </CardActions>

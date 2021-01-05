@@ -11,10 +11,11 @@ import Button from "@material-ui/core/Button";
 import TabularDisplay from "./TabularDisplay";
 import DetailsRoundedIcon from "@material-ui/icons/DetailsRounded";
 
-function DisplayTutor(props) {
+function DisplayIndividual(props) {
   const [assignments, setAssignments] = useState();
-  const [name,setName] = useState(props.location.state.name);
-  console.log(props.location)
+  const [name, setName] = useState(props.location.state.name);
+  const [fieldName, setFieldName] = useState(props.location.state.fieldName);
+  console.log(props.location);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -23,7 +24,7 @@ function DisplayTutor(props) {
     return (
       db
         .collection("assignments")
-        .where("tutor", "==", name)
+        .where(fieldName, "==", name)
         .onSnapshot((snapshot) => {
           const data = [];
           snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
@@ -50,12 +51,12 @@ function DisplayTutor(props) {
                   state: {
                     data: data[i],
                     assigned_date: moment(
-                    data[i].assigned_date.toDate().toDateString()
-                  ).format("DD/MM/YYYY"),
-                  due_date: moment(
-                    data[i].due_date.toDate().toDateString()
-                  ).format("DD/MM/YYYY"),
-                    type: "assignments",
+                      data[i].assigned_date.toDate().toDateString()
+                    ).format("DD/MM/YYYY"),
+                    due_date: moment(
+                      data[i].due_date.toDate().toDateString()
+                    ).format("DD/MM/YYYY"),
+                    fieldName: "assignments",
                   },
                 }}
               >
@@ -70,7 +71,7 @@ function DisplayTutor(props) {
         }),
       db
         .collection("timed")
-        .where("tutor", "==", name)
+        .where(fieldName, "==", name)
         .onSnapshot((snapshot) => {
           const data = [];
           snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
@@ -97,11 +98,11 @@ function DisplayTutor(props) {
                   state: {
                     data: data[i],
                     assigned_date: moment(
-                    data[i].assigned_date.toDate().toDateString()
-                  ).format("DD/MM/YYYY"),
-                  due_date: moment(
-                    data[i].due_date.toDate().toDateString()
-                  ).format("DD/MM/YYYY"),
+                      data[i].assigned_date.toDate().toDateString()
+                    ).format("DD/MM/YYYY"),
+                    due_date: moment(
+                      data[i].due_date.toDate().toDateString()
+                    ).format("DD/MM/YYYY"),
                     type: "timed",
                   },
                 }}
@@ -117,7 +118,7 @@ function DisplayTutor(props) {
           setAssignments(data1);
         })
     );
-  }, [name]);
+  }, [name, fieldName]);
 
   const columns = [
     {
@@ -202,4 +203,4 @@ function DisplayTutor(props) {
   );
 }
 
-export default DisplayTutor;
+export default DisplayIndividual;

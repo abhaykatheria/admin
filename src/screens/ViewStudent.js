@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Divider from "@material-ui/core/Divider";
 import Tooltip from "@material-ui/core/Tooltip";
-import EditRoundedIcon from '@material-ui/icons/EditRounded';
+import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import PriorityHighIcon from "@material-ui/icons/PriorityHigh";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -28,175 +28,173 @@ import { green, grey, red } from "@material-ui/core/colors";
 import "./tutor.css";
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        width: "100%",
-        maxWidth: "36ch",
-        margin: "auto",
-        backgroundColor: theme.palette.background.paper,
-    },
-    inline: {
-        display: "inline",
-    },
+  root: {
+    width: "100%",
+    maxWidth: "36ch",
+    margin: "auto",
+    backgroundColor: theme.palette.background.paper,
+  },
+  inline: {
+    display: "inline",
+  },
 }));
 
 const useStyles2 = makeStyles((theme) => ({
-    root: {
-        minWidth: "50%",
-        backgroundColor: "lightBlue",
-        boxShadow: "3px 3px 5px 6px rgba(255,255,255,0.6)",
-        "&:hover": {
-            boxShadow: "3px 3px 5px 6px rgba(255,255,255,1)",
-        },
+  root: {
+    minWidth: "50%",
+    backgroundColor: "lightBlue",
+    boxShadow: "3px 3px 5px 6px rgba(255,255,255,0.6)",
+    "&:hover": {
+      boxShadow: "3px 3px 5px 6px rgba(255,255,255,1)",
     },
-    button: {
-        margin: theme.spacing(2),
-        display: "inline-flex",
-        horizontalAlign: "middle",
+  },
+  button: {
+    margin: theme.spacing(2),
+    display: "inline-flex",
+    horizontalAlign: "middle",
+  },
+  bullet: {
+    display: "inline-block",
+    margin: "0 2px",
+    transform: "scale(0.8)",
+  },
+  title: {
+    fontSize: 14,
+  },
+  pos: {
+    marginBottom: 12,
+  },
+  green: {
+    color: "#fff",
+    backgroundColor: green[700],
+    "&:hover": {
+      backgroundColor: green[800],
     },
-    bullet: {
-        display: "inline-block",
-        margin: "0 2px",
-        transform: "scale(0.8)",
+  },
+  grey: {
+    color: "#fff",
+    backgroundColor: grey[700],
+    "&:hover": {
+      backgroundColor: grey[800],
     },
-    title: {
-        fontSize: 14,
-    },
-    pos: {
-        marginBottom: 12,
-    },
-    green: {
-        color: "#fff",
-        backgroundColor: green[700],
-        '&:hover': {
-            backgroundColor: green[800],
-        },
-    },
-    grey: {
-        color: "#fff",
-        backgroundColor: grey[700],
-        '&:hover': {
-            backgroundColor: grey[800],
-        },
-    },
+  },
 }));
 
 export default function ViewStudent() {
-    const [tutors, setTutors] = useState();
-    const [tutorName, setTutorName] = useState();
-    const classes = useStyles();
-    const classes2 = useStyles2();
+  const [students, setStudents] = useState();
+  const [tutorName, setTutorName] = useState();
+  const classes = useStyles();
+  const classes2 = useStyles2();
 
-    useEffect(() => {
-        const db = app.firestore();
-        window.scrollTo(0, 0);
-        return db.collection("students").onSnapshot((snapshot) => {
-            const data = [];
-            snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
-            console.log(data); // <------
-            setTutors(data);
-        });
-    }, []);
+  useEffect(() => {
+    const db = app.firestore();
+    window.scrollTo(0, 0);
+    return db.collection("students").onSnapshot((snapshot) => {
+      const data = [];
+      snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
+      console.log(data); // <------
+      setStudents(data);
+    });
+  }, []);
 
-    return (
-        <div className="body">
-            <div className="wrapper">
-                {tutors !== undefined ? (
-                    tutors.map((tutor) => (
-                        <Card className={classes2.root} variant="outlined">
-                            <CardContent>
-                                <ListItem alignItems="flex-start">
-                                    <ListItemAvatar>
-                                        <Avatar alt="Remy Sharp" src={avatar} />
-                                    </ListItemAvatar>
-                                    <ListItemText
-                                        primary={tutor.name}
-                                        secondary={
-                                            <React.Fragment>
-                                                <Typography
-                                                    component="span"
-                                                    variant="body2"
-                                                    className={classes.inline}
-                                                    color="textPrimary"
-                                                >
-                                                    {tutor.email}
-                                                </Typography>
-                                                <br />
-                        Dues: {tutor.dues}
-                                                <br />
-                                            </React.Fragment>
-                                        }
-                                    />
-                                </ListItem>
-                            </CardContent>
-                            <CardActions>
-                                <div style={{ margin: "0 auto", textAlign: "center" }}>
-                                    <Tooltip title="All Assignment" arrow>
-                                        <Link
-                                            to={{
-                                                pathname: "/disTut",
-                                                state: {
-                                                    name: tutor.name
-                                                },
-                                            }}
-                                        >
-                                            <Button
-                                                variant="contained"
-                                                color="primary"
-                                                className={classes2.button}
-                                                children={<AssignmentRoundedIcon />}
-                                            ></Button>
-                                        </Link>
-                                    </Tooltip>
-                                    <Tooltip title="Edit Details" arrow>
-                                        <Link
-                                            to={{
-                                                pathname: "/editTutor",
-                                                state: {
-                                                    data: tutor
-                                                },
-                                            }}
-                                        >
-                                            <Button
-                                                variant="contained"
-                                                color="primary"
-                                                className={`${classes2.button} ${classes2.green}`}
-                                                children={<EditRoundedIcon />}
-                                            ></Button>
-                                        </Link>
-                                    </Tooltip>
-                                    <Tooltip title="Delete Tutor" arrow>
-                                        <Button
-                                            variant="contained"
-                                            color="secondary"
-                                            className={classes2.button}
-                                            children={<DeleteIcon />}
-                                            onClick={() => {
-                                                const db = app.firestore();
-                                                db.collection("tutors")
-                                                    .doc(tutor.id)
-                                                    .delete();
-                                                console.log(tutors);
-                                            }}
-                                        ></Button>
-
-                                    </Tooltip>
-                                </div>
-                            </CardActions>
-                        </Card>
-                    ))
-                ) : (
-                        <div
-                            style={{
-                                position: "absolute",
-                                left: "50%",
-                                top: "50%",
-                                transform: "translate(-50%, -50%)",
-                            }}
+  return (
+    <div className="body">
+      <div className="wrapper">
+        {students !== undefined ? (
+          students.map((student) => (
+            <Card className={classes2.root} variant="outlined">
+              <CardContent>
+                <ListItem alignItems="flex-start">
+                  <ListItemAvatar>
+                    <Avatar alt="Remy Sharp" src={avatar} />
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={student.name}
+                    secondary={
+                      <React.Fragment>
+                        <Typography
+                          component="span"
+                          variant="body2"
+                          className={classes.inline}
+                          color="textPrimary"
                         >
-                            <CircularProgress />
-                        </div>
-                    )}
-            </div>
-        </div>
-    );
+                          {student.email}
+                        </Typography>
+                        <br />
+                        Collection: {student.collections}
+                        <br />
+                      </React.Fragment>
+                    }
+                  />
+                </ListItem>
+              </CardContent>
+              <CardActions>
+                <div style={{ margin: "0 auto", textAlign: "center" }}>
+                  <Tooltip title="All Assignment" arrow>
+                    <Link
+                      to={{
+                        pathname: "/dis",
+                        state: {
+                          name: student.name,
+                          fieldName: "student",
+                        },
+                      }}
+                    >
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        className={classes2.button}
+                        children={<AssignmentRoundedIcon />}
+                      ></Button>
+                    </Link>
+                  </Tooltip>
+                  <Tooltip title="Edit Details" arrow>
+                    <Link
+                      to={{
+                        pathname: "/editStudent",
+                        state: {
+                          data: student,
+                        },
+                      }}
+                    >
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        className={`${classes2.button} ${classes2.green}`}
+                        children={<EditRoundedIcon />}
+                      ></Button>
+                    </Link>
+                  </Tooltip>
+                  <Tooltip title="Delete Tutor" arrow>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      className={classes2.button}
+                      children={<DeleteIcon />}
+                      onClick={() => {
+                        const db = app.firestore();
+                        db.collection("students").doc(student.id).delete();
+                        console.log(students);
+                      }}
+                    ></Button>
+                  </Tooltip>
+                </div>
+              </CardActions>
+            </Card>
+          ))
+        ) : (
+          <div
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
+          >
+            <CircularProgress />
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
