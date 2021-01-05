@@ -7,7 +7,6 @@ import ViewTutor from "./screens/ViewTutor";
 import UpcomingAssignment from "./screens/UpcomingAssignment";
 import Analytics from "./screens/Analytics";
 import AppBar from "./screens/AppBar";
-import ViewStudentSearch from "./screens/ViewStudentSearch";
 import AddStudent from "./screens/AddStudent";
 import DisplayIndividual from "./screens/DisplayIndividual"
 import 'filepond/dist/filepond.min.css';
@@ -43,7 +42,6 @@ function App() {
           <Route exact path="/addAss" component={AddAssignment} />
           <Route exact path="/upAss" component={UpcomingAssignment} />
           <Route exact path="/analytics" component={Analytics} />
-          <Route exact path="/viewStud" component={ViewStudentSearch} />
           <Route exact path="/addStudent" component={AddStudent} />
           <Route exact path="/allAss" component={AllAssignment} />
           <Route exact path="/dis" component={DisplayIndividual} />
