@@ -39,6 +39,12 @@ function AllAssignments() {
               pathname: "/viewDetails",
               state: {
                 data: data[i],
+                assigned_date: moment(
+                    data[i].assigned_date.toDate().toDateString()
+                  ).format("DD/MM/YYYY"),
+                  due_date: moment(
+                    data[i].due_date.toDate().toDateString()
+                  ).format("DD/MM/YYYY"),
               },
             }}
           >

@@ -67,11 +67,15 @@ export default function TestDisplay(props) {
   const [typeOfAssignment, setTypeOfAssignment] = useState(
     props.location.state.type
   );
-  console.log(assignment)
+  const [assignedDate, setAssignedDate] = useState(
+    props.location.state.assigned_date
+  );
+  const [dueDate, setDueDate] = useState(props.location.state.due_date);
+  console.log(assignment);
   const classes = useStyles();
   const [ar, setAr] = useState([]);
 
-  useEffect(() => {}, [props]);
+  useEffect(() => {}, []);
 
   return (
     <div className="body">
@@ -89,10 +93,9 @@ export default function TestDisplay(props) {
                 <b>Price</b> = {assignment.price}$<br />
                 <b>Amount Paid</b> = {assignment.amount_paid}$<br />
                 <b>Tutor fee</b> = {assignment.tutor_fee}$<br />
-                <b>Assigned Date</b> ={" "}
-                {moment(new Date(assignment.assigned_date)).format("DD/MM/YYYY")} 
+                <b>Assigned Date</b> = {assignedDate}
                 <br />
-                <b>Due Date </b> = {moment(new Date(assignment.due_date)).format("DD/MM/YYYY")}
+                <b>Due Date </b> = {dueDate}
                 <br />
                 <b>Status </b> = {assignment.satus}
               </Typography>
