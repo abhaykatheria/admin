@@ -13,6 +13,8 @@ import DetailsRoundedIcon from "@material-ui/icons/DetailsRounded";
 
 function DisplayTutor(props) {
   const [assignments, setAssignments] = useState();
+  const [name,setName] = useState(props.location.state.name);
+  console.log(props.location)
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -21,7 +23,7 @@ function DisplayTutor(props) {
     return (
       db
         .collection("assignments")
-        .where("tutor", "==", props.location.aboutProps.name)
+        .where("tutor", "==", name)
         .onSnapshot((snapshot) => {
           const data = [];
           snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
@@ -45,7 +47,7 @@ function DisplayTutor(props) {
               <Link
                 to={{
                   pathname: "/viewDetails",
-                  aboutProps: {
+                  state: {
                     data: data[i],
                     type: "assignments",
                   },
@@ -62,7 +64,7 @@ function DisplayTutor(props) {
         }),
       db
         .collection("timed")
-        .where("tutor", "==", props.location.aboutProps.name)
+        .where("tutor", "==", name)
         .onSnapshot((snapshot) => {
           const data = [];
           snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
@@ -86,7 +88,7 @@ function DisplayTutor(props) {
               <Link
                 to={{
                   pathname: "/viewDetails",
-                  aboutProps: {
+                  state: {
                     data: data[i],
                     type: "timed",
                   },
@@ -103,7 +105,7 @@ function DisplayTutor(props) {
           setAssignments(data1);
         })
     );
-  }, [props]);
+  }, [name]);
 
   const columns = [
     {

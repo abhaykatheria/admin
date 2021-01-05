@@ -63,15 +63,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function TestDisplay(props) {
-  const [assignment, setAssignment] = useState()
-  const[typeOfAssignment,setTypeOfAssignment] = useState()
+  const [assignment, setAssignment] = useState(props.location.state.data);
+  const [typeOfAssignment, setTypeOfAssignment] = useState(
+    props.location.state.type
+  );
+  console.log(assignment)
   const classes = useStyles();
   const [ar, setAr] = useState([]);
 
-  useEffect(() => {
-      setAssignment(props.location.aboutProps.data)
-      setTypeOfAssignment(props.location.aboutProps.type)
-  },[props])
+  useEffect(() => {}, [props]);
 
   return (
     <div className="body">
@@ -90,11 +90,9 @@ export default function TestDisplay(props) {
                 <b>Amount Paid</b> = {assignment.amount_paid}$<br />
                 <b>Tutor fee</b> = {assignment.tutor_fee}$<br />
                 <b>Assigned Date</b> ={" "}
-                {assignment.assigned_date.toDate().toDateString()} at{" "}
-                {assignment.assigned_date.toDate().toLocaleTimeString()}
+                {moment(new Date(assignment.assigned_date)).format("DD/MM/YYYY")} 
                 <br />
-                <b>Due Date </b>= {assignment.due_date.toDate().toDateString()}{" "}
-                at {assignment.assigned_date.toDate().toLocaleTimeString()}
+                <b>Due Date </b> = {moment(new Date(assignment.due_date)).format("DD/MM/YYYY")}
                 <br />
                 <b>Status </b> = {assignment.satus}
               </Typography>

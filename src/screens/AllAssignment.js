@@ -41,7 +41,7 @@ function AllAssignments() {
             <Link
               to={{
                 pathname: "/viewDetails",
-                aboutProps: {
+                state: {
                   data: data[i],
                   type: "assignments"
                 },
@@ -79,7 +79,7 @@ function AllAssignments() {
             <Link
               to={{
                 pathname: "/viewDetails",
-                aboutProps: {
+                state: {
                   data: data[i],
                   type: "timed"
                 },

@@ -20,6 +20,7 @@ import PaymentCollection from './screens/PaymentCollection'
 import Dues from './screens/Dues'
 import ViewDetails from './screens/ViewDetails'
 import EditTutor from './screens/EditTutor'
+import { createBrowserHistory } from 'history';
 
 import {
   BrowserRouter as Router,
@@ -28,8 +29,9 @@ import {
 } from "react-router-dom";
 
 function App() {
+  const browserHistory = createBrowserHistory();
   return (
-    <Router>
+    <Router history={browserHistory}>
       <div>
         <AppBar />
         <Switch>

@@ -37,7 +37,7 @@ function AllAssignments() {
           <Link
             to={{
               pathname: "/viewDetails",
-              aboutProps: {
+              state: {
                 data: data[i],
               },
             }}

@@ -53,7 +53,7 @@ const styles = (theme) => ({
 
 function EditTutor(props) {
   const { classes } = props;
-  console.log(props.location.aboutProps.data)
+  console.log(props.location.state.data)
 
 
   const [name, setName] = useState("");
@@ -63,8 +63,8 @@ function EditTutor(props) {
   const options = countryList().getData();
   useEffect(() => {
     window.scrollTo(0, 0);
-    setName(props.location.aboutProps.data.name)
-    setEmail(props.location.aboutProps.data.email)
+    setName(props.location.state.data.name)
+    setEmail(props.location.state.data.email)
   },[props]);
 
   const changeHandler = (value) => {

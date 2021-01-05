@@ -82,6 +82,7 @@ const useStyles2 = makeStyles((theme) => ({
 
 export default function ViewTutor() {
   const [tutors, setTutors] = useState();
+  const [tutorName,setTutorName] = useState();
   const classes = useStyles();
   const classes2 = useStyles2();
 
@@ -134,9 +135,8 @@ export default function ViewTutor() {
                     <Link
                       to={{
                         pathname: "/disTut",
-                        aboutProps: {
-                          name: tutor.name,
-                          status: "all",
+                        state: {
+                          name: tutor.name
                         },
                       }}
                     >
@@ -152,7 +152,7 @@ export default function ViewTutor() {
                     <Link
                       to={{
                         pathname: "/editTutor",
-                        aboutProps: {
+                        state: {
                           data: tutor
                         },
                       }}
