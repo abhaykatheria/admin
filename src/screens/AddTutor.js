@@ -136,8 +136,11 @@ function AddTutor(props) {
         dues: 0,
       }).then(function (id) {
         console.log(id.id)
-        if(id.id!='')
+        if(id.id!=''){
         alert('Tutor added succesfully')
+          setName('')
+          setEmail('')
+      }
         else
         alert('Some error occured, try again')
       });
