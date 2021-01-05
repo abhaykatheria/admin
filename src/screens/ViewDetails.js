@@ -222,6 +222,7 @@ function get_url_extension(url) {
   return url.split(/[#?]/)[0].split(".").pop().trim();
 }
 
+
 async function func(ar, assignment) {
   const zip = new JSZip();
   let count = 0;
@@ -236,7 +237,10 @@ async function func(ar, assignment) {
     // await new Promise(r => setTimeout(r, 5000));
     // const ext=getExtension(url)
     // console.log(ext)
-    const filename = key + "." + get_url_extension(url);
+    // var temp = url.split(RegExp(% 2..*% 2F(.*?) \?alt))[1].split(".")[0];
+    console.log(url)
+    console.log()
+    const filename = url.split('/').pop().split('#')[0].split('?')[0];
     console.log(file);
 
     zip.file(filename, file, { binary: true });
