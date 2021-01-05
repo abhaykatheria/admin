@@ -5,6 +5,7 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import 'firebase/firebase-firestore'
 import app from 'firebase/app'
 import TimezoneSelect from 'react-timezone-select'
+import { useEffect } from 'react'
 
 
 const styles = theme => ({
@@ -47,7 +48,30 @@ function AddStudent(props) {
     const [time_zone, setTime_Zone] = useState('')
     const [selectedTimezone, setSelectedTimezone] = useState({})
 
-    
+
+    const [allStudents, setAllStudents] = useState([])    
+
+    useEffect(() => {
+        const db = app.firestore();
+        window.scrollTo(0, 0);
+        
+        db.collection('students').onSnapshot((snapshot) => {
+            const data = [];
+            const ids = [];
+            snapshot.forEach((doc) => {
+                data.push({ ...doc.data() })
+            }
+            );
+            let data1 = []
+            for (var i = 0; i < data.length; i++) {
+                data1.push(data[i].name);
+                // console.log(data[i]);
+            }
+            console.log(data1);
+            setAllStudents(data1);
+        });
+    }, []);
+
 
     return (
         <main className={classes.main}>
@@ -90,12 +114,30 @@ function AddStudent(props) {
         </main>
     )
 
+    function validateEmail(email) {
+        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
+    }
 
     async function onRegister() {
         
-        if(name=='' || email=='' || selectedTimezone==''){
+        if(name==''  || selectedTimezone=='' || selectedTimezone=={}){
             return
         }
+
+        if(email!=''){
+            if (!validateEmail(email)) {
+                alert("Please enter a valid email")
+                return
+            }
+        }
+
+        if(allStudents.includes(name)){
+            alert('You have entered a duplicate name, Please try again')
+            //test comment
+            return
+        }
+
         console.log(name, email,time_zone)
         try {
             const db = app.firestore()
@@ -104,9 +146,18 @@ function AddStudent(props) {
                 email: email,
                 time_zone: selectedTimezone.value,
                 collections: 0
-            })
+            }).then(function (id) {
+                console.log(id.id)
+                if (id.id != '') {
+                    alert('Student added succesfully')
+                    setName('')
+                    setEmail('')
+                }
+                else
+                    alert('Some error occured, try again')
+            });
         } catch (error) {
-            alert(error.message)
+            alert('Some error occured, try again')
         }
     }
 }

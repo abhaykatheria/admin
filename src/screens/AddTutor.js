@@ -54,16 +54,11 @@ function AddTutor(props) {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [country, setCountry] = useState("");
 
-  const options = countryList().getData();
   useEffect(() => {
     window.scrollTo(0, 0);
   });
 
-  const changeHandler = (value) => {
-    setCountry(value);
-  };
 
   return (
     <main className={classes.main}>
@@ -99,13 +94,6 @@ function AddTutor(props) {
               onChange={(e) => setEmail(e.target.value)}
             />
           </FormControl>
-          <FormControl margin="normal" required fullWidth>
-            <Select
-              options={options}
-              value={country}
-              onChange={changeHandler}
-            />
-          </FormControl>
           <Button
             type="submit"
             fullWidth
@@ -123,22 +111,43 @@ function AddTutor(props) {
     </main>
   );
 
+  function validateEmail(email) {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  }
+
   async function onRegister() {
-    if (country === "") {
+    if (name=== "" ||email==="") {
       alert("Please Fill All Required Field");
       return;
     }
-    console.log(name, email, country.label);
+
+    if(!validateEmail(email)){
+      alert("Please enter a valid email")
+      return
+    }
+
+    console.log(name, email);
     try {
       const db = app.firestore();
       db.collection("tutors").add({
         name: name,
         email: email,
-        country: country.label,
         dues: 0,
+      }).then(function (id) {
+        console.log(id.id)
+        if(id.id!=''){
+        alert('Tutor added succesfully')
+          setName('')
+          setEmail('')
+      }
+        else
+        alert('Some error occured, try again')
       });
+
     } catch (error) {
-      alert(error.message);
+      alert('Some error occured, try again')
+      // alert(error.message);
     }
   }
 }

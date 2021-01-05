@@ -20,6 +20,7 @@ import PaymentCollection from './screens/PaymentCollection'
 import Dues from './screens/Dues'
 import ViewDetails from './screens/ViewDetails'
 import EditTutor from './screens/EditTutor'
+import ViewStudent from './screens/ViewStudent'
 import { createBrowserHistory } from 'history';
 
 import {
@@ -52,6 +53,7 @@ function App() {
           <Route exact path="/dues" component={Dues} />
           <Route exact path="/viewDetails" component = {ViewDetails} />
           <Route exact path="/editTutor" component = {EditTutor}/>
+          <Route exact path="/viewStudent" component={ViewStudent} />
         </Switch>
       </div>
     </Router>

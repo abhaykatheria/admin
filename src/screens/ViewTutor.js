@@ -123,7 +123,6 @@ export default function ViewTutor() {
                         <br />
                         Dues: {tutor.dues}
                         <br />
-                        Country: {tutor.country}
                       </React.Fragment>
                     }
                   />
