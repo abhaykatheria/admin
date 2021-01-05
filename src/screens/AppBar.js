@@ -112,7 +112,7 @@ export default function APPBar() {
               </Badge>
             </Tooltip>
           </IconButton>
-          <Button color="inherit" component={Link} to="/viewStud">
+          <Button color="inherit" component={Link} to="/viewStudent">
             Search
           </Button>
         </Toolbar>

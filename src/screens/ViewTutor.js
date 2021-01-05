@@ -10,9 +10,12 @@ import { Link } from "react-router-dom";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Divider from "@material-ui/core/Divider";
 import Tooltip from "@material-ui/core/Tooltip";
-import EditRoundedIcon from '@material-ui/icons/EditRounded';
+import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import PriorityHighIcon from "@material-ui/icons/PriorityHigh";
+import Grid from "@material-ui/core/Grid";
+import TextField from "@material-ui/core/TextField";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
@@ -67,22 +70,22 @@ const useStyles2 = makeStyles((theme) => ({
   green: {
     color: "#fff",
     backgroundColor: green[700],
-    '&:hover': {
+    "&:hover": {
       backgroundColor: green[800],
+    },
   },
-},
   grey: {
     color: "#fff",
     backgroundColor: grey[700],
-    '&:hover': {
-        backgroundColor: grey[800],
+    "&:hover": {
+      backgroundColor: grey[800],
     },
   },
 }));
 
 export default function ViewTutor() {
   const [tutors, setTutors] = useState();
-  const [tutorName,setTutorName] = useState();
+  const [searchResult,setSearchResult] = useState();
   const classes = useStyles();
   const classes2 = useStyles2();
 
@@ -94,14 +97,55 @@ export default function ViewTutor() {
       snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
       console.log(data); // <------
       setTutors(data);
+      setSearchResult(data)
     });
   }, []);
 
+  const onSearchTutor = (event,value) => {
+    if(value===null) {
+      setSearchResult(tutors)
+      console.log(tutors)
+    }else{
+      const data1 = [];
+      for (var i = 0; i < tutors.length; i++) {
+        if (tutors[i].name === value) data1.push(tutors[i]);
+      }
+      console.log(data1)
+      setSearchResult(data1)
+    }
+    
+  }
+
   return (
     <div className="body">
+    {tutors !== undefined ? (
+      <Grid
+          container
+          direction="row"
+          justify="space-between"
+          alignItems="center"
+        >
+        <div style={{ width: 300,paddingLeft:"5px" }}>
+          <Autocomplete
+            id="free-solo-demo"
+            freeSolo
+            options={tutors.map((assign)=>assign.name)}
+            onChange = {onSearchTutor}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Search by tutor name "
+                margin="normal"
+                variant="outlined"
+              />
+            )}
+          />
+          </div>
+          </Grid>
+    ):<div></div>}
       <div className="wrapper">
-        {tutors !== undefined ? (
-          tutors.map((tutor) => (
+        {searchResult !== undefined ? (
+          searchResult.map((tutor) => (
             <Card className={classes2.root} variant="outlined">
               <CardContent>
                 <ListItem alignItems="flex-start">
@@ -133,9 +177,10 @@ export default function ViewTutor() {
                   <Tooltip title="All Assignment" arrow>
                     <Link
                       to={{
-                        pathname: "/disTut",
+                        pathname: "/dis",
                         state: {
-                          name: tutor.name
+                          name: tutor.name,
+                          fieldName: "tutor",
                         },
                       }}
                     >
@@ -152,7 +197,7 @@ export default function ViewTutor() {
                       to={{
                         pathname: "/editTutor",
                         state: {
-                          data: tutor
+                          data: tutor,
                         },
                       }}
                     >
@@ -165,20 +210,17 @@ export default function ViewTutor() {
                     </Link>
                   </Tooltip>
                   <Tooltip title="Delete Tutor" arrow>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        className={classes2.button}
-                        children={<DeleteIcon />}
-                        onClick={() => {
-                            const db = app.firestore();
-                            db.collection("tutors")
-                              .doc(tutor.id)
-                              .delete();
-                            console.log(tutors);
-                          }}
-                      ></Button>
-                    
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      className={classes2.button}
+                      children={<DeleteIcon />}
+                      onClick={() => {
+                        const db = app.firestore();
+                        db.collection("tutors").doc(tutor.id).delete();
+                        console.log(tutors);
+                      }}
+                    ></Button>
                   </Tooltip>
                 </div>
               </CardActions>

@@ -7,9 +7,8 @@ import ViewTutor from "./screens/ViewTutor";
 import UpcomingAssignment from "./screens/UpcomingAssignment";
 import Analytics from "./screens/Analytics";
 import AppBar from "./screens/AppBar";
-import ViewStudentSearch from "./screens/ViewStudentSearch";
 import AddStudent from "./screens/AddStudent";
-import DisplayTutor from "./screens/DisplayTutor"
+import DisplayIndividual from "./screens/DisplayIndividual"
 import 'filepond/dist/filepond.min.css';
 import AllAssignment from './screens/AllAssignment'
 import AddTimedAssignment from './screens/AddTimedAssignment'
@@ -21,6 +20,7 @@ import Dues from './screens/Dues'
 import ViewDetails from './screens/ViewDetails'
 import EditTutor from './screens/EditTutor'
 import ViewStudent from './screens/ViewStudent'
+import EditStudent from './screens/EditStudent'
 import { createBrowserHistory } from 'history';
 
 import {
@@ -42,10 +42,9 @@ function App() {
           <Route exact path="/addAss" component={AddAssignment} />
           <Route exact path="/upAss" component={UpcomingAssignment} />
           <Route exact path="/analytics" component={Analytics} />
-          <Route exact path="/viewStud" component={ViewStudentSearch} />
           <Route exact path="/addStudent" component={AddStudent} />
           <Route exact path="/allAss" component={AllAssignment} />
-          <Route exact path="/disTut" component={DisplayTutor} />
+          <Route exact path="/dis" component={DisplayIndividual} />
           <Route exact path="/addTimeAss" component={AddTimedAssignment} />
           <Route exact path="/display" component={Display}/>
           <Route exact path="/timedAss" component={TimedAssignment} />
@@ -53,6 +52,7 @@ function App() {
           <Route exact path="/dues" component={Dues} />
           <Route exact path="/viewDetails" component = {ViewDetails} />
           <Route exact path="/editTutor" component = {EditTutor}/>
+          <Route exact path="/editStudent" component = {EditStudent}/>
           <Route exact path="/viewStudent" component={ViewStudent} />
         </Switch>
       </div>
