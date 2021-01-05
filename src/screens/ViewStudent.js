@@ -11,8 +11,9 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import Divider from "@material-ui/core/Divider";
 import Tooltip from "@material-ui/core/Tooltip";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import PriorityHighIcon from "@material-ui/icons/PriorityHigh";
+import Grid from "@material-ui/core/Grid";
+import TextField from "@material-ui/core/TextField";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
@@ -82,7 +83,7 @@ const useStyles2 = makeStyles((theme) => ({
 
 export default function ViewStudent() {
   const [students, setStudents] = useState();
-  const [tutorName, setTutorName] = useState();
+  const [searchResult,setSearchResult] = useState();
   const classes = useStyles();
   const classes2 = useStyles2();
 
@@ -94,14 +95,55 @@ export default function ViewStudent() {
       snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
       console.log(data); // <------
       setStudents(data);
+      setSearchResult(data);
     });
   }, []);
 
+  const onSearchTutor = (event,value) => {
+    if(value===null) {
+      setSearchResult(students)
+      console.log(students)
+    }else{
+      const data1 = [];
+      for (var i = 0; i < students.length; i++) {
+        if (students[i].name === value) data1.push(students[i]);
+      }
+      console.log(data1)
+      setSearchResult(data1)
+    }
+    
+  }
+
   return (
     <div className="body">
+    {students !== undefined ? (
+      <Grid
+          container
+          direction="row"
+          justify="space-between"
+          alignItems="center"
+        >
+        <div style={{ width: 300,paddingLeft:"5px" }}>
+          <Autocomplete
+            id="free-solo-demo"
+            freeSolo
+            options={students.map((assign)=>assign.name)}
+            onChange = {onSearchTutor}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Search by student name "
+                margin="normal"
+                variant="outlined"
+              />
+            )}
+          />
+          </div>
+          </Grid>
+    ):<div></div>}
       <div className="wrapper">
-        {students !== undefined ? (
-          students.map((student) => (
+        {searchResult !== undefined ? (
+          searchResult.map((student) => (
             <Card className={classes2.root} variant="outlined">
               <CardContent>
                 <ListItem alignItems="flex-start">
