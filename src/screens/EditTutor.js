@@ -53,23 +53,22 @@ const styles = (theme) => ({
 
 function EditTutor(props) {
   const { classes } = props;
-  console.log(props.location.state.data)
+  // console.log(props.location.state.data)
 
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [country, setCountry] = useState("");
+  const [docId,setDocId] = useState("")
+  const [dues,setDues] = useState("")
 
   const options = countryList().getData();
   useEffect(() => {
     window.scrollTo(0, 0);
     setName(props.location.state.data.name)
     setEmail(props.location.state.data.email)
+    setDocId(props.location.state.data.id)
+    setDues(props.location.state.data.dues)
   },[props]);
-
-  const changeHandler = (value) => {
-    setCountry(value);
-  };
 
   return (
     <main className={classes.main}>
@@ -105,13 +104,6 @@ function EditTutor(props) {
               onChange={(e) => setEmail(e.target.value)}
             />
           </FormControl>
-          <FormControl margin="normal" required fullWidth>
-            <Select
-              options={options}
-              value={country}
-              onChange={changeHandler}
-            />
-          </FormControl>
           <Button
             type="submit"
             fullWidth
@@ -129,23 +121,39 @@ function EditTutor(props) {
     </main>
   );
 
+  function validateEmail(email) {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  }
+
   async function onRegister() {
-    if (country === "") {
+    
+    if (name === "" || email === "") {
       alert("Please Fill All Required Field");
       return;
     }
-    console.log(name, email, country.label);
+
+    if (!validateEmail(email)) {
+      alert("Please enter a valid email")
+      return
+    }
+
+    console.log(name, email,docId);
     try {
       const db = app.firestore();
-      db.collection("tutors").add({
+      db.collection("tutors").doc(docId).set({
         name: name,
         email: email,
-        country: country.label,
-        dues: 0,
+        dues: dues
+      }).then(function (id) {
+        alert('Details modified successfully')
       });
+
     } catch (error) {
-      alert(error.message);
+      alert('Some error occured, try again')
+      // alert(error.message);
     }
+
   }
 }
 
