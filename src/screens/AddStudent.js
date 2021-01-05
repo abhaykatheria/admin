@@ -134,6 +134,7 @@ function AddStudent(props) {
 
         if(allStudents.includes(name)){
             alert('You have entered a duplicate name, Please try again')
+            //test comment
             return
         }
 
