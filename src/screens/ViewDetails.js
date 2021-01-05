@@ -12,6 +12,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Tooltip from "@material-ui/core/Tooltip";
 import moment from "moment";
+import { Link } from "react-router-dom";
 import JSZip from "jszip";
 import JSZipUtils from "jszip-utils";
 import saveAs from "save-as";
@@ -67,6 +68,12 @@ export default function TestDisplay(props) {
   const [typeOfAssignment, setTypeOfAssignment] = useState(
     props.location.state.type
   );
+  // const [nav,setNav] = useState()
+  // if (props.location.state.type==="timed"){
+  //   setNav("/editTimed")
+  // }else{
+  //   setNav("/")
+  // }
   const [assignedDate, setAssignedDate] = useState(
     props.location.state.assigned_date
   );
@@ -119,28 +126,44 @@ export default function TestDisplay(props) {
                         }}
                       ></Button>
                     </Tooltip>
-                    <Tooltip title="Change Due Date" arrow>
-                      <Button
-                        variant="contained"
-                        className={`${classes.button} ${classes.grey}`}
-                        children={<PriorityHighIcon />}
-                        onClick={() => {
-                          var dateString = window.prompt(
-                            "Enter the new due date in this format:- DD/MM/YYY"
-                          );
-                          if (dateString == null) return;
-                          var dateObj = moment(dateString, "DD/MM/YYYY")._d;
-                          if (dateString === "" || dateObj === "Invalid Date")
-                            alert("Enter a valid date");
-                          const db = app.firestore();
-                          console.log(dateString, dateObj);
-                          db.collection(typeOfAssignment)
-                            .doc(assignment.id)
-                            .update({
-                              due_date: dateObj,
-                            });
-                        }}
-                      ></Button>
+                    <Tooltip title="Edit" arrow>
+                      {typeOfAssignment === "timed" ? (
+                        <Link
+                          to={{
+                            pathname: "/editTimed",
+                            state: {
+                              data: assignment,
+                              due_date: dueDate,
+                              assigned_date: assignedDate,
+                            },
+                          }}
+                        >
+                          <Button
+                            variant="contained"
+                            className={`${classes.button} ${classes.grey}`}
+                            children={<PriorityHighIcon />}
+                            onClick={() => {}}
+                          ></Button>
+                        </Link>
+                      ) : (
+                        <Link
+                          to={{
+                            pathname: "/editAssignment",
+                            state: {
+                              data: assignment,
+                              due_date: dueDate,
+                              assigned_date: assignedDate,
+                            },
+                          }}
+                        >
+                          <Button
+                            variant="contained"
+                            className={`${classes.button} ${classes.grey}`}
+                            children={<PriorityHighIcon />}
+                            onClick={() => {}}
+                          ></Button>
+                        </Link>
+                      )}
                     </Tooltip>
                     <Tooltip title="Mark As Completed" arrow>
                       <Button
