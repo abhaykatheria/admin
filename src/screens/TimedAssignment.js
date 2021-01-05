@@ -39,6 +39,7 @@ function AllAssignments() {
               pathname: "/viewDetails",
               state: {
                 data: data[i],
+                type: "timed",
                 assigned_date: moment(
                     data[i].assigned_date.toDate().toDateString()
                   ).format("DD/MM/YYYY"),
