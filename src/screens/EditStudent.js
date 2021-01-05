@@ -55,12 +55,17 @@ function EditStudent(props) {
 
   const [name, setName] = useState(props.location.state.data.name);
   const [email, setEmail] = useState(props.location.state.data.email);
+  const [docId,setDocId] = useState(props.location.state.data.id);
+  const [collections, setCollections] = useState(props.location.state.data.collections);
+
   const [time_zone, setTime_Zone] = useState(
     props.location.state.data.time_zone
   );
   const [selectedTimezone, setSelectedTimezone] = useState(
     props.location.state.data.time_zone
   );
+  
+  console.log(docId,collections)
 
   const [allStudents, setAllStudents] = useState([]);
 
@@ -91,7 +96,7 @@ function EditStudent(props) {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Add Student
+          Edit Student
         </Typography>
         <form
           className={classes.form}
@@ -168,25 +173,19 @@ function EditStudent(props) {
     console.log(name, email, time_zone);
     try {
       const db = app.firestore();
-      db.collection("students")
-        .add({
-          name: name,
-          email: email,
-          time_zone: selectedTimezone.value,
-          collections: 0,
-        })
-        .then(function (id) {
-          console.log(id.id);
-          if (id.id != "") {
-            alert("Student added succesfully");
-            setName("");
-            setEmail("");
-          } else alert("Some error occured, try again");
-        });
+      db.collection("students").doc(docId).set({
+        name: name,
+        email: email,
+        collections: collections,
+        time_zone: selectedTimezone
+      }).then(function () {
+        alert('Details modified successfully')
+      });
     } catch (error) {
       alert("Some error occured, try again");
     }
   }
 }
+
 
 export default withStyles(styles)(EditStudent);
