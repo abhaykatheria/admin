@@ -26,6 +26,12 @@ const images = [
   },
   {
     url: image1,
+    title: "View Student",
+    route: "/viewStudent",
+    width: "30%",
+  },
+  {
+    url: image1,
     title: "Add Assignment",
     route: "/addAss",
     width: "30%",
