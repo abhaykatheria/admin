@@ -420,20 +420,18 @@ function AddAssignment(props) {
     try {
       const db = app.firestore();
       try {
-
-        if(due_date.length>10){
-          setDueDate(moment(due_date.toDateString()).format(
-            "DD/MM/YYYY"
-          ))
+        console.log(due_date);
+        if(due_date===undefined){
+          console.log('huehue')
+          
         }
-
+        if(due_date===undefined){
         await db
           .collection("assignments").doc(docId)
           .update({
             amount_paid: parseInt(amount_paid),
-            assigned_date: props.location.state.data.assigned_date,
+            // assigned_date: props.location.state.data.assigned_date,
             comments: comments,
-            due_date: due_date,
             payment_pending: payment_pending,
             price: parseInt(price),
             satus: satus,
@@ -447,6 +445,30 @@ function AddAssignment(props) {
           .then((doc) => {  
             alert("Assignment updated successfully")
           });
+        }
+          else{
+          await db
+            .collection("assignments").doc(docId)
+            .update({
+              amount_paid: parseInt(amount_paid),
+              // assigned_date: props.location.state.data.assigned_date,
+              comments: comments,
+              due_date: due_date,
+              payment_pending: payment_pending,
+              price: parseInt(price),
+              satus: satus,
+              student: student,
+              subject: subject,
+              tutor: tutor,
+              tutor_fee: parseInt(tutor_fee),
+              ass_id: x,
+              // time_zone: selectedTimezone.value,
+            })
+            .then((doc) => {
+              alert("Assignment updated successfully")
+            });
+          }
+
 
         db.collection("tutors").onSnapshot((snapshot) => {
           snapshot.forEach((doc) => {
@@ -463,11 +485,11 @@ function AddAssignment(props) {
         alert(error.message);
       }
 
-      if(false){
+      if(duesFlag){
       updateDues();
       updateDuesCollection(x);
       }
-      if(false){
+      if(colFlag){
       updatePayment(x);
       updateStudentCollection();
       }
