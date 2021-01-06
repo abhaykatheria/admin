@@ -78,6 +78,8 @@ export default function TestDisplay(props) {
     props.location.state.assigned_date
   );
   const [dueDate, setDueDate] = useState(props.location.state.due_date);
+  const [startDate, setStartDate] = useState(props.location.state.start_date);
+  console.log(startDate)
   console.log(assignment);
   const classes = useStyles();
   const [ar, setAr] = useState([]);
@@ -135,6 +137,7 @@ export default function TestDisplay(props) {
                               data: assignment,
                               due_date: dueDate,
                               assigned_date: assignedDate,
+                              start_date: startDate,
                             },
                           }}
                         >

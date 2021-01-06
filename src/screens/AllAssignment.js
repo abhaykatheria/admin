@@ -94,6 +94,9 @@ function AllAssignments() {
                   due_date: moment(
                     data[i].due_date.toDate().toDateString()
                   ).format("DD/MM/YYYY"),
+                  start_date: moment(
+                    data[i].start_date.toDate().toDateString()
+                  ).format("DD/MM/YYYY"),
                   type: "timed",
                 },
               }}

@@ -15,11 +15,14 @@ import firebase from "firebase";
 import "firebase/firebase-firestore";
 import app from "firebase/app";
 import { useEffect } from "react";
+import DateTimePicker from "react-datetime-picker";
 import "firebase/firebase-storage";
 import { FilePond } from "react-filepond";
 import TimezoneSelect from "react-timezone-select";
 import * as emailjs from "emailjs-com";
-import DurationPicker from "react-duration-picker";
+import moment from "moment";
+import DurationPicker from 'react-duration-picker'
+
 
 const styles = (theme) => ({
   main: {
@@ -38,9 +41,8 @@ const styles = (theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: `${theme.spacing.unit * 5}px ${theme.spacing.unit * 2}px ${
-      theme.spacing.unit * 3
-    }px ${theme.spacing.unit * 3}px`,
+    padding: `${theme.spacing.unit * 5}px ${theme.spacing.unit * 2}px ${theme.spacing.unit * 3
+      }px ${theme.spacing.unit * 3}px`,
   },
   avatar: {
     margin: theme.spacing.unit,
@@ -55,8 +57,9 @@ const styles = (theme) => ({
   },
 });
 
-function EditTimedAssignment(props) {
+function AddAssignment(props) {
   const { classes } = props;
+  // console.log(props.location.state);
 
   const [tutor, setTutor] = useState(props.location.state.data.tutor);
   const [allTutors, setAllTutors] = useState([]);
@@ -70,7 +73,7 @@ function EditTimedAssignment(props) {
   const [tutor_fee, setTutorFee] = useState(
     props.location.state.data.tutor_fee
   );
-  const [due_date, setDueDate] = useState(props.location.state.due_date);
+  const [due_date, setDueDate] = useState(props.location.state.data.due_date);
   const [comments, setComments] = useState(props.location.state.data.comments);
   const [assigned_date, setAssignedDate] = useState(
     props.location.state.assigned_date
@@ -83,34 +86,43 @@ function EditTimedAssignment(props) {
   const [file, setFile] = useState("");
   const [tutorId, setTutorId] = useState("");
   const [dues, setDues] = useState("");
-  const [assId, setAssId] = useState("");
+  const [assId, setAssId] = useState(props.location.state.data.ass_id);
   const [studentCollections, setStudentCollections] = useState("");
   const [files, setFiles] = useState([]);
   const [fileAr, setFileAr] = useState([]);
-  const [selectedTimezone, setSelectedTimezone] = useState(
-    props.location.state.data.time_zone
-  );
+  const [docId, setDocId] = useState(props.location.state.data.id)
+  const [duesFlag, setDuesFlag] = useState(true)
+  const [colFlag, setColFlag] = useState(true)
+  const [startDate, setStartDate] = useState('')
+  const [duration, setDuration] = useState(props.location.state.data.duration)
+  // console.log(props.location.state, duration)
+
+  // const [selectedTimezone, setSelectedTimezone] = useState(
+  //   props.location.state.data.time_zone
+  // );
   const [tutorEmail, setTutorEmail] = useState("");
-  const [duration, setDuration] = useState();
-  const [disStud, setDisStud] = useState([
-    {
-      value: props.location.state.data.student,
-      label: props.location.state.data.student,
-    },
-  ]);
 
   const changeTutorHandler = (value) => {
     setTutor(value);
-    console.log({ value });
+    console.log({ value }, value.dues);
+    setTutorId(value.id);
   };
 
   const changeStudentHandler = (value) => {
     setstudent(value);
+    console.log({ value });
   };
 
-  const onTimeChange = (duration) => {};
-
   useEffect(() => {
+    console.log(duration)
+    console.log(startDate)
+    if (props.location.state.data.price > 0 || props.location.state.data.amount_paid)
+      setColFlag(false)
+
+    if (props.location.state.data.tutor_fee)
+      setDuesFlag(false)
+
+    console.log(assId, docId)
     const db = app.firestore();
     window.scrollTo(0, 0);
     db.collection("tutors").onSnapshot((snapshot) => {
@@ -124,7 +136,8 @@ function EditTimedAssignment(props) {
       console.log(ids);
       let data1 = [];
       for (var i = 0; i < data.length; i++) {
-        data1.push({ name: data[i].name, id: ids[i], email: data[i].email });
+        data1.push({ ...data[i], id: ids[i] });
+        console.log(data[i], data1[i].dues);
         // console.log(data[i]);
       }
       data1 = data1.map((dat) => {
@@ -132,10 +145,12 @@ function EditTimedAssignment(props) {
           value: dat.id,
           label: dat.name,
           email: dat.email,
+          dues: dat.dues,
+          id: dat.id,
         };
       });
-      console.log(data1);
       setAllTutors(data1);
+      console.log(allTutors);
     });
 
     db.collection("students").onSnapshot((snapshot) => {
@@ -161,6 +176,7 @@ function EditTimedAssignment(props) {
           value: dat.id,
           label: dat.name,
           collections: dat.collections,
+          id: dat.id,
         };
       });
       console.log(data1);
@@ -176,7 +192,7 @@ function EditTimedAssignment(props) {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Edit Assignment
+            Modify Assignment
           </Typography>
           <form
             className={classes.form}
@@ -186,9 +202,9 @@ function EditTimedAssignment(props) {
               <p>Student</p>
               <Select
                 options={allStudents}
-                defaultInputValue = {student}
                 value={student}
                 isDisabled
+                defaultInputValue={student}
                 onChange={changeStudentHandler}
               />
             </FormControl>
@@ -196,20 +212,19 @@ function EditTimedAssignment(props) {
               <p>Tutor</p>
               <Select
                 options={allTutors}
-                // defaultValue={tutor}
-                defaultInputValue = {tutor}
                 isDisabled
                 value={tutor}
+                defaultInputValue={tutor}
                 onChange={changeTutorHandler}
               />
             </FormControl>
-            <p>Time zone</p>
+            {/* <p>Time zone</p>
             <div className="select-wrapper">
               <TimezoneSelect
                 value={selectedTimezone}
                 onChange={setSelectedTimezone}
               />
-            </div>
+            </div> */}
 
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="name">Subject</InputLabel>
@@ -224,7 +239,7 @@ function EditTimedAssignment(props) {
             </FormControl>
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="name">Price</InputLabel>
-              <Input
+              {price === 0 && <Input
                 id="name"
                 name="name"
                 autoComplete="off"
@@ -232,28 +247,65 @@ function EditTimedAssignment(props) {
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
               />
+              }
+              {price !== 0 && <Input
+                id="name"
+                name="name"
+                autoComplete="off"
+                autoFocus
+                disabled
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+              />
+              }
             </FormControl>
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="name">Amount Paid</InputLabel>
-              <Input
-                id="name"
-                name="name"
-                autoComplete="off"
-                autoFocus
-                value={amount_paid}
-                onChange={(e) => setAmountPaid(e.target.value)}
-              />
+              {amount_paid === 0 &&
+                <Input
+                  id="name"
+                  name="name"
+                  autoComplete="off"
+                  autoFocus
+                  value={amount_paid}
+                  onChange={(e) => setAmountPaid(e.target.value)}
+                />
+              }
+              {amount_paid !== 0 &&
+                <Input
+                  id="name"
+                  name="name"
+                  autoComplete="off"
+                  disabled
+                  autoFocus
+                  value={amount_paid}
+                  onChange={(e) => setAmountPaid(e.target.value)}
+                />
+              }
             </FormControl>
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="name">Tutor Fee</InputLabel>
-              <Input
-                id="name"
-                name="name"
-                autoComplete="off"
-                autoFocus
-                value={tutor_fee}
-                onChange={(e) => setTutorFee(e.target.value)}
-              />
+              {tutor_fee === 0 &&
+                <Input
+                  id="name"
+                  name="name"
+                  autoComplete="off"
+                  autoFocus
+                  value={tutor_fee}
+                  onChange={(e) => setTutorFee(e.target.value)}
+                />
+              }
+              {tutor_fee !== 0 &&
+                <Input
+                  id="name"
+                  name="name"
+                  autoComplete="off"
+                  autoFocus
+                  disabled
+                  value={tutor_fee}
+                  onChange={(e) => setTutorFee(e.target.value)}
+                />
+              }
             </FormControl>
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="name">Comments</InputLabel>
@@ -266,17 +318,25 @@ function EditTimedAssignment(props) {
                 onChange={(e) => setComments(e.target.value)}
               />
             </FormControl>
-            <FormControl>
-              <DurationPicker
-                onChange={(duration) => {
-                  // console.log(hours,minutes,seconds)
 
-                  setDuration(duration);
-                }}
-                initialDuration={{ hours: 0, minutes: 0, seconds: 0 }}
-                maxHours={100}
-              />
+            <FormControl margin="normal" required fullWidth>
+              <p>Start Date</p>
+              <p>{props.location.state.start_date}</p>
+              <DateTimePicker onChange={setStartDate} value={startDate} />
             </FormControl>
+            
+            <DurationPicker
+              onChange={(duration) => {
+
+                // console.log(hours,minutes,seconds)
+
+                setDuration(duration)
+              }
+              }
+              initialDuration={props.location.state.data.duration}
+              maxHours={24}
+            />
+
             <FilePond
               files={files}
               allowMultiple={true}
@@ -328,7 +388,8 @@ function EditTimedAssignment(props) {
   }
 
   async function onRegister() {
-    console.log(files);
+    console.log(duesFlag, colFlag)
+    // console.log(selectedTimezone);
     const tempar = [];
     for (let i = 0; i < files.length; i++) {
       tempar.push(files[i].file);
@@ -337,31 +398,18 @@ function EditTimedAssignment(props) {
     // setFileAr(tempar)
     console.log(tempar);
 
-    console.log(duration);
-    const { hours, minutes, seconds } = duration;
-    var dt = new Date();
-    dt.setHours(dt.getHours() + hours);
-    dt.setMinutes(dt.getMinutes() + minutes);
-    console.log(dt);
-    setDueDate(dt);
+    // console.log(hashPwd);
 
     if (
-      tutor === "" ||
-      student === "" ||
-      subject === "" ||
-      price === "" ||
-      amount_paid === "" ||
-      tutor_fee === "" ||
-      comments === "" ||
-      due_date === "" ||
-      tempar === "" ||
-      selectedTimezone === ""
+      tutor == "" ||
+      student == ""
+      // selectedTimezone == ""
     ) {
       alert("Please Fill All Required Field");
       return;
     }
 
-    let x = student.label + tutor.label + assigned_date.toISOString();
+    let x = assId;
     console.log("huehue       " + x);
     setAssId(x);
 
@@ -369,7 +417,7 @@ function EditTimedAssignment(props) {
 
     console.log(
       student,
-      tutor.label,
+      tutor,
       subject,
       price,
       amount_paid,
@@ -389,35 +437,58 @@ function EditTimedAssignment(props) {
     try {
       const db = app.firestore();
       try {
-        await db
-          .collection("timed")
-          .add({
-            amount_paid: parseInt(amount_paid),
-            assigned_date: assigned_date,
-            comments: comments,
-            due_date: due_date,
-            payment_pending: payment_pending,
-            price: parseInt(price),
-            satus: satus,
-            student: student.label,
-            subject: subject,
-            tutor: tutor.label,
-            tutor_fee: parseInt(tutor_fee),
-            ass_id: x,
-            time_zone: selectedTimezone.value,
-          })
-          .then((doc) => {
-            console.log(doc.id, due_date, price - amount_paid, student);
-            console.log(
-              doc.id,
-              due_date,
-              "pending",
-              tutor.label,
-              tutor_fee,
-              tutorId
-            );
-            setAssId(doc.id);
-          });
+        console.log(docId,amount_paid,comments,payment_pending,price,student,subject,tutor,duration,comments)
+        if (startDate === undefined) {
+          console.log('huehue')
+
+        }
+        if (startDate === undefined) {
+          await db
+            .collection("timed").doc(docId)
+            .update({
+              amount_paid: parseInt(amount_paid),
+              // assigned_date: props.location.state.data.assigned_date,
+              comments: comments,
+              payment_pending: payment_pending,
+              price: parseInt(price),
+              satus: satus,
+              student: student,
+              subject: subject,
+              tutor: tutor,
+              duration: duration,
+              tutor_fee: parseInt(tutor_fee),
+              ass_id: x,
+              // time_zone: selectedTimezone.value,
+            })
+            .then((doc) => {
+              alert("Assignment updated successfully")
+            });
+        }
+        else {
+          await db
+            .collection("timed").doc(docId)
+            .update({
+              amount_paid: parseInt(amount_paid),
+              // assigned_date: props.location.state.data.assigned_date,
+              comments: comments,
+              due_date: due_date,
+              start_date: startDate,
+              duration: duration,
+              payment_pending: payment_pending,
+              price: parseInt(price),
+              satus: satus,
+              student: student,
+              subject: subject,
+              tutor: tutor,
+              tutor_fee: parseInt(tutor_fee),
+              ass_id: x,
+              // time_zone: selectedTimezone.value,
+            })
+            .then((doc) => {
+              alert("Assignment updated successfully")
+            });
+        }
+
 
         db.collection("tutors").onSnapshot((snapshot) => {
           snapshot.forEach((doc) => {
@@ -433,14 +504,21 @@ function EditTimedAssignment(props) {
       } catch (error) {
         alert(error.message);
       }
+
+      // if (duesFlag) {
+      //   updateDues();
+      //   updateDuesCollection(x);
+      // }
+      // if (colFlag) {
+      //   updatePayment(x);
+      //   updateStudentCollection();
+      // }
     } catch (error) {
       alert(error.message);
     }
-    updateDues();
-    // updateDuesCollection()
-    // updatePayment()
-    sendEmail();
-    updateStudentCollection();
+
+    // sendEmail();
+    // updateTutorDues()
   }
   // updateDues();
   // updateDuesCollection();
@@ -460,10 +538,10 @@ function EditTimedAssignment(props) {
     console.log(message);
 
     let templateParams = {
-      to_name: "chitransh.326@gmail.com",
-      from_name: tutor.email,
+      to_name: tutor.email,
+      from_name: "chitransh.326@gmail.com",
       subject: "New Assignment Assigned",
-      message_html: "message",
+      message: message,
     };
 
     emailjs.send(
@@ -475,10 +553,12 @@ function EditTimedAssignment(props) {
   }
 
   async function updateDues() {
+    console.log(tutor.dues);
     try {
       if (tutorId != "") {
-        // console.log(dues);
-        await app.firestore().collection("tutors").doc(tutorId).update({
+        console.log(tutor);
+        let dues = tutor.dues + parseInt(tutor_fee);
+        await app.firestore().collection("tutors").doc(tutor.id).update({
           dues: dues,
         });
       }
@@ -487,34 +567,39 @@ function EditTimedAssignment(props) {
     }
   }
 
-  async function updateDuesCollection() {
+  async function updateDuesCollection(x) {
     try {
       // console.log(dues);
-      await app.firestore().collection("dues").add({
-        assg_id: assId,
-        due_date: due_date,
-        status: "pending",
-        tutor: tutor.label,
-        tutor_fee: tutor_fee,
-        tutorId: tutorId,
-      });
+      console.log({ assId });
+      await app
+        .firestore()
+        .collection("dues")
+        .add({
+          assg_id: x,
+          due_date: due_date,
+          status: "pending",
+          tutor: tutor.label,
+          tutor_fee: parseInt(tutor_fee),
+          tutorId: tutorId,
+        });
     } catch (error) {
       alert(error.message);
     }
   }
 
-  async function updatePayment() {
+  async function updatePayment(x) {
     try {
-      // console.log(dues);
+      console.log(student);
       await app
         .firestore()
         .collection("payment_collection")
         .add({
-          assg_id: assId,
+          assg_id: x,
           due_date: due_date,
           pending: price - amount_paid,
           status: "pending",
           student: student.label,
+          id: student.id,
         });
     } catch (error) {
       alert(error.message);
@@ -529,7 +614,8 @@ function EditTimedAssignment(props) {
         .collection("students")
         .doc(student.value)
         .update({
-          collections: parseInt(student.collections) + parseInt(price),
+          collections:
+            parseInt(student.collections) + parseInt(price - amount_paid),
         });
     } catch (error) {
       alert(error.message);
@@ -537,4 +623,4 @@ function EditTimedAssignment(props) {
   }
 }
 
-export default withStyles(styles)(EditTimedAssignment);
+export default withStyles(styles)(AddAssignment);
