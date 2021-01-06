@@ -158,7 +158,7 @@ export default function PaymentCollection(props) {
                             <CardActions>
                                 <div style={{ margin: "0 auto", textAlign: "center" }}>
                                     <Tooltip title="Mark as paid" arrow>
-                                        <Link>
+                                        
                                             <Button
                                                 variant="contained"
                                                 color="primary"
@@ -171,7 +171,7 @@ export default function PaymentCollection(props) {
                                                     
                                                 }}
                                             ></Button>
-                                        </Link>
+                                        
                                     </Tooltip>
                                 </div>
                             </CardActions>
