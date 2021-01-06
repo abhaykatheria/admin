@@ -442,7 +442,7 @@ function AddAssignment(props) {
           console.log('huehue')
 
         }
-        if (startDate === undefined) {
+        if (startDate === undefined || startDate==='') {
           await db
             .collection("timed").doc(docId)
             .update({
@@ -458,6 +458,7 @@ function AddAssignment(props) {
               duration: duration,
               tutor_fee: parseInt(tutor_fee),
               ass_id: x,
+              start_date: props.location.state.data.start_date,
               // time_zone: selectedTimezone.value,
             })
             .then((doc) => {
@@ -471,7 +472,6 @@ function AddAssignment(props) {
               amount_paid: parseInt(amount_paid),
               // assigned_date: props.location.state.data.assigned_date,
               comments: comments,
-              due_date: due_date,
               start_date: startDate,
               duration: duration,
               payment_pending: payment_pending,
