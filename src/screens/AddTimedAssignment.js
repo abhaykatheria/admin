@@ -73,7 +73,7 @@ function AddTimedAssignment(props) {
     const [comments, setComments] = useState('')
     const [assigned_date, setAssignedDate] = useState(new Date())
     const [payment_pending, setPaymentPending] = useState(true)
-    const [satus, setStatus] = useState("ongoing")
+    const [satus, setStatus] = useState("not started")
     const [assURL, setAssURL] = useState('')
     const [file, setFile] = useState('')
     const [tutorId, setTutorId] = useState('')
