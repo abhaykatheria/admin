@@ -55,15 +55,14 @@ function Analytics() {
         var daysCount = {};
         snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
         for (var key in data) {
-          var date = moment(data[key].assigned_date.toDate().toDateString());
+          var date = moment(data[key].due_date.toDate().toDateString());
           console.log(date);
-          var weekNumber = moment(date).format("w");
-          console.log(weekNumber);
+          var dayNumber = moment(date).format("d");
+          console.log(dayNumber);
           var weekDay = moment(date)
-            .add(weekNumber - 1, "weeks")
-            .subtract(7, "days")
+            .subtract(dayNumber, "days")
             .format("MMM DD");
-
+          console.log(dayNumber,weekDay)
           if (datePrice[date.format("MMM DD YYYY")] !== undefined) {
             datePrice[date.format("MMM DD YYYY")] += data[key].price;
           } else {
