@@ -63,7 +63,7 @@ const images = [
   {
     url: image1,
     title: "Payment Collection",
-    route: "/payCol",
+    route: "/paymentData",
     width: "30%",
   },
   {
