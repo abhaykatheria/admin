@@ -125,7 +125,7 @@ function AddAssignment(props) {
                 }
             })
             setAllTutors(data1);
-            console.log(allTutors);
+            // console.log(allTutors);
         });
 
         db.collection('students').onSnapshot((snapshot) => {
