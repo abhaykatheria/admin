@@ -20,6 +20,8 @@ import "firebase/firebase-storage";
 import { FilePond } from "react-filepond";
 import TimezoneSelect from "react-timezone-select";
 import * as emailjs from "emailjs-com";
+import moment from "moment";
+
 
 const styles = (theme) => ({
   main: {
@@ -57,7 +59,7 @@ const styles = (theme) => ({
 
 function AddAssignment(props) {
   const { classes } = props;
-  console.log(props.location.state);
+  // console.log(props.location.state);
 
   const [tutor, setTutor] = useState(props.location.state.data.tutor);
   const [allTutors, setAllTutors] = useState([]);
@@ -71,7 +73,7 @@ function AddAssignment(props) {
   const [tutor_fee, setTutorFee] = useState(
     props.location.state.data.tutor_fee
   );
-  const [due_date, setDueDate] = useState(props.location.state.due_date);
+  const [due_date, setDueDate] = useState();
   const [comments, setComments] = useState(props.location.state.data.comments);
   const [assigned_date, setAssignedDate] = useState(
     props.location.state.assigned_date
@@ -84,10 +86,14 @@ function AddAssignment(props) {
   const [file, setFile] = useState("");
   const [tutorId, setTutorId] = useState("");
   const [dues, setDues] = useState("");
-  const [assId, setAssId] = useState("");
+  const [assId, setAssId] = useState(props.location.state.data.ass_id);
   const [studentCollections, setStudentCollections] = useState("");
   const [files, setFiles] = useState([]);
   const [fileAr, setFileAr] = useState([]);
+  const [docId,setDocId] = useState(props.location.state.data.id)
+  const [duesFlag,setDuesFlag] = useState(true)
+  const [colFlag, setColFlag] = useState(true)
+
   // const [selectedTimezone, setSelectedTimezone] = useState(
   //   props.location.state.data.time_zone
   // );
@@ -105,6 +111,14 @@ function AddAssignment(props) {
   };
 
   useEffect(() => {
+    console.log(assigned_date,due_date,props.location.state.data.due_date)
+    if (props.location.state.data.price > 0 || props.location.state.data.amount_paid)
+    setColFlag(false)
+    
+    if (props.location.state.data.tutor_fee)
+    setDuesFlag(false)
+
+    console.log(assId,docId)
     const db = app.firestore();
     window.scrollTo(0, 0);
     db.collection("tutors").onSnapshot((snapshot) => {
@@ -174,7 +188,7 @@ function AddAssignment(props) {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Add Assignment
+            Modify Assignment
           </Typography>
           <form
             className={classes.form}
@@ -300,8 +314,10 @@ function AddAssignment(props) {
                 onChange={(e) => setComments(e.target.value)}
               />
             </FormControl>
+            
             <FormControl margin="normal" required fullWidth>
               <p>Due Date</p>
+              <p>{props.location.state.due_date}</p>
               <DateTimePicker onChange={setDueDate} value={due_date} />
             </FormControl>
             <FilePond
@@ -355,6 +371,7 @@ function AddAssignment(props) {
   }
 
   async function onRegister() {
+    console.log(duesFlag,colFlag)
     // console.log(selectedTimezone);
     const tempar = [];
     for (let i = 0; i < files.length; i++) {
@@ -368,21 +385,14 @@ function AddAssignment(props) {
 
     if (
       tutor == "" ||
-      student == "" ||
-      subject == "" ||
-      price == "" ||
-      amount_paid == "" ||
-      tutor_fee == "" ||
-      comments == "" ||
-      due_date == "" ||
-      tempar == "" 
+      student == "" 
       // selectedTimezone == ""
     ) {
       alert("Please Fill All Required Field");
       return;
     }
 
-    let x = student.label + tutor.label + assigned_date.toISOString();
+    let x = assId;
     console.log("huehue       " + x);
     setAssId(x);
 
@@ -390,7 +400,7 @@ function AddAssignment(props) {
 
     console.log(
       student,
-      tutor.label,
+      tutor,
       subject,
       price,
       amount_paid,
@@ -410,34 +420,32 @@ function AddAssignment(props) {
     try {
       const db = app.firestore();
       try {
+
+        if(due_date.length>10){
+          setDueDate(moment(due_date.toDateString()).format(
+            "DD/MM/YYYY"
+          ))
+        }
+
         await db
-          .collection("assignments")
-          .add({
+          .collection("assignments").doc(docId)
+          .update({
             amount_paid: parseInt(amount_paid),
-            assigned_date: assigned_date,
+            assigned_date: props.location.state.data.assigned_date,
             comments: comments,
             due_date: due_date,
             payment_pending: payment_pending,
             price: parseInt(price),
             satus: satus,
-            student: student.label,
+            student: student,
             subject: subject,
-            tutor: tutor.label,
+            tutor: tutor,
             tutor_fee: parseInt(tutor_fee),
             ass_id: x,
             // time_zone: selectedTimezone.value,
           })
-          .then((doc) => {
-            console.log(doc.id, due_date, price - amount_paid, student);
-            console.log(
-              doc.id,
-              due_date,
-              "pending",
-              tutor.label,
-              tutor_fee,
-              tutorId
-            );
-            setAssId(doc.id);
+          .then((doc) => {  
+            alert("Assignment updated successfully")
           });
 
         db.collection("tutors").onSnapshot((snapshot) => {
@@ -455,15 +463,19 @@ function AddAssignment(props) {
         alert(error.message);
       }
 
+      if(false){
       updateDues();
       updateDuesCollection(x);
+      }
+      if(false){
       updatePayment(x);
       updateStudentCollection();
+      }
     } catch (error) {
       alert(error.message);
     }
 
-    sendEmail();
+    // sendEmail();
     // updateTutorDues()
   }
   // updateDues();

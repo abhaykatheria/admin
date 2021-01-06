@@ -22,6 +22,7 @@ function AllAssignments() {
         const data = [];
         snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
         for (var i = 0; i < data.length; i++) {
+          console.log(new Date(data[i].due_date.seconds*1000))
           data1.push([
             data[i].student,
             data[i].subject,

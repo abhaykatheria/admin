@@ -79,14 +79,20 @@ const useStyles2 = makeStyles((theme) => ({
 }));
 
 export default function PaymentCollection(props) {
-    const [dues, setDues] = useState();
-    const[id,setId] = useState(props.location.state.data.id)
-    const[fieldName,setFieldName] = useState(props.location.state.fieldName)
-    const [duesMap,setDuesMap] = useState();
+
+        const [dues, setDues] = useState();
+        const [id, setId] = useState(props.location.state.data.id)
+        const [fieldName, setFieldName] = useState(props.location.state.fieldName)
+        const [duesMap, setDuesMap] = useState();
+
+
     const classes = useStyles();
     const classes2 = useStyles2();
 
     useEffect(() => {
+        setId(props.location.state.data.id)
+        setFieldName(props.location.state.fieldName)
+        
         const db = app.firestore();
         window.scrollTo(0, 0);
         db.collection("dues").where(fieldName,"==",id).onSnapshot((snapshot) => {
@@ -152,9 +158,7 @@ export default function PaymentCollection(props) {
                             <CardActions>
                                 <div style={{ margin: "0 auto", textAlign: "center" }}>
                                     <Tooltip title="Mark as paid" arrow>
-                                        <Link
-                                            
-                                        >
+                                        <Link>
                                             <Button
                                                 variant="contained"
                                                 color="primary"
@@ -164,6 +168,7 @@ export default function PaymentCollection(props) {
                                                     console.log(assignment)
                                                     deleteDoc(assignment)
                                                     updateDues(duesMap[assignment.tutorId],assignment)
+                                                    
                                                 }}
                                             ></Button>
                                         </Link>
