@@ -78,8 +78,10 @@ const useStyles2 = makeStyles((theme) => ({
     },
 }));
 
-export default function PaymentCollection() {
+export default function PaymentCollection(props) {
     const [dues, setDues] = useState();
+    const[id,setId] = useState(props.location.state.data.id)
+    const[fieldName,setFieldName] = useState(props.location.state.fieldName)
     const [duesMap,setDuesMap] = useState();
     const classes = useStyles();
     const classes2 = useStyles2();
@@ -87,7 +89,7 @@ export default function PaymentCollection() {
     useEffect(() => {
         const db = app.firestore();
         window.scrollTo(0, 0);
-        db.collection("dues").onSnapshot((snapshot) => {
+        db.collection("dues").where(fieldName,"==",id).onSnapshot((snapshot) => {
             const data = [];
             snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
             console.log(data); // <------
@@ -96,9 +98,9 @@ export default function PaymentCollection() {
             );
             
             setDues(data);
+            console.log(data)
         });
-
-        
+ 
         db.collection('tutors').onSnapshot((snapshot) => {
             const data=[]
             snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));

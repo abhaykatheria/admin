@@ -57,7 +57,7 @@ const images = [
   {
     url: image1,
     title: "Dues",
-    route: "/dues",
+    route: "/duesData",
     width: "30%",
   },
   {

@@ -18,6 +18,7 @@ function TabularDisplay(props) {
   const options = {
     filter: true,
     filterType: "dropdown",
+    selectableRows: false, 
     onRowClick: (rowData, rowMeta) => {
       console.log(rowData);
     },

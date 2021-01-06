@@ -179,11 +179,6 @@ export default function TestDisplay(props) {
                             .update({
                               satus: "completed",
                             });
-                            setAssignment({
-                              ...assignment,
-                              satus: 'completed'
-                            })
-                          assignment.status="completed"
                           console.log(assignment);
                         }}
                       ></Button>

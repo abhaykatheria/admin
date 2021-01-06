@@ -23,6 +23,7 @@ import ViewStudent from "./screens/ViewStudent";
 import EditStudent from "./screens/EditStudent";
 import EditTimedAssignment from "./screens/EditTimedAssignment";
 import EditAssignment from "./screens/EditAssignment";
+import DuesData from "./screens/DuesData";
 import { createBrowserHistory } from "history";
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
@@ -48,6 +49,7 @@ function App() {
           <Route exact path="/timedAss" component={TimedAssignment} />
           <Route exact path="/payCol" component={PaymentCollection} />
           <Route exact path="/dues" component={Dues} />
+          <Route exact path="/duesData" component={DuesData} />
           <Route exact path="/viewDetails" component={ViewDetails} />
           <Route exact path="/editTutor" component={EditTutor} />
           <Route exact path="/editStudent" component={EditStudent} />
