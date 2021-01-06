@@ -94,6 +94,7 @@ export default function PaymentCollection() {
             data.sort((a, b) =>
                 a.due_date.seconds > b.due_date.seconds ? 1 : b.due_date.seconds > a.due_date.seconds ? -1 : 0
             );
+            
             setDues(data);
         });
 

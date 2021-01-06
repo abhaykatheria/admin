@@ -88,9 +88,9 @@ function AddAssignment(props) {
   const [studentCollections, setStudentCollections] = useState("");
   const [files, setFiles] = useState([]);
   const [fileAr, setFileAr] = useState([]);
-  const [selectedTimezone, setSelectedTimezone] = useState(
-    props.location.state.data.time_zone
-  );
+  // const [selectedTimezone, setSelectedTimezone] = useState(
+  //   props.location.state.data.time_zone
+  // );
   const [tutorEmail, setTutorEmail] = useState("");
 
   const changeTutorHandler = (value) => {
@@ -200,13 +200,13 @@ function AddAssignment(props) {
                 onChange={changeTutorHandler}
               />
             </FormControl>
-            <p>Time zone</p>
+            {/* <p>Time zone</p>
             <div className="select-wrapper">
               <TimezoneSelect
                 value={selectedTimezone}
                 onChange={setSelectedTimezone}
               />
-            </div>
+            </div> */}
 
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="name">Subject</InputLabel>
@@ -221,7 +221,7 @@ function AddAssignment(props) {
             </FormControl>
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="name">Price</InputLabel>
-              <Input
+              {price === 0 && <Input
                 id="name"
                 name="name"
                 autoComplete="off"
@@ -229,9 +229,21 @@ function AddAssignment(props) {
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
               />
+              }
+              {price !== 0 && <Input
+                id="name"
+                name="name"
+                autoComplete="off"
+                autoFocus
+                disabled
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+              />
+              }
             </FormControl>
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="name">Amount Paid</InputLabel>
+              { amount_paid===0 &&
               <Input
                 id="name"
                 name="name"
@@ -240,9 +252,22 @@ function AddAssignment(props) {
                 value={amount_paid}
                 onChange={(e) => setAmountPaid(e.target.value)}
               />
+              }
+              { amount_paid !== 0 &&
+                <Input
+                  id="name"
+                  name="name"
+                  autoComplete="off"
+                  disabled
+                  autoFocus
+                  value={amount_paid}
+                  onChange={(e) => setAmountPaid(e.target.value)}
+                />
+              }
             </FormControl>
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="name">Tutor Fee</InputLabel>
+              { tutor_fee===0 &&
               <Input
                 id="name"
                 name="name"
@@ -251,6 +276,18 @@ function AddAssignment(props) {
                 value={tutor_fee}
                 onChange={(e) => setTutorFee(e.target.value)}
               />
+              }
+              {tutor_fee !== 0 &&
+                <Input
+                  id="name"
+                  name="name"
+                  autoComplete="off"
+                  autoFocus
+                  disabled
+                  value={tutor_fee}
+                  onChange={(e) => setTutorFee(e.target.value)}
+                />
+              }
             </FormControl>
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="name">Comments</InputLabel>
@@ -318,7 +355,7 @@ function AddAssignment(props) {
   }
 
   async function onRegister() {
-    console.log(selectedTimezone);
+    // console.log(selectedTimezone);
     const tempar = [];
     for (let i = 0; i < files.length; i++) {
       tempar.push(files[i].file);
@@ -338,8 +375,8 @@ function AddAssignment(props) {
       tutor_fee == "" ||
       comments == "" ||
       due_date == "" ||
-      tempar == "" ||
-      selectedTimezone == ""
+      tempar == "" 
+      // selectedTimezone == ""
     ) {
       alert("Please Fill All Required Field");
       return;
@@ -388,7 +425,7 @@ function AddAssignment(props) {
             tutor: tutor.label,
             tutor_fee: parseInt(tutor_fee),
             ass_id: x,
-            time_zone: selectedTimezone.value,
+            // time_zone: selectedTimezone.value,
           })
           .then((doc) => {
             console.log(doc.id, due_date, price - amount_paid, student);
