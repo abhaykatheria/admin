@@ -82,6 +82,7 @@ function AddAssignment(props) {
     const [fileAr,setFileAr] = useState([])
     const [selectedTimezone, setSelectedTimezone] = useState({})
     const [tutorEmail,setTutorEmail] = useState('')
+    const [downloadLinks,setDownloadLinks] = useState([])
 
     const changeTutorHandler = value => {
         setTutor(value)
@@ -111,7 +112,7 @@ function AddAssignment(props) {
             let data1 = []
             for (var i = 0; i < data.length; i++) {
                 data1.push({ ...data[i],id:ids[i]});
-                console.log(data[i],data1[i].dues)
+                // console.log(data[i],data1[i].dues)
                 // console.log(data[i]);
             }
             data1 = data1.map((dat) => {
@@ -124,7 +125,7 @@ function AddAssignment(props) {
                 }
             })
             setAllTutors(data1);
-            console.log(allTutors);
+            // console.log(allTutors);
         });
 
         db.collection('students').onSnapshot((snapshot) => {
@@ -169,7 +170,7 @@ function AddAssignment(props) {
                         Add Assignment
        			</Typography>
                     <form className={classes.form} onSubmit={e => e.preventDefault() && false}>
-                        <FormControl margin="normal" required fullWidth>
+                        <FormControl margin="normal"  fullWidth>
                             <p>Student</p>
                             <Select
                                 options={allStudents}
@@ -177,7 +178,7 @@ function AddAssignment(props) {
                                 onChange={changeStudentHandler}
                             />
                         </FormControl>
-                        <FormControl margin="normal" required fullWidth>
+                        <FormControl margin="normal"  fullWidth>
                             <p>Tutor</p>
                             <Select
                                 options={allTutors}
@@ -185,35 +186,28 @@ function AddAssignment(props) {
                                 onChange={changeTutorHandler}
                             />
                         </FormControl>
-                        <p>Time zone</p>
-                        <div className='select-wrapper'>
-                            <TimezoneSelect
-                                value={selectedTimezone}
-                                onChange={setSelectedTimezone}
-                            />
-                        </div>
 
-                        <FormControl margin="normal" required fullWidth>
+                        <FormControl margin="normal"  fullWidth>
                             <InputLabel htmlFor="name">Subject</InputLabel>
                             <Input id="name" name="name" autoComplete="off" autoFocus value={subject} onChange={e => setSubject(e.target.value)} />
                         </FormControl>
-                        <FormControl margin="normal" required fullWidth>
+                        <FormControl margin="normal"  fullWidth>
                             <InputLabel htmlFor="name">Price</InputLabel>
                             <Input id="name" name="name" autoComplete="off" autoFocus value={price} onChange={e => setPrice(e.target.value)} />
                         </FormControl>
-                        <FormControl margin="normal" required fullWidth>
+                        <FormControl margin="normal"  fullWidth>
                             <InputLabel htmlFor="name">Amount Paid</InputLabel>
                             <Input id="name" name="name" autoComplete="off" autoFocus value={amount_paid} onChange={e => setAmountPaid(e.target.value)} />
                         </FormControl>
-                        <FormControl margin="normal" required fullWidth>
+                        <FormControl margin="normal"  fullWidth>
                             <InputLabel htmlFor="name">Tutor Fee</InputLabel>
                             <Input id="name" name="name" autoComplete="off" autoFocus value={tutor_fee} onChange={e => setTutorFee(e.target.value)} />
                         </FormControl>
-                        <FormControl margin="normal" required fullWidth>
+                        <FormControl margin="normal"  fullWidth>
                             <InputLabel htmlFor="name">Comments</InputLabel>
                             <Input id="name" name="name" autoComplete="off" autoFocus value={comments} onChange={e => setComments(e.target.value)} />
                         </FormControl>
-                        <FormControl margin="normal" required fullWidth>
+                        <FormControl margin="normal"  fullWidth>
                             <p>Due Date</p>
                             <DateTimePicker
                                 onChange={setDueDate}
@@ -249,7 +243,7 @@ function AddAssignment(props) {
         firebase.storage().ref(location).constructor.prototype.putFiles = function (tempar) {
             var ref = this;
             return Promise.all(tempar.map(function (file) {
-                return ref.child(file.name).put(file);
+                return ref.child(file.name).put(file)
             }));
         }
 
@@ -257,7 +251,7 @@ function AddAssignment(props) {
         let s ='files/'+x.toString()
         console.log('huehue ' + s);
         firebase.storage().ref(s).putFiles(tempar).then((snapshot) => {
-            console.log(snapshot);
+            // console.log(snapshot);
         });
     }
 
@@ -278,8 +272,7 @@ function AddAssignment(props) {
         // console.log(hashPwd);
 
 
-        if (tutor == '' || student == '' || subject == '' || price == '' || amount_paid == ''
-            || tutor_fee == '' || comments == '' || due_date == '' || tempar == '' || selectedTimezone=='') {
+        if (tutor == '' || student == '' ) {
             alert("Please Fill All Required Field");
             return;
         }
@@ -319,10 +312,11 @@ function AddAssignment(props) {
                         tutor: tutor.label,
                         tutor_fee: parseInt(tutor_fee),
                         ass_id: x   ,
-                        time_zone: selectedTimezone.value,
                     }).then((doc) => {
                         console.log(doc.id, due_date, price - amount_paid, student);
                         console.log(doc.id, due_date, "pending", tutor.label, tutor_fee, tutorId);
+                        if(doc.id!='')
+                        alert('Assignment added successfully')
                         setAssId(doc.id)
                     })
 
@@ -340,26 +334,89 @@ function AddAssignment(props) {
                 } catch (error) {
                     alert(error.message)
                 }
-
+            if(tutor_fee!=''){
             updateDues()
             updateDuesCollection(x)
-            updatePayment(x)
-            updateStudentCollection()
+            }
+            if (amount_paid != '' && price != ''){
+                updatePayment(x)
+                updateStudentCollection()
+            }
+            if(tempar!='')
+            getDownloadLinks(x)
         } catch (error) {
           alert(error.message);
         }
-
+        if(due_date!='' && tutor_fee!='' && tempar!='')
         sendEmail()
         // updateTutorDues()
     }
     // updateDues();
     // updateDuesCollection();
     // updatePayment();
-  
+    
+    function getDownloadLinks(x){
+        let location =
+            "/files/" + x.toString();
+        var temp = [];
+        var storageRef = app.storage().ref(location);
+        // console.log(storageRef)
+        storageRef
+            .listAll()
+            .then(function (result) {
+                result.items.forEach(function (imageRef) {
+                    // console.log(imageRef)
+                    imageRef
+                        .getDownloadURL()
+                        .then(function (url) {
+                            temp.push(url.toString());
+                            // console.log(ar)
+                        })
+                        .catch(function (error) {
+                            // Handle any errors
+                        });
+                });
+            })
+            .catch(function (error) {
+                // Handle any errors
+            });
+            if(temp!=[])
+            setDownloadLinks(temp)
+        let s = ""
+        for (let [key, value] of Object.entries(downloadLinks)) {
+            let url = value;
+            console.log(url);
+            s += url
+            s += "\n"
+        }
+
+        console.log(s)
+
+        }
 
     function sendEmail(){
+        
+        let s = ""
+        for (let [key, value] of Object.entries(downloadLinks)) {
+            let url = value;
+            console.log(url);
+            s += url
+            s += "\n"
+        }
+
+        console.log(s)
+
+
         console.log(tutor.email)
-        let message = "You got a new assignment for student " + student.label +" subject name is " + subject +". The due date is " + due_date +" and you will be paid "+ tutor_fee
+        let message = "You have been assigned a new lesson as a Tutor. Here are the additional details-" +"\n"
+        + "Due Status:       " + due_date +"\n"
+        + "Student Name:     " + student.label + "\n"            
+        + "Type:             " + "General" + "\n"
+        + "Subject:          " + subject + "\n"
+        + "Comments:         " + comments + "\n"
+        + "The download links are:- " +"\n\n\n"
+        + s
+
         console.log(message)
         
         let templateParams = {
