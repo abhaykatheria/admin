@@ -56,7 +56,7 @@ function DisplayIndividual(props) {
                     due_date: moment(
                       data[i].due_date.toDate().toDateString()
                     ).format("DD/MM/YYYY"),
-                    fieldName: "assignments",
+                    type: "assignments",
                   },
                 }}
               >

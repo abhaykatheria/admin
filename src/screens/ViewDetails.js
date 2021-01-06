@@ -171,12 +171,19 @@ export default function TestDisplay(props) {
                         className={`${classes.button} ${classes.green}`}
                         children={<CheckCircleIcon />}
                         onClick={() => {
+                          console.log(typeOfAssignment,assignment.id)
                           const db = app.firestore();
+                          console.log(typeOfAssignment)
                           db.collection(typeOfAssignment)
                             .doc(assignment.id)
                             .update({
                               satus: "completed",
                             });
+                            setAssignment({
+                              ...assignment,
+                              satus: 'completed'
+                            })
+                          assignment.status="completed"
                           console.log(assignment);
                         }}
                       ></Button>
