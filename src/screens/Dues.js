@@ -128,6 +128,12 @@ export default function PaymentCollection(props) {
 
   return (
     <div className="body">
+      <div
+        className={classes.root}
+        style={{ margin: "0 auto", textAlign: "center", paddingTop: "2px" }}
+      >
+        <Button variant="contained" children={<CheckCircleIcon />}></Button>
+      </div>
       <div className="wrapper">
         {dues !== undefined ? (
           dues.map((assignment) => (
