@@ -477,7 +477,7 @@ function AddAssignment(props) {
                 pending: price - amount_paid,
                 status: "pending",
                 student: student.label,
-                id: student.id
+                studentId: student.id
             })
         }
         catch (error) {

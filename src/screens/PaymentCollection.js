@@ -87,22 +87,23 @@ export default function PaymentCollection(props) {
   const classes2 = useStyles2();
 
   useEffect(() => {
+    console.log(id)
     const db = app.firestore();
     window.scrollTo(0, 0);
     db.collection("payment_collection")
-      .where(fieldName, "==", id)
+      .where('studentId', "==", id)
       .onSnapshot((snapshot) => {
         const data = [];
         snapshot.forEach((doc) =>
-          data.push({ ...doc.data(), id: doc.id, studentId: doc.data().id })
+          data.push({ ...doc.data(), id: doc.id, studentId: doc.data().studentId })
         );
         console.log(data); // <------
         data.sort((a, b) =>
           a.due_date.seconds > b.due_date.seconds
             ? 1
             : b.due_date.seconds > a.due_date.seconds
-            ? -1
-            : 0
+              ? -1
+              : 0
         );
         setDues(data);
       });
@@ -172,22 +173,44 @@ export default function PaymentCollection(props) {
                       }}
                     ></Button>
                   </Tooltip>
+                  <Tooltip title="Change payment amount" arrow>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      className={`${classes2.button} ${classes2.green}`}
+                      children={<PriorityHighIcon />}
+                      onClick={() => {
+                        let amount = prompt('Enter changed payment amount here');
+                        amount = parseInt(amount)
+
+                        if (isNaN(amount)) {
+                          alert("Enter valid amount")
+                          return
+                        }
+
+                        console.log(assignment, amount);
+                        updateDues(duesMap[assignment.studentId], assignment, amount);
+                        assignment.pending = amount
+                        updatePaymentCol(assignment)
+                      }}
+                    ></Button>
+                  </Tooltip>
                 </div>
               </CardActions>
             </Card>
           ))
         ) : (
-          <div
-            style={{
-              position: "absolute",
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%, -50%)",
-            }}
-          >
-            <CircularProgress />
-          </div>
-        )}
+            <div
+              style={{
+                position: "absolute",
+                left: "50%",
+                top: "50%",
+                transform: "translate(-50%, -50%)",
+              }}
+            >
+              <CircularProgress />
+            </div>
+          )}
       </div>
     </div>
   );
@@ -199,17 +222,28 @@ async function deleteDoc(assignment) {
     .firestore()
     .collection("payment_collection")
     .doc(assignment.id)
-    .delete();
+    .delete().then(() => {
+      alert("Collected Successfully")
+    })
 }
 
-async function updateDues(dues, assignment) {
-  console.log(dues);
+async function updatePaymentCol(assignment){
+  await app.firestore().collection('payment_collection').doc(assignment.id).update({
+    pending: assignment.pending
+  }).then(function () {
+    alert('Updated Successfully')
+  })
+}
 
+async function updateDues(dues, assignment, amount) {
+  console.log(dues);
+  if (isNaN(amount))
+    amount = 0
   await app
     .firestore()
     .collection("students")
     .doc(assignment.studentId)
     .update({
-      collections: dues - assignment.pending,
+      collections: dues - assignment.pending + amount,
     });
 }
