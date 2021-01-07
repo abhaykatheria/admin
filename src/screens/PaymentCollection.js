@@ -122,6 +122,11 @@ export default function PaymentCollection(props) {
       setDuesMap(map);
     });
   }, []);
+  
+  const markDuesHandler = () => {
+    // id already h idhar, so do the nanga naach here ...
+
+  }
 
   return (
     <div className="body">
@@ -129,7 +134,7 @@ export default function PaymentCollection(props) {
         className={classes.root}
         style={{ margin: "0 auto", textAlign: "center" }}
       >
-        <Button variant="contained" children={<CheckCircleIcon />}></Button>
+        <Button variant="contained" children={<CheckCircleIcon />} onClick = {markDuesHandler}></Button>
       </div>
       <div className="wrapper">
         {dues !== undefined ? (

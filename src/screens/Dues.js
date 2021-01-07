@@ -126,13 +126,17 @@ export default function PaymentCollection(props) {
     });
   }, []);
 
+  const markDuesHandler = () => {
+    
+  }
+
   return (
     <div className="body">
       <div
         className={classes.root}
         style={{ margin: "0 auto", textAlign: "center", paddingTop: "2px" }}
       >
-        <Button variant="contained" children={<CheckCircleIcon />}></Button>
+        <Button variant="contained" children={<CheckCircleIcon />} onClick = {markDuesHandler}></Button>
       </div>
       <div className="wrapper">
         {dues !== undefined ? (
