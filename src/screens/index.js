@@ -20,38 +20,8 @@ const images = [
   },
   {
     url: image1,
-    title: "Add Student",
-    route: "/addStudent",
-    width: "30%",
-  },
-  {
-    url: image1,
     title: "View Student",
     route: "/viewStudent",
-    width: "30%",
-  },
-  {
-    url: image1,
-    title: "Add Assignment",
-    route: "/addAss",
-    width: "30%",
-  },
-  {
-    url: image1,
-    title: "Add Timed Assignment",
-    route: "/addTimeAss",
-    width: "30%",
-  },
-  {
-    url: image1,
-    title: "All Assignment",
-    route: "/allAss",
-    width: "30%",
-  },
-  {
-    url: image1,
-    title: "Timed Assignment",
-    route: "/timedAss",
     width: "30%",
   },
   {
@@ -64,12 +34,6 @@ const images = [
     url: image1,
     title: "Payment Collection",
     route: "/paymentData",
-    width: "30%",
-  },
-  {
-    url: image1,
-    title: "Upcoming Assignment",
-    route: "/upAss",
     width: "30%",
   },
   {
