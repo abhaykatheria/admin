@@ -103,8 +103,8 @@ export default function PaymentCollection(props) {
           a.due_date.seconds > b.due_date.seconds
             ? 1
             : b.due_date.seconds > a.due_date.seconds
-            ? -1
-            : 0
+              ? -1
+              : 0
         );
 
         setDues(data);
@@ -182,38 +182,72 @@ export default function PaymentCollection(props) {
                       }}
                     ></Button>
                   </Tooltip>
+                  <Tooltip title="Change payment amount" arrow>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      className={`${classes2.button} ${classes2.green}`}
+                      children={<PriorityHighIcon />}
+                      onClick={() => {
+                        let amount = prompt('Enter changed payment amount here');
+                        amount = parseInt(amount)
+
+                        if (isNaN(amount)) {
+                          alert("Enter valid amount")
+                          return
+                        }
+
+                        console.log(assignment, amount);
+                        updateDues(duesMap[assignment.tutorId], assignment, amount);
+                        assignment.tutor_fee = amount
+                        updateDuesCol(assignment)
+                      }}
+                    ></Button>
+                  </Tooltip>
                 </div>
               </CardActions>
             </Card>
           ))
         ) : (
-          <div
-            style={{
-              position: "absolute",
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%, -50%)",
-            }}
-          >
-            <CircularProgress />
-          </div>
-        )}
+            <div
+              style={{
+                position: "absolute",
+                left: "50%",
+                top: "50%",
+                transform: "translate(-50%, -50%)",
+              }}
+            >
+              <CircularProgress />
+            </div>
+          )}
       </div>
     </div>
   );
 }
 
 async function deleteDoc(assignment) {
-  await app.firestore().collection("dues").doc(assignment.id).delete();
+  await app.firestore().collection("dues").doc(assignment.id).delete().then(() =>{
+    alert("Paid Successfully")
+  })
 }
 
-async function updateDues(dues, assignment) {
+async function updateDuesCol(assignment) {
+  await app.firestore().collection('dues').doc(assignment.id).update({
+    tutor_fee: assignment.tutor_fee
+  }).then(function () {
+    alert('Updated Successfully')
+  })
+}
+
+async function updateDues(dues, assignment, amount) {
   console.log(dues);
+  if(isNaN(amount))
+  amount=0
   await app
     .firestore()
     .collection("tutors")
     .doc(assignment.tutorId)
     .update({
-      dues: dues - assignment.tutor_fee,
+      dues: dues - assignment.tutor_fee + amount,
     });
 }
