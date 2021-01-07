@@ -83,6 +83,7 @@ export default function PaymentCollection(props) {
   const [duesMap, setDuesMap] = useState();
   const [id, setId] = useState(props.location.state.data.id);
   const [fieldName, setFieldName] = useState(props.location.state.fieldName);
+  const [disabled, setDisabled] = useState(true)
   const classes = useStyles();
   const classes2 = useStyles2();
 
@@ -106,6 +107,7 @@ export default function PaymentCollection(props) {
               : 0
         );
         setDues(data);
+        console.log(data)
       });
 
     db.collection("students").onSnapshot((snapshot) => {
@@ -124,7 +126,7 @@ export default function PaymentCollection(props) {
   }, []);
   
   const markDuesHandler = () => {
-    // id already h idhar, so do the nanga naach here ...
+    console.log(id)
 
   }
 
@@ -134,7 +136,7 @@ export default function PaymentCollection(props) {
         className={classes.root}
         style={{ margin: "0 auto", textAlign: "center" }}
       >
-        <Button variant="contained" children={<CheckCircleIcon />} onClick = {markDuesHandler}></Button>
+        <Button variant="contained" children={<CheckCircleIcon />} onClick = {markDuesHandler} disabled = {disabled}></Button>
       </div>
       <div className="wrapper">
         {dues !== undefined ? (

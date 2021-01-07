@@ -8,7 +8,7 @@ import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import HomeRoundedIcon from "@material-ui/icons/HomeRounded";
 import AssignmentRoundedIcon from "@material-ui/icons/AssignmentRounded";
-import AccessAlarmRoundedIcon from '@material-ui/icons/AccessAlarmRounded';
+import EmailRoundedIcon from '@material-ui/icons/EmailRounded';
 import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
 import Badge from "@material-ui/core/Badge";
 import { green, grey, red } from "@material-ui/core/colors";
@@ -118,10 +118,15 @@ export default function APPBar() {
             </Button>
           </Typography>
           <IconButton aria-label="Total Assignment" color="inherit">
+            <Tooltip title="Send Email to All Tutors" arrow>
+                <EmailRoundedIcon  onClick={()=>{console.log("Khatam kro be 🤑")}}/>
+            </Tooltip>
+          </IconButton>
+          <IconButton aria-label="Total Assignment" color="inherit">
             <Tooltip title="Timed Assignment" arrow>
               <Badge badgeContent={timedAssignment} max={999} color="secondary">
                 {" "}
-                <AccessAlarmIcon className={classes.green} />
+                <AccessAlarmIcon />
               </Badge>
             </Tooltip>
           </IconButton>
