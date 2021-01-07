@@ -203,7 +203,7 @@ export default function PaymentCollection(props) {
                       children={<CheckCircleIcon />}
                       onClick={() => {
                         console.log(assignment);
-                        deleteDoc(assignment);
+                        deleteDocs(assignment);
                         updateDues(duesMap[assignment.studentId], assignment);
                       }}
                     ></Button>
@@ -251,7 +251,7 @@ export default function PaymentCollection(props) {
   );
 }
 
-async function deleteDoc(assignment) {
+async function deleteDocs(assignment) {
   console.log(assignment.id);
   await app
     .firestore()
