@@ -126,10 +126,6 @@ export default function PaymentCollection(props) {
   }, []);
 
   const markDuesHandler = () => {
-<<<<<<< HEAD
-    console.log(id)
-=======
-    // chal na bsdk
     console.log(id)
     let assignment = {
       studentId: id,
@@ -150,7 +146,6 @@ export default function PaymentCollection(props) {
 
   }
 
->>>>>>> 69dff27d825803b0e8c3d7a80ef1c168561d4f3c
 
   async function deleteDoc(id) {
     await app.firestore().collection('payment_collection').doc(id).delete()
