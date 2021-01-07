@@ -121,13 +121,34 @@ export default function PaymentCollection(props) {
       for (let i = 0; i < data.length; i++) {
         map[data[i].id] = data[i].dues;
       }
-      console.log(map);
+      // console.log(map);
       setDuesMap(map);
     });
   }, []);
 
   const markDuesHandler = () => {
+    console.log(id)
+    let assignment = {
+      tutorId: id,
+      tutor_fee: 0,
+    }
+    updateDues(0, assignment, 0)
+
+    const db = app.firestore();
+    db.collection("dues")
+      .where(fieldName, "==", id)
+      .onSnapshot((snapshot) => {
+        snapshot.forEach((doc) => {
+          deleteDoc(doc.id)
+        });
+      })
+        alert("marked all successfully")
     
+
+  }
+
+  async function deleteDoc(id){
+    await app.firestore().collection('dues').doc(id).delete()
   }
 
   return (
@@ -136,7 +157,7 @@ export default function PaymentCollection(props) {
         className={classes.root}
         style={{ margin: "0 auto", textAlign: "center", paddingTop: "2px" }}
       >
-        <Button variant="contained" children={<CheckCircleIcon />} onClick = {markDuesHandler}></Button>
+        <Button variant="contained" children={<CheckCircleIcon />} onClick={markDuesHandler}></Button>
       </div>
       <div className="wrapper">
         {dues !== undefined ? (
@@ -230,7 +251,7 @@ export default function PaymentCollection(props) {
 }
 
 async function deleteDoc(assignment) {
-  await app.firestore().collection("dues").doc(assignment.id).delete().then(() =>{
+  await app.firestore().collection("dues").doc(assignment.id).delete().then(() => {
     alert("Paid Successfully")
   })
 }
@@ -245,8 +266,8 @@ async function updateDuesCol(assignment) {
 
 async function updateDues(dues, assignment, amount) {
   console.log(dues);
-  if(isNaN(amount))
-  amount=0
+  if (isNaN(amount))
+    amount = 0
   await app
     .firestore()
     .collection("tutors")

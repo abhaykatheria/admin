@@ -124,11 +124,38 @@ export default function PaymentCollection(props) {
       setDuesMap(map);
     });
   }, []);
-  
+
   const markDuesHandler = () => {
+<<<<<<< HEAD
     console.log(id)
+=======
+    // chal na bsdk
+    console.log(id)
+    let assignment = {
+      studentId: id,
+      pending: 0
+    }
+
+    updateDues(0, assignment, 0)
+
+    app.firestore().collection("payment_collection")
+      .where('studentId', "==", id)
+      .onSnapshot((snapshot) => {
+        snapshot.forEach((doc) => {
+          deleteDoc(doc.id)
+        })
+      });
+
+    alert("marked all successfully")
 
   }
+
+>>>>>>> 69dff27d825803b0e8c3d7a80ef1c168561d4f3c
+
+  async function deleteDoc(id) {
+    await app.firestore().collection('payment_collection').doc(id).delete()
+  }
+
 
   return (
     <div className="body">
@@ -136,7 +163,7 @@ export default function PaymentCollection(props) {
         className={classes.root}
         style={{ margin: "0 auto", textAlign: "center" }}
       >
-        <Button variant="contained" children={<CheckCircleIcon />} onClick = {markDuesHandler} disabled = {disabled}></Button>
+        <Button variant="contained" children={<CheckCircleIcon />} onClick={markDuesHandler}></Button>
       </div>
       <div className="wrapper">
         {dues !== undefined ? (
@@ -240,7 +267,7 @@ async function deleteDoc(assignment) {
     })
 }
 
-async function updatePaymentCol(assignment){
+async function updatePaymentCol(assignment) {
   await app.firestore().collection('payment_collection').doc(assignment.id).update({
     pending: assignment.pending
   }).then(function () {
