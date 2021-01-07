@@ -202,7 +202,7 @@ export default function PaymentCollection(props) {
                       children={<CheckCircleIcon />}
                       onClick={() => {
                         console.log(assignment);
-                        deleteDoc(assignment);
+                        deleteDocs(assignment);
                         updateDues(duesMap[assignment.tutorId], assignment);
                       }}
                     ></Button>
@@ -250,7 +250,7 @@ export default function PaymentCollection(props) {
   );
 }
 
-async function deleteDoc(assignment) {
+async function deleteDocs(assignment) {
   await app.firestore().collection("dues").doc(assignment.id).delete().then(() => {
     alert("Paid Successfully")
   })

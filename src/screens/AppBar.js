@@ -17,6 +17,7 @@ import { useState } from "react";
 import app from "firebase/app";
 import moment from "moment";
 import "firebase/firebase-firestore";
+import * as emailjs from 'emailjs-com'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,11 +48,13 @@ export default function APPBar() {
   const [timedAssignment, setTimedAssignment] = useState();
   const [dueToday, setDueToday] = useState();
   const [duePast, setDuePast] = useState();
+  const [downloadLinks, setDownloadLinks] = useState([])
+
 
   useEffect(() => {
     window.scrollTo(0, 0);
     const db = app.firestore();
-    console.log(new Date().toString());
+    // console.log(new Date().toString());
     db.collection("timed").onSnapshot((snapshot) => {
       const data = [];
       snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
@@ -98,6 +101,51 @@ export default function APPBar() {
     });
   }, []);
 
+  function getDownloadLinks(x) {
+    let location =
+      "/files/" + x.toString();
+    console.log(location);
+    var temp = [];
+    var storageRef = app.storage().ref(location);
+    // console.log(storageRef)
+    storageRef
+      .listAll()
+      .then(function (result) {
+        result.items.forEach(function (imageRef) {
+          // console.log(imageRef)
+          imageRef
+            .getDownloadURL()
+            .then(function (url) {
+              temp.push(url.toString());
+              // console.log(url)
+              // console.log(ar)
+            })
+            .catch(function (error) {
+              // Handle any errors
+            });
+        });
+      })
+      .catch(function (error) {
+        // Handle any errors
+      });
+    if (temp != [])
+      setDownloadLinks(temp)
+    let s = ""
+    for (let [key, value] of Object.entries(downloadLinks)) {
+      let url = value;
+      // console.log(url);
+      s += url
+      s += "\n"
+    }
+    if (s != '')
+      console.log(s)
+    if (s != '')
+      return s
+
+  }
+
+  
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -119,7 +167,50 @@ export default function APPBar() {
           </Typography>
           <IconButton aria-label="Total Assignment" color="inherit">
             <Tooltip title="Send Email to All Tutors" arrow>
-                <EmailRoundedIcon  onClick={()=>{console.log("Khatam kro be 🤑")}}/>
+              <EmailRoundedIcon onClick={() => {
+
+                const db = app.firestore()
+
+                db.collection('assignments').onSnapshot((snapshot) => {
+                  snapshot.forEach((doc) => {
+                    console.log(doc.data(), doc.id)
+                    let s = getDownloadLinks(doc.data().ass_id)
+                    if (s != undefined) {
+                      console.log(s)
+
+                      let assignment = doc.data()
+
+                      let message = "You have been assigned a new lesson as a Tutor. Here are the additional details-" + "\n"
+                        + "Due Status:       " + assignment.due_date + "\n"
+                        + "Student Name:     " + assignment.student + "\n"
+                        + "Type:             " + "General" + "\n"
+                        + "Subject:          " + assignment.subject + "\n"
+                        + "Comments:         " + assignment.comments + "\n"
+                        + "The download links are:- " + "\n\n\n"
+                        + s
+
+                      let templateParams = {
+                        to_name: 'chitianand1999@gmail.com',
+                        from_name: 'chitransh.326@gmail.com',
+                        subject: "Assignment update email",
+                        message: message,
+                      }
+
+                        emailjs.send(
+                          'service_5x2bgwj',
+                          'template_mdudrfo',
+                          templateParams,
+                          'user_2Mb02sYPwYBJT9hScfbBR'
+                        )
+
+                    }
+                  })
+                })
+
+
+
+
+              }} />
             </Tooltip>
           </IconButton>
           <IconButton aria-label="Total Assignment" color="inherit">
