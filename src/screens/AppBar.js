@@ -239,7 +239,7 @@ export default function APPBar() {
                         + s
 
                       let templateParams = {
-                        to_name: 'chitianand1999@gmail.com',
+                        to_name: assignment.tutor_email,
                         from_name: 'chitransh.326@gmail.com',
                         subject: "Assignment update email",
                         message: message,
@@ -256,7 +256,41 @@ export default function APPBar() {
                   })
                 })
 
+                db.collection('timed').onSnapshot((snapshot) => {
+                  snapshot.forEach((doc) => {
+                    console.log(doc.data(), doc.id)
+                    let s = getDownloadLinks(doc.data().ass_id)
+                    if (s != undefined) {
+                      console.log(s)
 
+                      let assignment = doc.data()
+
+                      let message = "You have been assigned a new lesson as a Tutor. Here are the additional details-" + "\n"
+                        + "Due Status:       " + assignment.due_date + "\n"
+                        + "Student Name:     " + assignment.student + "\n"
+                        + "Type:             " + "General" + "\n"
+                        + "Subject:          " + assignment.subject + "\n"
+                        + "Comments:         " + assignment.comments + "\n"
+                        + "The download links are:- " + "\n\n\n"
+                        + s
+
+                      let templateParams = {
+                        to_name: assignment.tutor_email,
+                        from_name: 'chitransh.326@gmail.com',
+                        subject: "Assignment update email",
+                        message: message,
+                      }
+
+                      emailjs.send(
+                        'service_5x2bgwj',
+                        'template_mdudrfo',
+                        templateParams,
+                        'user_2Mb02sYPwYBJT9hScfbBR'
+                      )
+
+                    }
+                  })
+                })
 
 
               }} />
