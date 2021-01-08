@@ -121,6 +121,8 @@ export default function ViewDetails(props) {
                 <b>Due Date </b> = {dueDate}
                 <br />
                 <b>Status </b> = {assignment.satus}
+                <br/>
+                {typeOfAssignment==="timed" ?(<div><b>Duration</b> = {assignment.duration.hours} hours {assignment.duration.minutes} minutes</div>):<b></b>}
               </Typography>
             </CardContent>
             <CardActions>
@@ -182,26 +184,7 @@ export default function ViewDetails(props) {
                         </Link>
                       )}
                     </Tooltip>
-                    {assignment.satus === "ongoing" ? (
-                      <Tooltip title="Mark As Completed" arrow>
-                        <Button
-                          variant="contained"
-                          className={`${classes.button} ${classes.green}`}
-                          children={<CheckCircleIcon />}
-                          onClick={() => {
-                            console.log(typeOfAssignment, assignment.id);
-                            const db = app.firestore();
-                            console.log(typeOfAssignment);
-                            db.collection(typeOfAssignment)
-                              .doc(assignment.id)
-                              .update({
-                                satus: "completed",
-                              });
-                            console.log(assignment);
-                          }}
-                        ></Button>
-                      </Tooltip>
-                    ) : (
+                    {assignment.satus === "completed" ? (
                       <Tooltip title="Mark As Ongoing" arrow>
                         <Button
                           variant="contained"
@@ -215,6 +198,25 @@ export default function ViewDetails(props) {
                               .doc(assignment.id)
                               .update({
                                 satus: "ongoing",
+                              });
+                            console.log(assignment);
+                          }}
+                        ></Button>
+                      </Tooltip>
+                    ):(
+                      <Tooltip title="Mark As Completed" arrow>
+                        <Button
+                          variant="contained"
+                          className={`${classes.button} ${classes.green}`}
+                          children={<CheckCircleIcon />}
+                          onClick={() => {
+                            console.log(typeOfAssignment, assignment.id);
+                            const db = app.firestore();
+                            console.log(typeOfAssignment);
+                            db.collection(typeOfAssignment)
+                              .doc(assignment.id)
+                              .update({
+                                satus: "completed",
                               });
                             console.log(assignment);
                           }}
