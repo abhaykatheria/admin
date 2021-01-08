@@ -333,10 +333,12 @@ function AddAssignment(props) {
                 alert(error.message)
             }
             if (checkValid(tutor_fee)) {
+                console.log('Update tutor', x)
                 updateDues()
                 updateDuesCollection(x)
             }
             if (checkValid(amount_paid) && checkValid(price)) {
+                console.log('Update student', x)
                 updatePayment(x)
                 updateStudentCollection()
             }
@@ -437,7 +439,7 @@ function AddAssignment(props) {
             message: message,
         }
 
-        if (s != ''){
+        if (s != '') {
             emailjs.send(
                 'service_5x2bgwj',
                 'template_mdudrfo',
@@ -464,33 +466,37 @@ function AddAssignment(props) {
         }
     }
 
-    async function updateDuesCollection(x) {
+    function updateDuesCollection(x) {
         try {
             console.log(dues);
-            await app.firestore().collection("dues").add({
+            app.firestore().collection("dues").add({
                 assg_id: x,
                 due_date: due_date,
                 status: "pending",
                 tutor: tutor.label,
                 tutor_fee: parseInt(tutor_fee),
                 tutorId: tutorId,
-            });
+            }).then((doc) => {
+                console.log(doc.id)
+            })
         } catch (error) {
             alert(error.message);
         }
     }
 
 
-    async function updatePayment(x) {
+    function updatePayment(x) {
         try {
             console.log(student);
-            await app.firestore().collection('payment_collection').add({
+            app.firestore().collection('payment_collection').add({
                 assg_id: x,
                 due_date: due_date,
                 pending: price - amount_paid,
                 status: "pending",
                 student: student.label,
                 studentId: student.id
+            }).then((doc) => {
+                console.log(doc.id)
             })
         }
         catch (error) {
