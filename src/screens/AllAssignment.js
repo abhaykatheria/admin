@@ -11,107 +11,105 @@ import TabularDisplay from "./TabularDisplay";
 import DetailsRoundedIcon from "@material-ui/icons/DetailsRounded";
 
 function AllAssignments() {
-  const [assignments, setAssignments] = useState();
+  const [assignments, setAssignments] = useState([]);
+  const [timed, setTimed] = useState([]);
+  const [total, setTotal] = useState([]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
     const db = app.firestore();
     const data1 = [];
-    return (
-      db.collection("assignments").onSnapshot((snapshot) => {
-        const data = [];
-        snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
-        for (var i = 0; i < data.length; i++) {
-          // console.log(new Date(data[i].due_date.seconds*1000))
-          data1.push([
-            data[i].student,
-            data[i].subject,
-            data[i].tutor,
-            data[i].price,
-            data[i].amount_paid,
-            data[i].tutor_fee,
-            "General",
-            moment(data[i].assigned_date.toDate().toDateString()).format(
-              "DD/MM/YYYY"
-            ),
-            moment(data[i].due_date.toDate().toDateString()).format(
-              "DD/MM/YYYY"
-            ),
-            data[i].satus,
-            data[i].id,
-            <Link
-              to={{
-                pathname: "/viewDetails",
-                state: {
-                  data: data[i],
-                  assigned_date: moment(
-                    data[i].assigned_date.toDate().toDateString()
-                  ).format("DD/MM/YYYY"),
-                  due_date: moment(
-                    data[i].due_date.toDate().toDateString()
-                  ).format("DD/MM/YYYY"),
-                  type: "assignments",
-                },
-              }}
-            >
-              <Button
-                variant="contained"
-                color="primary"
-                children={<DetailsRoundedIcon />}
-              ></Button>
-            </Link>,
-          ]);
-        }
-      }),
-      db.collection("timed").onSnapshot((snapshot) => {
-        const data = [];
-        snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
-        for (var i = 0; i < data.length; i++) {
-          data1.push([
-            data[i].student,
-            data[i].subject,
-            data[i].tutor,
-            data[i].price,
-            data[i].amount_paid,
-            data[i].tutor_fee,
-            "Timed",
-            moment(data[i].assigned_date.toDate().toDateString()).format(
-              "DD/MM/YYYY"
-            ),
-            moment(data[i].due_date.toDate().toDateString()).format(
-              "DD/MM/YYYY"
-            ),
-            data[i].satus,
-            data[i].id,
-            <Link
-              to={{
-                pathname: "/viewDetails",
-                state: {
-                  data: data[i],
-                  assigned_date: moment(
-                    data[i].assigned_date.toDate().toDateString()
-                  ).format("DD/MM/YYYY"),
-                  due_date: moment(
-                    data[i].due_date.toDate().toDateString()
-                  ).format("DD/MM/YYYY"),
-                  start_date: moment(
-                    data[i].start_date.toDate().toDateString()
-                  ).format("DD/MM/YYYY"),
-                  type: "timed",
-                },
-              }}
-            >
-              <Button
-                variant="contained"
-                color="secondary"
-                children={<DetailsRoundedIcon />}
-              ></Button>
-            </Link>,
-          ]);
-        }
-        setAssignments(data1);
-      })
-    );
+    const data2 = [];
+    db.collection("assignments").onSnapshot((snapshot) => {
+      const data = [];
+      snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
+      for (var i = 0; i < data.length; i++) {
+        console.log(new Date(data[i].due_date.seconds * 1000));
+        data1.push([
+          data[i].student,
+          data[i].subject,
+          data[i].tutor,
+          data[i].price,
+          data[i].amount_paid,
+          data[i].tutor_fee,
+          "General",
+          moment(data[i].assigned_date.toDate().toDateString()).format(
+            "DD/MM/YYYY"
+          ),
+          moment(data[i].due_date.toDate().toDateString()).format("DD/MM/YYYY"),
+          data[i].satus,
+          data[i].id,
+          <Link
+            to={{
+              pathname: "/viewDetails",
+              state: {
+                data: data[i],
+                assigned_date: moment(
+                  data[i].assigned_date.toDate().toDateString()
+                ).format("DD/MM/YYYY"),
+                due_date: moment(
+                  data[i].due_date.toDate().toDateString()
+                ).format("DD/MM/YYYY"),
+                type: "assignments",
+              },
+            }}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              children={<DetailsRoundedIcon />}
+            ></Button>
+          </Link>,
+        ]);
+      }
+      setAssignments(data1);
+    });
+    db.collection("timed").onSnapshot((snapshot) => {
+      const temp = [];
+      snapshot.forEach((doc) => temp.push({ ...doc.data(), id: doc.id }));
+      for (var i = 0; i < temp.length; i++) {
+        data2.push([
+          temp[i].student,
+          temp[i].subject,
+          temp[i].tutor,
+          temp[i].price,
+          temp[i].amount_paid,
+          temp[i].tutor_fee,
+          "Timed",
+          moment(temp[i].assigned_date.toDate().toDateString()).format(
+            "DD/MM/YYYY"
+          ),
+          moment(temp[i].due_date.toDate().toDateString()).format("DD/MM/YYYY"),
+          temp[i].satus,
+          temp[i].id,
+          <Link
+            to={{
+              pathname: "/viewDetails",
+              state: {
+                data: temp[i],
+                assigned_date: moment(
+                  temp[i].assigned_date.toDate().toDateString()
+                ).format("DD/MM/YYYY"),
+                due_date: moment(
+                  temp[i].due_date.toDate().toDateString()
+                ).format("DD/MM/YYYY"),
+                start_date: moment(
+                  temp[i].start_date.toDate().toDateString()
+                ).format("DD/MM/YYYY"),
+                type: "timed",
+              },
+            }}
+          >
+            <Button
+              variant="contained"
+              color="secondary"
+              children={<DetailsRoundedIcon />}
+            ></Button>
+          </Link>,
+        ]);
+      }
+      setTimed(data2);
+    });
   }, []);
 
   const columns = [
@@ -178,7 +176,7 @@ function AllAssignments() {
       {assignments !== undefined ? (
         <TabularDisplay
           title={"All Assignments"}
-          data={assignments}
+          data={[...assignments,...timed]}
           columns={columns}
         />
       ) : (

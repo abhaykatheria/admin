@@ -79,7 +79,7 @@ export default function TestDisplay(props) {
   );
   const [dueDate, setDueDate] = useState(props.location.state.due_date);
   const [startDate, setStartDate] = useState(props.location.state.start_date);
-  console.log(startDate)
+  console.log(startDate);
   console.log(assignment);
   const classes = useStyles();
   const [ar, setAr] = useState([]);
@@ -168,24 +168,45 @@ export default function TestDisplay(props) {
                         </Link>
                       )}
                     </Tooltip>
-                    <Tooltip title="Mark As Completed" arrow>
-                      <Button
-                        variant="contained"
-                        className={`${classes.button} ${classes.green}`}
-                        children={<CheckCircleIcon />}
-                        onClick={() => {
-                          console.log(typeOfAssignment,assignment.id)
-                          const db = app.firestore();
-                          console.log(typeOfAssignment)
-                          db.collection(typeOfAssignment)
-                            .doc(assignment.id)
-                            .update({
-                              satus: "completed",
-                            });
-                          console.log(assignment);
-                        }}
-                      ></Button>
-                    </Tooltip>
+                    {assignment.satus === "ongoing" ? (
+                      <Tooltip title="Mark As Completed" arrow>
+                        <Button
+                          variant="contained"
+                          className={`${classes.button} ${classes.green}`}
+                          children={<CheckCircleIcon />}
+                          onClick={() => {
+                            console.log(typeOfAssignment, assignment.id);
+                            const db = app.firestore();
+                            console.log(typeOfAssignment);
+                            db.collection(typeOfAssignment)
+                              .doc(assignment.id)
+                              .update({
+                                satus: "completed",
+                              });
+                            console.log(assignment);
+                          }}
+                        ></Button>
+                      </Tooltip>
+                    ) : (
+                      <Tooltip title="Mark As Ongoing" arrow>
+                        <Button
+                          variant="contained"
+                          className={`${classes.button} ${classes.grey}`}
+                          children={<CheckCircleIcon />}
+                          onClick={() => {
+                            console.log(typeOfAssignment, assignment.id);
+                            const db = app.firestore();
+                            console.log(typeOfAssignment);
+                            db.collection(typeOfAssignment)
+                              .doc(assignment.id)
+                              .update({
+                                satus: "ongoing",
+                              });
+                            console.log(assignment);
+                          }}
+                        ></Button>
+                      </Tooltip>
+                    )}
                   </div>
                   <Tooltip title="Download files" arrow>
                     <Button
@@ -250,7 +271,6 @@ function get_url_extension(url) {
   return url.split(/[#?]/)[0].split(".").pop().trim();
 }
 
-
 async function func(ar, assignment) {
   const zip = new JSZip();
   let count = 0;
@@ -266,9 +286,9 @@ async function func(ar, assignment) {
     // const ext=getExtension(url)
     // console.log(ext)
     // var temp = url.split(RegExp(% 2..*% 2F(.*?) \?alt))[1].split(".")[0];
-    console.log(url)
-    console.log()
-    const filename = url.split('/').pop().split('#')[0].split('?')[0];
+    console.log(url);
+    console.log();
+    const filename = url.split("/").pop().split("#")[0].split("?")[0];
     console.log(file);
 
     zip.file(filename, file, { binary: true });

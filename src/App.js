@@ -1,10 +1,8 @@
 import React from "react";
-import { CssBaseline, CircularProgress } from "@material-ui/core";
 import Front from "./screens/index";
 import AddTutor from "./screens/AddTutor";
 import AddAssignment from "./screens/AddAssignment";
 import ViewTutor from "./screens/ViewTutor";
-import UpcomingAssignment from "./screens/UpcomingAssignment";
 import Analytics from "./screens/Analytics";
 import AppBar from "./screens/AppBar";
 import AddStudent from "./screens/AddStudent";
@@ -40,7 +38,6 @@ function App() {
           <Route exact path="/addTutor" component={AddTutor} />
           <Route exact path="/viewTutor" component={ViewTutor} />
           <Route exact path="/addAss" component={AddAssignment} />
-          <Route exact path="/upAss" component={UpcomingAssignment} />
           <Route exact path="/analytics" component={Analytics} />
           <Route exact path="/addStudent" component={AddStudent} />
           <Route exact path="/allAss" component={AllAssignment} />
