@@ -614,7 +614,7 @@ function AddAssignment(props) {
 
     console.log(tutorEmail)
     let message = "You have been assigned a new lesson as a Tutor. Here are the additional details-" + "\n"
-      + "Due Status:       " + due_date + "\n"
+      + "Due Status:       " + startDate + "\n"
       + "Student Name:     " + student + "\n"
       + "Type:             " + "General" + "\n"
       + "Subject:          " + subject + "\n"
@@ -666,7 +666,7 @@ function AddAssignment(props) {
         .collection("dues")
         .add({
           assg_id: x,
-          due_date: due_date,
+          due_date: startDate,
           status: "pending",
           tutor: tutor,
           tutor_fee: parseInt(tutor_fee),
@@ -685,7 +685,7 @@ function AddAssignment(props) {
         .collection("payment_collection")
         .add({
           assg_id: x,
-          due_date: due_date,
+          due_date: startDate,
           pending: price - amount_paid,
           status: "pending",
           student: student,
