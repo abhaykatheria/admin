@@ -29,6 +29,8 @@ function Analytics() {
   const [monthlyGraph, setMonthlyGraph] = useState(false);
   const [weeklyGraph, setWeeklyGraph] = useState(false);
   const [dayGraph, setDayGraph] = useState(false);
+  const [ass,setAss] = useState([]);
+  const [timed,setTimed] = useState([]);
   const classes = useStyles();
   moment.updateLocale("en", {
     week: {
@@ -39,84 +41,95 @@ function Analytics() {
   useEffect(() => {
     window.scrollTo(0, 0);
     const db = app.firestore();
-    return db
-      .collection("assignments")
+    // var datePrice = {};
+    // var dayPrice = {};
+    // var weekPrice = {};
+    // var monthPrice = {};
+    // const data1 = [];
+    // const temp = [];
+    // const temp2 = [];
+    // const temp3 = [];
+    // var daysCount = {};
+
+    db.collection("assignments")
       .orderBy("assigned_date")
       .onSnapshot((snapshot) => {
-        const data = [];
-        var datePrice = {};
-        var dayPrice = {};
-        var weekPrice = {};
-        var monthPrice = {};
-        const data1 = [];
-        const temp = [];
-        const temp2 = [];
-        const temp3 = [];
-        var daysCount = {};
-        snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
-        for (var key in data) {
-          var date = moment(data[key].due_date.toDate().toDateString());
-          console.log(date);
-          var dayNumber = moment(date).format("d");
-          console.log(dayNumber);
-          var weekDay = moment(date)
-            .subtract(dayNumber, "days")
-            .format("MMM DD");
-          console.log(dayNumber,weekDay)
-          if (datePrice[date.format("MMM DD YYYY")] !== undefined) {
-            datePrice[date.format("MMM DD YYYY")] += data[key].price;
-          } else {
-            datePrice[date.format("MMM DD YYYY")] = data[key].price;
-          }
-
-          if (dayPrice[date.format("dddd")] !== undefined) {
-            dayPrice[date.format("dddd")] += data[key].price;
-            daysCount[date.format("dddd")] += 1;
-          } else {
-            dayPrice[date.format("dddd")] = data[key].price;
-            daysCount[date.format("dddd")] = 1;
-          }
-
-          if (weekPrice[weekDay] !== undefined) {
-            weekPrice[weekDay] += data[key].price;
-          } else {
-            weekPrice[weekDay] = data[key].price;
-          }
-
-          if (monthPrice[date.format("MMM YY")] !== undefined) {
-            monthPrice[date.format("MMM YY")] += data[key].price;
-          } else {
-            monthPrice[date.format("MMM YY")] = data[key].price;
-            console.log(date.format("MMM YY"));
-          }
-        }
-
-        for (var key2 in datePrice) {
-          data1.push({ x: new Date(key2), y: datePrice[key2] / 72 });
-        }
-        for (var key3 in dayPrice) {
-          temp.push({
-            label: key3,
-            y: dayPrice[key3] / (72 * daysCount[key3]),
-          });
-        }
-        for (var key4 in weekPrice) {
-          temp2.push({ label: key4, y: weekPrice[key4] / 72 });
-        }
-        for (var key5 in monthPrice) {
-          console.log(key5);
-          temp3.push({ label: key5, y: monthPrice[key5] / 72 });
-        }
-        console.log("day", temp);
-        console.log(data1);
-        console.log("week", temp2);
-        console.log("month", temp3);
-
-        setDailyCollection(data1);
-        setDayWiseCollection(temp);
-        setWeeklyCollection(temp2);
-        setMonthlyCollection(temp3);
+        const dataAss = [];
+        snapshot.forEach((doc) => dataAss.push({ ...doc.data(), id: doc.id }));
+        setAss(dataAss)
       });
+    db.collection("timed")
+      .orderBy("assigned_date")
+      .onSnapshot((snapshot) => {
+        const dataTimed = [];
+        snapshot.forEach((doc) => dataTimed.push({ ...doc.data(), id: doc.id }))
+        setTimed(dataTimed);
+      });
+      // console.log(data)
+    // for (var key in data) {
+    //   var date = moment(data[key].due_date.toDate().toDateString());
+    //   console.log(date);
+    //   var dayNumber = moment(date).format("d");
+    //   console.log(dayNumber);
+    //   var weekDay = moment(date).subtract(dayNumber, "days").format("MMM DD");
+    //   console.log(dayNumber, weekDay);
+    //   if (datePrice[date.format("MMM DD YYYY")] !== undefined) {
+    //     datePrice[date.format("MMM DD YYYY")] +=
+    //       data[key].price - data[key].tutor_fee;
+    //   } else {
+    //     datePrice[date.format("MMM DD YYYY")] =
+    //       data[key].price - data[key].tutor_fee;
+    //   }
+
+    //   if (dayPrice[date.format("dddd")] !== undefined) {
+    //     dayPrice[date.format("dddd")] += data[key].price - data[key].tutor_fee;
+    //     daysCount[date.format("dddd")] += 1;
+    //   } else {
+    //     dayPrice[date.format("dddd")] = data[key].price - data[key].tutor_fee;
+    //     daysCount[date.format("dddd")] = 1;
+    //   }
+
+    //   if (weekPrice[weekDay] !== undefined) {
+    //     weekPrice[weekDay] += data[key].price - data[key].tutor_fee;
+    //   } else {
+    //     weekPrice[weekDay] = data[key].price - data[key].tutor_fee;
+    //   }
+
+    //   if (monthPrice[date.format("MMM YY")] !== undefined) {
+    //     monthPrice[date.format("MMM YY")] +=
+    //       data[key].price - data[key].tutor_fee;
+    //   } else {
+    //     monthPrice[date.format("MMM YY")] =
+    //       data[key].price - data[key].tutor_fee;
+    //     console.log(date.format("MMM YY"));
+    //   }
+    // }
+
+    // for (var key2 in datePrice) {
+    //   data1.push({ x: new Date(key2), y: datePrice[key2] / 72 });
+    // }
+    // for (var key3 in dayPrice) {
+    //   temp.push({
+    //     label: key3,
+    //     y: dayPrice[key3],
+    //   });
+    // }
+    // for (var key4 in weekPrice) {
+    //   temp2.push({ label: key4, y: weekPrice[key4] / 72 });
+    // }
+    // for (var key5 in monthPrice) {
+    //   console.log(key5);
+    //   temp3.push({ label: key5, y: monthPrice[key5] / 72 });
+    // }
+    // console.log("day", temp);
+    // console.log(data1);
+    // console.log("week", temp2);
+    // console.log("month", temp3);
+
+    // setDailyCollection(data1);
+    // setDayWiseCollection(temp);
+    // setWeeklyCollection(temp2);
+    // setMonthlyCollection(temp3);
   }, []);
 
   const defaultCollection = {
@@ -233,7 +246,85 @@ function Analytics() {
     margin: "auto",
   };
 
+  function executeOnEachStep () {
+    const data = [...ass,...timed]
+    var datePrice = {};
+    var dayPrice = {};
+    var weekPrice = {};
+    var monthPrice = {};
+    const data1 = [];
+    const temp = [];
+    const temp2 = [];
+    const temp3 = [];
+    var daysCount = {};
+    for (var key in data) {
+      var date = moment(data[key].due_date.toDate().toDateString());
+      console.log(date);
+      var dayNumber = moment(date).format("d");
+      console.log(dayNumber);
+      var weekDay = moment(date).subtract(dayNumber, "days").format("MMM DD");
+      console.log(dayNumber, weekDay);
+      if (datePrice[date.format("MMM DD YYYY")] !== undefined) {
+        datePrice[date.format("MMM DD YYYY")] +=
+          data[key].price - data[key].tutor_fee;
+      } else {
+        datePrice[date.format("MMM DD YYYY")] =
+          data[key].price - data[key].tutor_fee;
+      }
+
+      if (dayPrice[date.format("dddd")] !== undefined) {
+        dayPrice[date.format("dddd")] += data[key].price - data[key].tutor_fee;
+        daysCount[date.format("dddd")] += 1;
+      } else {
+        dayPrice[date.format("dddd")] = data[key].price - data[key].tutor_fee;
+        daysCount[date.format("dddd")] = 1;
+      }
+
+      if (weekPrice[weekDay] !== undefined) {
+        weekPrice[weekDay] += data[key].price - data[key].tutor_fee;
+      } else {
+        weekPrice[weekDay] = data[key].price - data[key].tutor_fee;
+      }
+
+      if (monthPrice[date.format("MMM YY")] !== undefined) {
+        monthPrice[date.format("MMM YY")] +=
+          data[key].price - data[key].tutor_fee;
+      } else {
+        monthPrice[date.format("MMM YY")] =
+          data[key].price - data[key].tutor_fee;
+        console.log(date.format("MMM YY"));
+      }
+    }
+    for (var key2 in datePrice) {
+      data1.push({ x: new Date(key2), y: datePrice[key2] / 72 });
+    }
+    for (var key3 in dayPrice) {
+      temp.push({
+        label: key3,
+        y: dayPrice[key3]/72,
+      });
+    }
+    for (var key4 in weekPrice) {
+      temp2.push({ label: key4, y: weekPrice[key4] / 72 });
+    }
+    for (var key5 in monthPrice) {
+      console.log(key5);
+      temp3.push({ label: key5, y: monthPrice[key5] / 72 });
+    }
+    console.log("day", temp);
+    console.log(data1);
+    console.log("week", temp2);
+    console.log("month", temp3);
+
+    setDailyCollection(data1);
+    setDayWiseCollection(temp);
+    setWeeklyCollection(temp2);
+    setMonthlyCollection(temp3);
+
+  }
+
   const onDefaultClick = () => {
+    executeOnEachStep()
     setDefaultGraph(true);
     setDayGraph(false);
     setWeeklyGraph(false);
@@ -241,6 +332,7 @@ function Analytics() {
   };
 
   const onDayWiseCollectionClick = () => {
+    executeOnEachStep ()
     setDefaultGraph(false);
     setDayGraph(true);
     setWeeklyGraph(false);
@@ -248,6 +340,7 @@ function Analytics() {
   };
 
   const onWeeklyCollectionClick = () => {
+    executeOnEachStep ()
     setDefaultGraph(false);
     setDayGraph(false);
     setWeeklyGraph(true);
@@ -255,6 +348,7 @@ function Analytics() {
   };
 
   const onMonthlyCollectionClick = () => {
+    executeOnEachStep ()
     setDefaultGraph(false);
     setDayGraph(false);
     setWeeklyGraph(false);
