@@ -12,6 +12,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Tooltip from "@material-ui/core/Tooltip";
 import moment from "moment";
+import MoneyIcon from "@material-ui/icons/Money";
 import { Link } from "react-router-dom";
 import JSZip from "jszip";
 import JSZipUtils from "jszip-utils";
@@ -21,10 +22,11 @@ import { green, grey } from "@material-ui/core/colors";
 import DeleteIcon from "@material-ui/icons/Delete";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import PriorityHighIcon from "@material-ui/icons/PriorityHigh";
+import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    minWidth: "50%",
+    minWidth: "100%",
     backgroundColor: "lightBlue",
     boxShadow: "3px 3px 5px 6px rgba(255,255,255,0.6)",
     "&:hover": {
@@ -63,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function TestDisplay(props) {
+export default function ViewDetails(props) {
   const [assignment, setAssignment] = useState(props.location.state.data);
   const [typeOfAssignment, setTypeOfAssignment] = useState(
     props.location.state.type
@@ -79,12 +81,24 @@ export default function TestDisplay(props) {
   );
   const [dueDate, setDueDate] = useState(props.location.state.due_date);
   const [startDate, setStartDate] = useState(props.location.state.start_date);
+  const [tutorId, setTutorId] = useState();
   console.log(startDate);
   console.log(assignment);
   const classes = useStyles();
   const [ar, setAr] = useState([]);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const db = app.firestore();
+    window.scrollTo(0, 0);
+    db.collection("tutors")
+      .where("name", "==", props.location.state.data.tutor)
+      .onSnapshot((snapshot) => {
+        const data = [];
+        snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
+        console.log(data); // <------
+        setTutorId(data.id);
+      });
+  }, [props]);
 
   return (
     <div className="body">
@@ -246,6 +260,42 @@ export default function TestDisplay(props) {
                         if (ar.length !== 0) func(ar, assignment);
                       }}
                     ></Button>
+                  </Tooltip>
+                  <Tooltip title="Edit Dues" arrow>
+                    <Link
+                      to={{
+                        pathname: "/indiDues",
+                        state: {
+                          fieldName: "assg_id",
+                          ass_id: assignment.ass_id,
+                        },
+                      }}
+                    >
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        className={classes.button}
+                        children={<MoneyIcon />}
+                      ></Button>
+                    </Link>
+                  </Tooltip>
+                  <Tooltip title="Edit payment collection" arrow>
+                    <Link
+                      to={{
+                        pathname: "/indiPayCol",
+                        state: {
+                          fieldName: "assg_id",
+                          ass_id: assignment.ass_id,
+                        },
+                      }}
+                    >
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        className={`${classes.button} ${classes.green}`}
+                        children={<AttachMoneyIcon />}
+                      ></Button>
+                    </Link>
                   </Tooltip>
                 </CardActions>
               </div>
