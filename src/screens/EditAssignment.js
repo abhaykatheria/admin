@@ -600,7 +600,7 @@ function AddAssignment(props) {
       + "The download links are:- " + "\n\n\n"
       + s
 
-    console.log(message,tutorEmail,props.location.state.data)
+    console.log(message, tutorEmail, props.location.state.data)
 
     let templateParams = {
       to_name: tutorEmail,

@@ -357,6 +357,7 @@ function AddTimedAssignment(props) {
                     tutor: tutor.label,
                     tutor_fee: parseInt(tutor_fee),
                     ass_id: x,
+                    tutor_email: tutorEmail
                 }).then((doc) => {
                     console.log(doc.id, due_date, price - amount_paid, student);
                     console.log(doc.id, due_date, "pending", tutor.label, tutor_fee, tutorId);
