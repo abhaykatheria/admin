@@ -73,7 +73,7 @@ function AddAssignment(props) {
   const [tutor_fee, setTutorFee] = useState(
     props.location.state.data.tutor_fee
   );
-  const [due_date, setDueDate] = useState(props.location.state.data.due_date);
+  const [due_date, setDueDate] = useState('');
   const [comments, setComments] = useState(props.location.state.data.comments);
   const [assigned_date, setAssignedDate] = useState(
     props.location.state.assigned_date
@@ -95,12 +95,15 @@ function AddAssignment(props) {
   const [colFlag, setColFlag] = useState(true)
   const [startDate, setStartDate] = useState('')
   const [duration, setDuration] = useState(props.location.state.data.duration)
+  const [studentId, setStudentId] = useState('')
+  const [downloadLinks, setDownloadLinks] = useState([])
+
   // console.log(props.location.state, duration)
 
   // const [selectedTimezone, setSelectedTimezone] = useState(
   //   props.location.state.data.time_zone
   // );
-  const [tutorEmail, setTutorEmail] = useState("");
+  const [tutorEmail, setTutorEmail] = useState(props.location.state.data.tutor_email);
 
   const changeTutorHandler = (value) => {
     setTutor(value);
@@ -129,6 +132,10 @@ function AddAssignment(props) {
       const data = [];
       const ids = [];
       snapshot.forEach((doc) => {
+        if (doc.data().name == tutor) {
+          setTutorId(doc.id)
+          setDues(doc.data().dues)
+        }
         data.push({ ...doc.data() });
         ids.push(doc.id);
         // console.log(doc.id);
@@ -157,6 +164,10 @@ function AddAssignment(props) {
       const data = [];
       const ids = [];
       snapshot.forEach((doc) => {
+        if (doc.data().name == student) {
+          setStudentId(doc.id);
+          setStudentCollections(doc.data().collections)
+        }
         data.push({ ...doc.data() });
         ids.push(doc.id);
         // console.log(doc.id);
@@ -239,7 +250,7 @@ function AddAssignment(props) {
             </FormControl>
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="name">Price</InputLabel>
-              {price === 0 && <Input
+              {colFlag && <Input
                 id="name"
                 name="name"
                 autoComplete="off"
@@ -248,7 +259,7 @@ function AddAssignment(props) {
                 onChange={(e) => setPrice(e.target.value)}
               />
               }
-              {price !== 0 && <Input
+              {!colFlag && <Input
                 id="name"
                 name="name"
                 autoComplete="off"
@@ -261,7 +272,7 @@ function AddAssignment(props) {
             </FormControl>
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="name">Amount Paid</InputLabel>
-              {amount_paid === 0 &&
+              {colFlag &&
                 <Input
                   id="name"
                   name="name"
@@ -271,7 +282,7 @@ function AddAssignment(props) {
                   onChange={(e) => setAmountPaid(e.target.value)}
                 />
               }
-              {amount_paid !== 0 &&
+              {!colFlag &&
                 <Input
                   id="name"
                   name="name"
@@ -285,7 +296,7 @@ function AddAssignment(props) {
             </FormControl>
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="name">Tutor Fee</InputLabel>
-              {tutor_fee === 0 &&
+              {duesFlag &&
                 <Input
                   id="name"
                   name="name"
@@ -295,7 +306,7 @@ function AddAssignment(props) {
                   onChange={(e) => setTutorFee(e.target.value)}
                 />
               }
-              {tutor_fee !== 0 &&
+              {!duesFlag &&
                 <Input
                   id="name"
                   name="name"
@@ -321,10 +332,10 @@ function AddAssignment(props) {
 
             <FormControl margin="normal" required fullWidth>
               <p>Start Date</p>
-              <p>{props.location.state.start_date}</p>
+              <p>{props.location.state.due_date}</p>
               <DateTimePicker onChange={setStartDate} value={startDate} />
             </FormControl>
-            
+
             <DurationPicker
               onChange={(duration) => {
 
@@ -355,11 +366,71 @@ function AddAssignment(props) {
             >
               Register
             </Button>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                let x = assId
+                let s = getDownloadLinks(x)
+              }}
+              // component={Link}
+              // to="/register"
+              className={classes.submit}>
+              Send email
+          			</Button>
           </form>
         </Paper>
       </main>
     </div>
   );
+
+  async function getDownloadLinks(x) {
+    let location =
+      "/files/" + x.toString();
+    var temp = [];
+    var storageRef = app.storage().ref(location);
+    // console.log(storageRef)
+    await storageRef
+      .listAll()
+      .then(function (result) {
+        result.items.forEach(function (imageRef) {
+          // console.log(imageRef)
+          imageRef
+            .getDownloadURL()
+            .then(function (url) {
+              temp.push(url.toString());
+              console.log(temp)
+              // console.log(ar)
+            })
+            .catch(function (error) {
+              // Handle any errors
+            });
+        });
+      })
+      .catch(function (error) {
+        // Handle any errors
+      });
+    if (temp != [])
+      setDownloadLinks(temp)
+    let s = ""
+    for (let [key, value] of Object.entries(downloadLinks)) {
+      let url = value;
+      console.log(url);
+      s += url
+      s += "\n"
+    }
+
+    if (s != "") {
+      console.log(s)
+      sendEmail()
+    }
+
+    return s
+
+  }
+
 
   async function upload(tempar, x) {
     console.log(tempar);
@@ -387,7 +458,19 @@ function AddAssignment(props) {
       });
   }
 
+  function checkValid(x) {
+    if (isNaN(parseInt(x)) || parseInt(x) == 0)
+      return false
+    return true
+  }
+
   async function onRegister() {
+
+    if (startDate === undefined || startDate == '' || startDate === null) {
+      alert('Fill due date and if its same as previous fill it again')
+      return
+    }
+
     console.log(duesFlag, colFlag)
     // console.log(selectedTimezone);
     const tempar = [];
@@ -437,12 +520,15 @@ function AddAssignment(props) {
     try {
       const db = app.firestore();
       try {
-        console.log(docId,amount_paid,comments,payment_pending,price,student,subject,tutor,duration,comments)
+        console.log(docId, amount_paid, comments, payment_pending, price, student, subject, tutor, duration, comments)
         if (startDate === undefined) {
           console.log('huehue')
 
         }
-        if (startDate === undefined || startDate==='') {
+
+        setDueDate(startDate)
+
+        if (startDate === undefined || startDate === '') {
           await db
             .collection("timed").doc(docId)
             .update({
@@ -490,29 +576,19 @@ function AddAssignment(props) {
         }
 
 
-        db.collection("tutors").onSnapshot((snapshot) => {
-          snapshot.forEach((doc) => {
-            if (doc.data().name === tutor.label) {
-              var temp = doc.data();
-              temp.dues += parseInt(tutor_fee);
-              setTutorId(doc.id);
-              setDues(temp.dues);
-            }
-            // console.log(doc.id, doc.data(), tutor.value);
-          });
-        });
+
       } catch (error) {
         alert(error.message);
       }
 
-      // if (duesFlag) {
-      //   updateDues();
-      //   updateDuesCollection(x);
-      // }
-      // if (colFlag) {
-      //   updatePayment(x);
-      //   updateStudentCollection();
-      // }
+      if (duesFlag && checkValid(tutor_fee)) {
+        updateDues();
+        updateDuesCollection(x);
+      }
+      if (colFlag && checkValid(amount_paid) && checkValid(price)) {
+        updatePayment(x);
+        updateStudentCollection();
+      }
     } catch (error) {
       alert(error.message);
     }
@@ -525,40 +601,54 @@ function AddAssignment(props) {
   // updatePayment();
 
   function sendEmail() {
-    console.log(tutor.email);
-    let message =
-      "You got a new assignment for student " +
-      student.label +
-      " subject name is " +
-      subject +
-      ". The due date is " +
-      due_date +
-      " and you will be paid " +
-      tutor_fee;
-    console.log(message);
+    let s = ""
+    for (let [key, value] of Object.entries(downloadLinks)) {
+      let url = value;
+      console.log(url);
+      s += url
+      s += "                             "
+    }
+
+    console.log(s)
+
+
+    console.log(tutorEmail)
+    let message = "You have been assigned a new lesson as a Tutor. Here are the additional details-" + "\n"
+      + "Due Status:       " + startDate + "\n"
+      + "Student Name:     " + student + "\n"
+      + "Type:             " + "General" + "\n"
+      + "Subject:          " + subject + "\n"
+      + "Comments:         " + comments + "\n"
+      + "The download links are:- " + "\n\n\n"
+      + s
+
+    console.log(message, tutorEmail, props.location.state.data)
 
     let templateParams = {
-      to_name: tutor.email,
-      from_name: "chitransh.326@gmail.com",
+      to_name: tutorEmail,
+      from_name: 'chitransh.326@gmail.com',
       subject: "New Assignment Assigned",
       message: message,
-    };
+    }
 
-    emailjs.send(
-      "service_5x2bgwj",
-      "template_mdudrfo",
-      templateParams,
-      "user_2Mb02sYPwYBJT9hScfbBR"
-    );
+    if (s != '') {
+      emailjs.send(
+        'service_5x2bgwj',
+        'template_mdudrfo',
+        templateParams,
+        'user_2Mb02sYPwYBJT9hScfbBR'
+      )
+      alert('Email sent successfully')
+    }
   }
 
+
   async function updateDues() {
-    console.log(tutor.dues);
     try {
       if (tutorId != "") {
         console.log(tutor);
-        let dues = tutor.dues + parseInt(tutor_fee);
-        await app.firestore().collection("tutors").doc(tutor.id).update({
+        setDues(dues + parseInt(tutor_fee))
+        await app.firestore().collection("tutors").doc(tutorId).update({
           dues: dues,
         });
       }
@@ -576,9 +666,9 @@ function AddAssignment(props) {
         .collection("dues")
         .add({
           assg_id: x,
-          due_date: due_date,
+          due_date: startDate,
           status: "pending",
-          tutor: tutor.label,
+          tutor: tutor,
           tutor_fee: parseInt(tutor_fee),
           tutorId: tutorId,
         });
@@ -595,11 +685,11 @@ function AddAssignment(props) {
         .collection("payment_collection")
         .add({
           assg_id: x,
-          due_date: due_date,
+          due_date: startDate,
           pending: price - amount_paid,
           status: "pending",
-          student: student.label,
-          id: student.id,
+          student: student,
+          id: studentId,
         });
     } catch (error) {
       alert(error.message);
@@ -612,10 +702,10 @@ function AddAssignment(props) {
       await app
         .firestore()
         .collection("students")
-        .doc(student.value)
+        .doc(studentId)
         .update({
           collections:
-            parseInt(student.collections) + parseInt(price - amount_paid),
+            parseInt(studentCollections) + parseInt(price - amount_paid),
         });
     } catch (error) {
       alert(error.message);
