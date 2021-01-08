@@ -93,6 +93,7 @@ function AddTimedAssignment(props) {
         setTutor(value)
         console.log({ value }, value.dues)
         setTutorId(value.id)
+        setTutorEmail(value.email)
     }
 
     const changeStudentHandler = value => {
@@ -142,7 +143,7 @@ function AddTimedAssignment(props) {
                 // console.log(doc.id);
             }
             );
-            console.log(ids);
+            // console.log(ids);
             let data1 = []
             for (var i = 0; i < data.length; i++) {
                 data1.push({ name: data[i].name, id: ids[i], collections: data[i].collections });
@@ -156,7 +157,7 @@ function AddTimedAssignment(props) {
                     id: dat.id
                 }
             })
-            console.log(data1);
+            // console.log(data1);
             setAllStudents(data1);
         });
     }, []);
@@ -249,6 +250,20 @@ function AddTimedAssignment(props) {
                             className={classes.submit}>
                             Register
           			</Button>
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            onClick={() => {
+                                let x = student.label + tutor.label + assigned_date.toISOString()
+                                let s = getDownloadLinks(x)
+                            }}
+                            // component={Link}
+                            // to="/register"
+                            className={classes.submit}>
+                            Send email
+          			</Button>
                     </form>
                 </Paper>
             </main>
@@ -275,7 +290,7 @@ function AddTimedAssignment(props) {
 
     async function onRegister() {
 
-        
+
 
         const tempar = []
         for (let i = 0; i < files.length; i++) {
@@ -290,12 +305,12 @@ function AddTimedAssignment(props) {
 
 
 
-        if (tutor == '' || student == '' || duration == '' || startDate =='') {
+        if (tutor == '' || student == '' || duration == '' || startDate == '') {
             alert("Please Fill All Required Field");
             return;
         }
 
-        
+
         console.log(startDate)
         // console.log(student.label, tutor.label, subject, price, amount_paid, tutor_fee, comments, new Date(), startDate, duration,due_date)
         let dt = startDate
@@ -308,6 +323,8 @@ function AddTimedAssignment(props) {
         setAssId(x)
 
         upload(tempar, x);
+
+        setDueDate(startDate)
 
         // console.log(student, tutor.label, subject, price, amount_paid, tutor_fee, comments);
         console.log(allTutors);
@@ -348,48 +365,38 @@ function AddTimedAssignment(props) {
                     setAssId(doc.id)
                 })
 
-                db.collection('tutors').onSnapshot((snapshot) => {
-                    snapshot.forEach((doc) => {
-                        if (doc.data().name === tutor.label) {
-                            var temp = doc.data()
-                            temp.dues += parseInt(tutor_fee)
-                            setTutorId(doc.id)
-                            setDues(temp.dues)
-                        }
-                        // console.log(doc.id, doc.data(), tutor.value);
-                    });
-                })
             } catch (error) {
                 alert(error.message)
             }
-            if (tutor_fee != '') {
+            if (checkValid(tutor_fee)) {
+                console.log('huehuehue')
                 updateDues()
                 updateDuesCollection(x)
             }
-            if (amount_paid != '' && price != '') {
+            if (checkValid(amount_paid) && checkValid(price)) {
                 updatePayment(x)
                 updateStudentCollection()
             }
-            if (tempar != '')
-                getDownloadLinks(x)
+            // if (tempar != '')
+            //     getDownloadLinks(x)
         } catch (error) {
             alert(error.message);
         }
-        if (due_date != '' && tutor_fee != '' && tempar != '')
-            sendEmail()
+        // if (due_date != '' && tutor_fee != '' && tempar != '')
+        //     sendEmail()
         // // updateTutorDues()
     }
     // updateDues();
     // updateDuesCollection();
     // updatePayment();
 
-    function getDownloadLinks(x) {
+    async function getDownloadLinks(x) {
         let location =
             "/files/" + x.toString();
         var temp = [];
         var storageRef = app.storage().ref(location);
         // console.log(storageRef)
-        storageRef
+        await storageRef
             .listAll()
             .then(function (result) {
                 result.items.forEach(function (imageRef) {
@@ -398,6 +405,7 @@ function AddTimedAssignment(props) {
                         .getDownloadURL()
                         .then(function (url) {
                             temp.push(url.toString());
+                            console.log(temp)
                             // console.log(ar)
                         })
                         .catch(function (error) {
@@ -418,9 +426,20 @@ function AddTimedAssignment(props) {
             s += "\n"
         }
 
-        console.log(s)
+        if (s != "") {
+            console.log(s)
+            sendEmail()
+        }
 
+        return s
     }
+
+    function checkValid(x) {
+        if (isNaN(parseInt(x)) || parseInt(x) == 0)
+            return false
+        return true
+    }
+
 
     function sendEmail() {
 
@@ -429,7 +448,7 @@ function AddTimedAssignment(props) {
             let url = value;
             console.log(url);
             s += url
-            s += "\n"
+            s += "                             "
         }
 
         console.log(s)
@@ -454,14 +473,17 @@ function AddTimedAssignment(props) {
             message: message,
         }
 
-        emailjs.send(
-            'service_5x2bgwj',
-            'template_mdudrfo',
-            templateParams,
-            'user_2Mb02sYPwYBJT9hScfbBR'
-        )
-
+        if (s != '') {
+            emailjs.send(
+                'service_5x2bgwj',
+                'template_mdudrfo',
+                templateParams,
+                'user_2Mb02sYPwYBJT9hScfbBR'
+            )
+            alert('Email sent successfully')
+        }
     }
+
 
 
     async function updateDues() {
@@ -479,34 +501,37 @@ function AddTimedAssignment(props) {
         }
     }
 
-    async function updateDuesCollection(x) {
+    function updateDuesCollection(x) {
         try {
-            // console.log(dues);
-            console.log({ assId })
-            await app.firestore().collection("dues").add({
+            console.log(dues);
+            app.firestore().collection("dues").add({
                 assg_id: x,
                 due_date: due_date,
                 status: "pending",
                 tutor: tutor.label,
                 tutor_fee: parseInt(tutor_fee),
                 tutorId: tutorId,
-            });
+            }).then((doc) => {
+                console.log(doc.id)
+            })
         } catch (error) {
             alert(error.message);
         }
     }
 
 
-    async function updatePayment(x) {
+    function updatePayment(x) {
         try {
             console.log(student);
-            await app.firestore().collection('payment_collection').add({
+            app.firestore().collection('payment_collection').add({
                 assg_id: x,
                 due_date: due_date,
                 pending: price - amount_paid,
                 status: "pending",
                 student: student.label,
-                id: student.id
+                studentId: student.id
+            }).then((doc) => {
+                console.log(doc.id)
             })
         }
         catch (error) {
