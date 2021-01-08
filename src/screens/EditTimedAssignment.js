@@ -332,7 +332,7 @@ function AddAssignment(props) {
 
             <FormControl margin="normal" required fullWidth>
               <p>Start Date</p>
-              <p>{props.location.state.start_date}</p>
+              <p>{props.location.state.due_date}</p>
               <DateTimePicker onChange={setStartDate} value={startDate} />
             </FormControl>
 
