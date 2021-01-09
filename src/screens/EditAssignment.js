@@ -646,6 +646,9 @@ function AddAssignment(props) {
           tutor: tutor,
           tutor_fee: parseInt(tutor_fee),
           tutorId: tutorId,
+          student: student,
+          assigned_date: assigned_date,
+          subject: subject
         });
     } catch (error) {
       alert(error.message);
