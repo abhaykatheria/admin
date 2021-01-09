@@ -12,7 +12,7 @@ import moment from "moment";
 import "./tutor.css";
 
 
-export default function PaymentCollection(props) {
+export default function DuesData(props) {
   const [tutors, setTutors] = useState();
 
   useEffect(() => {
@@ -27,9 +27,9 @@ export default function PaymentCollection(props) {
           [data[i].name, data[i].dues,
           <Link
             to={{
-              pathname: "/dues",
+              pathname: "/duesTable",
               state: {
-                data: data[i],
+                id: data[i].id,
                 fieldName: "tutorId",
               },
             }}

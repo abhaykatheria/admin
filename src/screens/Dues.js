@@ -78,17 +78,17 @@ const useStyles2 = makeStyles((theme) => ({
   },
 }));
 
-export default function PaymentCollection(props) {
+export default function Dues(props) {
   const [dues, setDues] = useState();
-  const [id, setId] = useState(props.location.state.data.id);
+  const [id, setId] = useState(props.location.state.id);
   const [fieldName, setFieldName] = useState(props.location.state.fieldName);
   const [duesMap, setDuesMap] = useState();
-
+  console.log(props.location.state)
   const classes = useStyles();
   const classes2 = useStyles2();
 
   useEffect(() => {
-    setId(props.location.state.data.id);
+    setId(props.location.state.id);
     setFieldName(props.location.state.fieldName);
 
     const db = app.firestore();
@@ -121,7 +121,7 @@ export default function PaymentCollection(props) {
       for (let i = 0; i < data.length; i++) {
         map[data[i].id] = data[i].dues;
       }
-      // console.log(map);
+      console.log(map);
       setDuesMap(map);
     });
   }, []);

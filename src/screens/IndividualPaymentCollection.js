@@ -78,7 +78,7 @@ const useStyles2 = makeStyles((theme) => ({
   },
 }));
 
-export default function PaymentCollection(props) {
+export default function IndividualPaymentCollection(props) {
     console.log(props.location.state);
   const [dues, setDues] = useState();
   const [duesMap, setDuesMap] = useState();

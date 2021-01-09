@@ -32,6 +32,7 @@ function AllAssignments() {
             "DD/MM/YYYY"
           ),
           moment(data[i].due_date.toDate().toDateString()).format("DD/MM/YYYY"),
+          String(data[i].duration.hours) + " hrs " + String(data[i].duration.minutes) + " mins",
           data[i].satus,
           data[i].id,
           <Link
@@ -93,7 +94,11 @@ function AllAssignments() {
     },
     {
       due_date: "due_date",
-      label: "Due Date",
+      label: "Start Date",
+    },
+    {
+      duration: "duration",
+      label: "Duration",
     },
     {
       satus: "satus",

@@ -25,6 +25,7 @@ import DuesData from "./screens/DuesData";
 import PaymentData from "./screens/PaymentData";
 import IndividualDue from "./screens/IndividualDue";
 import IndividualPaymentCollection from "./screens/IndividualPaymentCollection";
+import DuesTable from "./screens/DuesTable";
 import { createBrowserHistory } from "history";
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
@@ -59,6 +60,7 @@ function App() {
           <Route exact path="/indiPayCol" component={IndividualPaymentCollection} />
           <Route exact path="/editTimed" component={EditTimedAssignment} />
           <Route exact path="/editAssignment" component={EditAssignment} />
+          <Route exact path="/duesTable" component={DuesTable} />
         </Switch>
       </div>
     </Router>
