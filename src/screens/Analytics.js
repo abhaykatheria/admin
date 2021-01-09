@@ -258,7 +258,7 @@ function Analytics() {
     const temp3 = [];
     var daysCount = {};
     for (var key in data) {
-      var date = moment(data[key].due_date.toDate().toDateString());
+      var date = moment(data[key].assigned_date.toDate().toDateString());
       console.log(date);
       var dayNumber = moment(date).format("d");
       console.log(dayNumber);
