@@ -75,32 +75,32 @@ function Analytics() {
     //   console.log(dayNumber, weekDay);
     //   if (datePrice[date.format("MMM DD YYYY")] !== undefined) {
     //     datePrice[date.format("MMM DD YYYY")] +=
-    //       data[key].price - data[key].tutor_fee;
+    //       data[key].price*72 - data[key].tutor_fee;
     //   } else {
     //     datePrice[date.format("MMM DD YYYY")] =
-    //       data[key].price - data[key].tutor_fee;
+    //       data[key].price*72 - data[key].tutor_fee;
     //   }
 
     //   if (dayPrice[date.format("dddd")] !== undefined) {
-    //     dayPrice[date.format("dddd")] += data[key].price - data[key].tutor_fee;
+    //     dayPrice[date.format("dddd")] += data[key].price*72 - data[key].tutor_fee;
     //     daysCount[date.format("dddd")] += 1;
     //   } else {
-    //     dayPrice[date.format("dddd")] = data[key].price - data[key].tutor_fee;
+    //     dayPrice[date.format("dddd")] = data[key].price*72 - data[key].tutor_fee;
     //     daysCount[date.format("dddd")] = 1;
     //   }
 
     //   if (weekPrice[weekDay] !== undefined) {
-    //     weekPrice[weekDay] += data[key].price - data[key].tutor_fee;
+    //     weekPrice[weekDay] += data[key].price*72 - data[key].tutor_fee;
     //   } else {
-    //     weekPrice[weekDay] = data[key].price - data[key].tutor_fee;
+    //     weekPrice[weekDay] = data[key].price*72 - data[key].tutor_fee;
     //   }
 
     //   if (monthPrice[date.format("MMM YY")] !== undefined) {
     //     monthPrice[date.format("MMM YY")] +=
-    //       data[key].price - data[key].tutor_fee;
+    //       data[key].price*72 - data[key].tutor_fee;
     //   } else {
     //     monthPrice[date.format("MMM YY")] =
-    //       data[key].price - data[key].tutor_fee;
+    //       data[key].price*72 - data[key].tutor_fee;
     //     console.log(date.format("MMM YY"));
     //   }
     // }
@@ -266,32 +266,32 @@ function Analytics() {
       console.log(dayNumber, weekDay);
       if (datePrice[date.format("MMM DD YYYY")] !== undefined) {
         datePrice[date.format("MMM DD YYYY")] +=
-          data[key].price - data[key].tutor_fee;
+          data[key].price*72 - data[key].tutor_fee;
       } else {
         datePrice[date.format("MMM DD YYYY")] =
-          data[key].price - data[key].tutor_fee;
+          data[key].price*72 - data[key].tutor_fee;
       }
 
       if (dayPrice[date.format("dddd")] !== undefined) {
-        dayPrice[date.format("dddd")] += data[key].price - data[key].tutor_fee;
+        dayPrice[date.format("dddd")] += data[key].price*72 - data[key].tutor_fee;
         daysCount[date.format("dddd")] += 1;
       } else {
-        dayPrice[date.format("dddd")] = data[key].price - data[key].tutor_fee;
+        dayPrice[date.format("dddd")] = data[key].price*72 - data[key].tutor_fee;
         daysCount[date.format("dddd")] = 1;
       }
 
       if (weekPrice[weekDay] !== undefined) {
-        weekPrice[weekDay] += data[key].price - data[key].tutor_fee;
+        weekPrice[weekDay] += data[key].price*72 - data[key].tutor_fee;
       } else {
-        weekPrice[weekDay] = data[key].price - data[key].tutor_fee;
+        weekPrice[weekDay] = data[key].price*72 - data[key].tutor_fee;
       }
 
       if (monthPrice[date.format("MMM YY")] !== undefined) {
         monthPrice[date.format("MMM YY")] +=
-          data[key].price - data[key].tutor_fee;
+          data[key].price*72 - data[key].tutor_fee;
       } else {
         monthPrice[date.format("MMM YY")] =
-          data[key].price - data[key].tutor_fee;
+          data[key].price*72 - data[key].tutor_fee;
         console.log(date.format("MMM YY"));
       }
     }

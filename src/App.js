@@ -38,12 +38,13 @@ function App() {
   useEffect(() => {
     firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
-        // if (user.email === "tester") {
-        //   console.log("user signed");
+        if (user.email === "Swarnsriv@gmail.com") {
+          console.log("user signed");
           setIsLogin(true);
       } else {
         console.log("user not signed");
       }
+    }
     });
   });
   return (

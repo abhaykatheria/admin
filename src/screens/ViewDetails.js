@@ -257,7 +257,7 @@ export default function ViewDetails(props) {
                                 subject: assignment.subject
                               }).then(function (id) {
                                 console.log(id.id)
-                                if (id.id != '') {
+                                if (id.id !== '') {
                                   alert('Marked succesfully')
 
                                 }
