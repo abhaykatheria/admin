@@ -584,10 +584,10 @@ function AddAssignment(props) {
     let offset = 5.5 - map[studentTimezone]
     offset *= 60
     let dt = due_date
-    if(offset!==0)
-    dt.setMinutes(dt.getMinutes() + offset)
+    if (offset !== 0)
+      dt.setMinutes(dt.getMinutes() + offset)
     setDueDate(dt)
-    console.log(offset,due_date)
+    console.log(offset, due_date)
 
     try {
 
@@ -709,10 +709,10 @@ function AddAssignment(props) {
 
     if (s != '') {
       emailjs.send(
-        'service_gkjzrw9',
-        'template_n3ql3z5',
+        'service_qv50s3o',
+        'template_iff5usj',
         templateParams,
-        'user_qXHvjLnbOETurGAvHuFye'
+        'user_spTrG7WdWYtv6Uu9jVWlf'
       )
       alert('Email sent successfully')
     }

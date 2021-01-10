@@ -727,10 +727,10 @@ function AddAssignment(props) {
 
     if (s != '') {
       emailjs.send(
-        'service_gkjzrw9',
-        'template_n3ql3z5',
+        'service_qv50s3o',
+        'template_iff5usj',
         templateParams,
-        'user_qXHvjLnbOETurGAvHuFye'
+        'user_spTrG7WdWYtv6Uu9jVWlf'
       )
       alert('Email sent successfully')
     }

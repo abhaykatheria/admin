@@ -221,7 +221,7 @@ function AddTimedAssignment(props) {
             // console.log(ids);
             let data1 = []
             for (var i = 0; i < data.length; i++) {
-                data1.push({ name: data[i].name, id: ids[i], collections: data[i].collections, time_zone: data[i].time_zone  });
+                data1.push({ name: data[i].name, id: ids[i], collections: data[i].collections, time_zone: data[i].time_zone });
                 // console.log(data[i]);
             }
             data1 = data1.map((dat) => {
@@ -547,7 +547,7 @@ function AddTimedAssignment(props) {
 
         console.log(message)
 
-        message="Duartion : " + duration.hours +" hours " + duration.minutes + " minutes " 
+        message = "Duartion : " + duration.hours + " hours " + duration.minutes + " minutes "
 
         let templateParams = {
             to_name: tutor.email,
@@ -564,10 +564,10 @@ function AddTimedAssignment(props) {
 
         if (s != '') {
             emailjs.send(
-                'service_gkjzrw9',
-                'template_n3ql3z5',
+                'service_qv50s3o',
+                'template_iff5usj',
                 templateParams,
-                'user_qXHvjLnbOETurGAvHuFye'
+                'user_spTrG7WdWYtv6Uu9jVWlf'
             )
             alert('Email sent successfully')
         }

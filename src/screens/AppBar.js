@@ -52,7 +52,7 @@ export default function APPBar() {
   const [dueToday, setDueToday] = useState();
   const [duePast, setDuePast] = useState();
   const [downloadLinks, setDownloadLinks] = useState([]);
-  const [flag,setFlag] = useState(false)
+  const [flag, setFlag] = useState(false)
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -277,10 +277,10 @@ export default function APPBar() {
                           };
 
                           emailjs.send(
-                            "service_gkjzrw9",
-                            "template_n3ql3z5",
+                            "service_qv50s3o",
+                            "template_iff5usj",
                             templateParams,
-                            "user_qXHvjLnbOETurGAvHuFye"
+                            "user_spTrG7WdWYtv6Uu9jVWlf"
                           );
                         }
                       });
@@ -342,17 +342,17 @@ export default function APPBar() {
                           };
 
                           emailjs.send(
-                            "service_gkjzrw9",
-                            "template_n3ql3z5",
+                            "service_qv50s3o",
+                            "template_iff5usj",
                             templateParams,
-                            "user_qXHvjLnbOETurGAvHuFye"
+                            "user_spTrG7WdWYtv6Uu9jVWlf"
                           );
                         }
                         setFlag(true)
                       });
                     })
 
-                    if(flag)
+                  if (flag)
                     alert('Emails sent successfully')
 
                 }}

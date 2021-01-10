@@ -167,14 +167,14 @@ function AddAssignment(props) {
 
     const changeStudentHandler = value => {
         setstudent(value)
-        console.log({ value }, value.time_zone,5.5-map[value.time_zone]);
+        console.log({ value }, value.time_zone, 5.5 - map[value.time_zone]);
 
         setStudentTimezone(value.time_zone)
 
-        let offset =5.5 - map[value.time_zone]
-        offset*=60
-        let dt=new Date()
-        dt.setMinutes(dt.getMinutes()+offset)
+        let offset = 5.5 - map[value.time_zone]
+        offset *= 60
+        let dt = new Date()
+        dt.setMinutes(dt.getMinutes() + offset)
         // console.log(dt)
 
     }
@@ -522,8 +522,8 @@ function AddAssignment(props) {
 
         console.log(message)
 
-        message=""
-        
+        message = ""
+
         let templateParams = {
             to_name: tutor.email,
             from_name: 'chitransh.326@gmail.com',
@@ -539,10 +539,10 @@ function AddAssignment(props) {
 
         if (s != '') {
             emailjs.send(
-                'service_gkjzrw9',
-                'template_n3ql3z5',
+                'service_qv50s3o',
+                'template_iff5usj',
                 templateParams,
-                'user_qXHvjLnbOETurGAvHuFye'
+                'user_spTrG7WdWYtv6Uu9jVWlf'
             )
             alert('Email sent successfully')
         }
