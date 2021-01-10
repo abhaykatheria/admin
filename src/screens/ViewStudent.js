@@ -161,10 +161,13 @@ export default function ViewStudent() {
                           color="textPrimary"
                         >
                           {student.email}
+                          <br />
+                          {student.phone_number}
                         </Typography>
                         <br />
                         Collection: {student.collections}
                         <br />
+                        {student.comment}
                       </React.Fragment>
                     }
                   />

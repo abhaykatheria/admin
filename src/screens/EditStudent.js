@@ -14,6 +14,9 @@ import "firebase/firebase-firestore";
 import app from "firebase/app";
 import TimezoneSelect from "react-timezone-select";
 import { useEffect } from "react";
+import 'react-phone-number-input/style.css'
+import PhoneInput from 'react-phone-number-input'
+
 
 const styles = (theme) => ({
   main: {
@@ -57,6 +60,8 @@ function EditStudent(props) {
   const [email, setEmail] = useState(props.location.state.data.email);
   const [docId,setDocId] = useState(props.location.state.data.id);
   const [collections, setCollections] = useState(props.location.state.data.collections);
+  const [comment, setComment] = useState(props.location.state.data.comment)
+  const [value, setValue] = useState(props.location.state.data.phone_number)
 
   const [time_zone, setTime_Zone] = useState(
     props.location.state.data.time_zone
@@ -130,6 +135,14 @@ function EditStudent(props) {
               onChange={setSelectedTimezone}
             />
           </div>
+          <FormControl margin="normal" fullWidth>
+            <InputLabel htmlFor="comment">Comments</InputLabel>
+            <Input id="comment" name="comment" autoComplete="off" autoFocus value={comment} onChange={e => setComment(e.target.value)} />
+          </FormControl>
+          <PhoneInput
+            placeholder="Enter phone number"
+            value={value}
+            onChange={setValue} />
           <Button
             type="submit"
             fullWidth
@@ -164,7 +177,7 @@ function EditStudent(props) {
       }
     }
 
-    if (allStudents.includes(name)) {
+    if (allStudents.includes(name) && props.location.state.data.name!=name) {
       alert("You have entered a duplicate name, Please try again");
       //test comment
       return;
@@ -177,7 +190,9 @@ function EditStudent(props) {
         name: name,
         email: email,
         collections: collections,
-        time_zone: selectedTimezone
+        time_zone: selectedTimezone,
+        phone_number: value,
+        comment: comment,
       }).then(function () {
         alert('Details modified successfully')
       });

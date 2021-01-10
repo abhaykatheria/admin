@@ -6,6 +6,8 @@ import 'firebase/firebase-firestore'
 import app from 'firebase/app'
 import TimezoneSelect from 'react-timezone-select'
 import { useEffect } from 'react'
+import 'react-phone-number-input/style.css'
+import PhoneInput from 'react-phone-number-input'
 
 
 const styles = theme => ({
@@ -47,14 +49,15 @@ function AddStudent(props) {
     const [email, setEmail] = useState('')
     const [time_zone, setTime_Zone] = useState('')
     const [selectedTimezone, setSelectedTimezone] = useState({})
+    const [comment, setComment] = useState('')
+    const [value,setValue] = useState('')
 
-
-    const [allStudents, setAllStudents] = useState([])    
+    const [allStudents, setAllStudents] = useState([])
 
     useEffect(() => {
         const db = app.firestore();
         window.scrollTo(0, 0);
-        
+
         db.collection('students').onSnapshot((snapshot) => {
             const data = [];
             const ids = [];
@@ -91,13 +94,21 @@ function AddStudent(props) {
                         <InputLabel htmlFor="email">Email Address</InputLabel>
                         <Input id="email" name="email" autoComplete="off" value={email} onChange={e => setEmail(e.target.value)} />
                     </FormControl>
-                        <p>Time zone</p>
-                        <div className='select-wrapper'>
-                            <TimezoneSelect
-                                value={selectedTimezone}
-                                onChange={setSelectedTimezone}
-                            />
-                        </div>
+                    <p>Time zone</p>
+                    <div className='select-wrapper'>
+                        <TimezoneSelect
+                            value={selectedTimezone}
+                            onChange={setSelectedTimezone}
+                        />
+                    </div>
+                    <FormControl margin="normal" fullWidth>
+                        <InputLabel htmlFor="comment">Comments</InputLabel>
+                        <Input id="comment" name="comment" autoComplete="off" autoFocus value={comment} onChange={e => setComment(e.target.value)} />
+                    </FormControl>
+                    <PhoneInput
+                        placeholder="Enter phone number"
+                        value={value}
+                        onChange={setValue} />
                     <Button
                         type="submit"
                         fullWidth
@@ -120,38 +131,44 @@ function AddStudent(props) {
     }
 
     async function onRegister() {
-        
-        if(name==''  || selectedTimezone=='' || selectedTimezone=={}){
+
+        console.log(value)
+
+        if (name == '' || selectedTimezone == '' || selectedTimezone == {}) {
             return
         }
 
-        if(email!=''){
+        if (email != '') {
             if (!validateEmail(email)) {
                 alert("Please enter a valid email")
                 return
             }
         }
 
-        if(allStudents.includes(name)){
+        if (allStudents.includes(name)) {
             alert('You have entered a duplicate name, Please try again')
             //test comment
             return
         }
 
-        console.log(name, email,time_zone)
+        console.log(name, email, time_zone)
         try {
             const db = app.firestore()
             db.collection("students").add({
                 name: name,
                 email: email,
                 time_zone: selectedTimezone.value,
-                collections: 0
+                collections: 0,
+                comment: comment,
+                phone_number: value
             }).then(function (id) {
                 console.log(id.id)
                 if (id.id != '') {
                     alert('Student added succesfully')
                     setName('')
                     setEmail('')
+                    setComment('')
+                    setValue('')
                 }
                 else
                     alert('Some error occured, try again')
