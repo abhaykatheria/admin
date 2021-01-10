@@ -256,18 +256,28 @@ export default function APPBar() {
                           "\n\n\n" +
                           s;
 
+                        message = "";
+
                         let templateParams = {
                           to_name: assignment.tutor_email,
                           from_name: "chitransh.326@gmail.com",
-                          subject: "Assignment update email",
+                          subject: "Assignment Modified",
                           message: message,
+                          student: assignment.student,
+                          due_date: new Date(
+                            assignment.due_date.seconds * 1000
+                          ).toLocaleString(),
+                          type: "general",
+                          ass: assignment.subject,
+                          comments: assignment.comments,
+                          links: s,
                         };
 
                         emailjs.send(
-                          "service_5x2bgwj",
-                          "template_mdudrfo",
+                          "service_gkjzrw9",
+                          "template_n3ql3z5",
                           templateParams,
-                          "user_2Mb02sYPwYBJT9hScfbBR"
+                          "user_qXHvjLnbOETurGAvHuFye"
                         );
                       }
                     });
@@ -304,18 +314,33 @@ export default function APPBar() {
                           "\n\n\n" +
                           s;
 
+                        message =
+                          "Duartion : " +
+                          assignment.duration.hours +
+                          " hours " +
+                          assignment.duration.minutes +
+                          " minutes ";
+
                         let templateParams = {
                           to_name: assignment.tutor_email,
                           from_name: "chitransh.326@gmail.com",
-                          subject: "Assignment update email",
-                          message: message,
+                          subject: "Assignment Modified",
+                          message: assignment.message,
+                          student: assignment.student,
+                          due_date: new Date(
+                            assignment.due_date.seconds * 1000
+                          ).toLocaleString(),
+                          type: "timed",
+                          ass: assignment.subject,
+                          comments: assignment.comments,
+                          links: s,
                         };
 
                         emailjs.send(
-                          "service_5x2bgwj",
-                          "template_mdudrfo",
+                          "service_gkjzrw9",
+                          "template_n3ql3z5",
                           templateParams,
-                          "user_2Mb02sYPwYBJT9hScfbBR"
+                          "user_qXHvjLnbOETurGAvHuFye"
                         );
                       }
                     });
@@ -346,8 +371,8 @@ export default function APPBar() {
               </Badge>
             </Tooltip>
           </IconButton>
-          <Button color="inherit" onClick={onLogOut}>
-            Logout
+          <Button color="inherit" onClick = {onLogOut}>
+            Search
           </Button>
         </Toolbar>
       </AppBar>

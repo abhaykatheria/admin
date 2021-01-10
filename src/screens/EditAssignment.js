@@ -698,7 +698,7 @@ function AddAssignment(props) {
       subject: "Assignment Modified",
       message: message,
       student: student,
-      due_date: due_date.toLocaleString(),
+      due_date: new Date(due_date.seconds * 1000).toLocaleString(),
       type: 'general',
       ass: subject,
       comments: comments,
