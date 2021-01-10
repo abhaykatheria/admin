@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Front from "./screens/index";
 import AddTutor from "./screens/AddTutor";
 import AddAssignment from "./screens/AddAssignment";
@@ -27,43 +27,70 @@ import IndividualDue from "./screens/IndividualDue";
 import IndividualPaymentCollection from "./screens/IndividualPaymentCollection";
 import DuesTable from "./screens/DuesTable";
 import { createBrowserHistory } from "history";
+import Login from "./screens/Login";
+import Alert from '@material-ui/lab/Alert';
+import firebase from "firebase";
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 function App() {
   const browserHistory = createBrowserHistory();
+  const [isLogin, setIsLogin] = useState(false);
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        // if (user.email === "tester") {
+        //   console.log("user signed");
+          setIsLogin(true);
+      } else {
+        console.log("user not signed");
+      }
+    });
+  });
   return (
-    <Router history={browserHistory}>
-      <div>
-        <AppBar />
-        <Switch>
-          <Route exact path="/" component={Front} />
-          <Route exact path="/addTutor" component={AddTutor} />
-          <Route exact path="/viewTutor" component={ViewTutor} />
-          <Route exact path="/addAss" component={AddAssignment} />
-          <Route exact path="/analytics" component={Analytics} />
-          <Route exact path="/addStudent" component={AddStudent} />
-          <Route exact path="/allAss" component={AllAssignment} />
-          <Route exact path="/dis" component={DisplayIndividual} />
-          <Route exact path="/addTimeAss" component={AddTimedAssignment} />
-          <Route exact path="/display" component={Display} />
-          <Route exact path="/timedAss" component={TimedAssignment} />
-          <Route exact path="/payCol" component={PaymentCollection} />
-          <Route exact path="/dues" component={Dues} />
-          <Route exact path="/duesData" component={DuesData} />
-          <Route exact path="/paymentData" component={PaymentData} />
-          <Route exact path="/viewDetails" component={ViewDetails} />
-          <Route exact path="/editTutor" component={EditTutor} />
-          <Route exact path="/editStudent" component={EditStudent} />
-          <Route exact path="/viewStudent" component={ViewStudent} />
-          <Route exact path="/indiDues" component={IndividualDue} />
-          <Route exact path="/indiPayCol" component={IndividualPaymentCollection} />
-          <Route exact path="/editTimed" component={EditTimedAssignment} />
-          <Route exact path="/editAssignment" component={EditAssignment} />
-          <Route exact path="/duesTable" component={DuesTable} />
-        </Switch>
-      </div>
-    </Router>
+    <div>
+      {isLogin === false ? (
+        <div>
+          <Login />
+        </div>
+      ) : (
+        <Router history={browserHistory}>
+          <div>
+            <AppBar />
+            <Switch>
+              <Route exact path="/" component={Front} />
+              <Route exact path="/addTutor" component={AddTutor} />
+              <Route exact path="/viewTutor" component={ViewTutor} />
+              <Route exact path="/addAss" component={AddAssignment} />
+              <Route exact path="/analytics" component={Analytics} />
+              <Route exact path="/addStudent" component={AddStudent} />
+              <Route exact path="/allAss" component={AllAssignment} />
+              <Route exact path="/dis" component={DisplayIndividual} />
+              <Route exact path="/addTimeAss" component={AddTimedAssignment} />
+              <Route exact path="/display" component={Display} />
+              <Route exact path="/timedAss" component={TimedAssignment} />
+              <Route exact path="/payCol" component={PaymentCollection} />
+              <Route exact path="/dues" component={Dues} />
+              <Route exact path="/duesData" component={DuesData} />
+              <Route exact path="/paymentData" component={PaymentData} />
+              <Route exact path="/viewDetails" component={ViewDetails} />
+              <Route exact path="/editTutor" component={EditTutor} />
+              <Route exact path="/editStudent" component={EditStudent} />
+              <Route exact path="/viewStudent" component={ViewStudent} />
+              <Route exact path="/indiDues" component={IndividualDue} />
+              <Route
+                exact
+                path="/indiPayCol"
+                component={IndividualPaymentCollection}
+              />
+              <Route exact path="/editTimed" component={EditTimedAssignment} />
+              <Route exact path="/editAssignment" component={EditAssignment} />
+              <Route exact path="/duesTable" component={DuesTable} />
+            </Switch>
+          </div>
+        </Router>
+      )}
+    </div>
   );
 }
 
