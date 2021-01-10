@@ -451,8 +451,8 @@ function AddTimedAssignment(props) {
             }
             if (checkValid(tutor_fee)) {
                 console.log('huehuehue')
-                updateDues()
-                updateDuesCollection(x)
+                // updateDues()
+                // updateDuesCollection(x)
             }
             if (checkValid(amount_paid) && checkValid(price)) {
                 updatePayment(x)

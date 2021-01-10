@@ -424,8 +424,8 @@ function AddAssignment(props) {
             }
             if (checkValid(tutor_fee)) {
                 console.log('Update tutor', x)
-                updateDues()
-                updateDuesCollection(x)
+                // updateDues()
+                // updateDuesCollection(x)
             }
             if (checkValid(amount_paid) && checkValid(price)) {
                 console.log('Update student', x)

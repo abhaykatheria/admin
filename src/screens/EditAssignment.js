@@ -198,6 +198,8 @@ function AddAssignment(props) {
     if (props.location.state.data.tutor_fee)
       setDuesFlag(false)
 
+    setDuesFlag(true)
+
     console.log(assId, docId)
     const db = app.firestore();
     window.scrollTo(0, 0);
@@ -644,8 +646,8 @@ function AddAssignment(props) {
 
       if (duesFlag && checkValid(tutor_fee)) {
         console.log(due_date)
-        updateDues();
-        updateDuesCollection(x);
+        // updateDues();
+        // updateDuesCollection(x);
       }
       console.log('huehue')
 

@@ -82,6 +82,9 @@ export default function ViewDetails(props) {
   const [dueDate, setDueDate] = useState(props.location.state.due_date);
   const [startDate, setStartDate] = useState(props.location.state.start_date);
   const [tutorId, setTutorId] = useState();
+  const [tutorDues, setTutorDues] = useState();
+  const [duesId, setDuesId] = useState();
+
   console.log(startDate);
   console.log(assignment);
   const classes = useStyles();
@@ -94,10 +97,23 @@ export default function ViewDetails(props) {
       .where("name", "==", props.location.state.data.tutor)
       .onSnapshot((snapshot) => {
         const data = [];
-        snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
+        snapshot.forEach((doc) => {
+          console.log(doc.data())
+          setTutorId(doc.id);
+          setTutorDues(doc.data().dues);
+        });
         console.log(data); // <------
-        setTutorId(data.id);
+        console.log(tutorId, tutorDues)
       });
+    db.collection("dues")
+      .where("assg_id", "==", props.location.state.data.ass_id)
+      .onSnapshot((snapshot) => {
+        const data = [];
+        snapshot.forEach((doc) => {
+          setDuesId(doc.id)
+        });
+      });
+
   }, [props]);
 
   return (
@@ -121,8 +137,8 @@ export default function ViewDetails(props) {
                 <b>Due Date </b> = {dueDate}
                 <br />
                 <b>Status </b> = {assignment.satus}
-                <br/>
-                {typeOfAssignment==="timed" ?(<div><b>Duration</b> = {assignment.duration.hours} hours {assignment.duration.minutes} minutes</div>):<b></b>}
+                <br />
+                {typeOfAssignment === "timed" ? (<div><b>Duration</b> = {assignment.duration.hours} hours {assignment.duration.minutes} minutes</div>) : <b></b>}
               </Typography>
             </CardContent>
             <CardActions>
@@ -161,28 +177,28 @@ export default function ViewDetails(props) {
                             variant="contained"
                             className={`${classes.button} ${classes.grey}`}
                             children={<PriorityHighIcon />}
-                            onClick={() => {}}
+                            onClick={() => { }}
                           ></Button>
                         </Link>
                       ) : (
-                        <Link
-                          to={{
-                            pathname: "/editAssignment",
-                            state: {
-                              data: assignment,
-                              due_date: dueDate,
-                              assigned_date: assignedDate,
-                            },
-                          }}
-                        >
-                          <Button
-                            variant="contained"
-                            className={`${classes.button} ${classes.grey}`}
-                            children={<PriorityHighIcon />}
-                            onClick={() => {}}
-                          ></Button>
-                        </Link>
-                      )}
+                          <Link
+                            to={{
+                              pathname: "/editAssignment",
+                              state: {
+                                data: assignment,
+                                due_date: dueDate,
+                                assigned_date: assignedDate,
+                              },
+                            }}
+                          >
+                            <Button
+                              variant="contained"
+                              className={`${classes.button} ${classes.grey}`}
+                              children={<PriorityHighIcon />}
+                              onClick={() => { }}
+                            ></Button>
+                          </Link>
+                        )}
                     </Tooltip>
                     {assignment.satus === "completed" ? (
                       <Tooltip title="Mark As Ongoing" arrow>
@@ -200,29 +216,64 @@ export default function ViewDetails(props) {
                                 satus: "ongoing",
                               });
                             console.log(assignment);
+
+                            db.collection('tutors').doc(tutorId).update({
+                              dues: tutorDues - assignment.tutor_fee
+                            })
+
+                            db.collection('dues').doc(duesId).delete().then(function () {
+                              alert('Marked successfully')
+                            })
+
                           }}
                         ></Button>
                       </Tooltip>
-                    ):(
-                      <Tooltip title="Mark As Completed" arrow>
-                        <Button
-                          variant="contained"
-                          className={`${classes.button} ${classes.green}`}
-                          children={<CheckCircleIcon />}
-                          onClick={() => {
-                            console.log(typeOfAssignment, assignment.id);
-                            const db = app.firestore();
-                            console.log(typeOfAssignment);
-                            db.collection(typeOfAssignment)
-                              .doc(assignment.id)
-                              .update({
-                                satus: "completed",
+                    ) : (
+                        <Tooltip title="Mark As Completed" arrow>
+                          <Button
+                            variant="contained"
+                            className={`${classes.button} ${classes.green}`}
+                            children={<CheckCircleIcon />}
+                            onClick={() => {
+                              console.log(typeOfAssignment, assignment.id);
+                              const db = app.firestore();
+                              console.log(typeOfAssignment);
+                              db.collection(typeOfAssignment)
+                                .doc(assignment.id)
+                                .update({
+                                  satus: "completed",
+                                });
+                              console.log(assignment);
+
+                              db.collection('dues').add({
+                                assg_id: assignment.ass_id,
+                                due_date: assignment.due_date,
+                                status: "pending",
+                                tutor: assignment.tutor,
+                                tutor_fee: parseInt(assignment.tutor_fee),
+                                tutorId: tutorId,
+                                student: assignment.student,
+                                assigned_date: assignment.assigned_date,
+                                subject: assignment.subject
+                              }).then(function (id) {
+                                console.log(id.id)
+                                if (id.id != '') {
+                                  alert('Marked succesfully')
+
+                                }
+                                else
+                                  alert('Some error occured, try again')
                               });
-                            console.log(assignment);
-                          }}
-                        ></Button>
-                      </Tooltip>
-                    )}
+
+                              db.collection('tutors').doc(tutorId).update({
+                                dues: tutorDues + assignment.tutor_fee
+                              })
+
+
+                            }}
+                          ></Button>
+                        </Tooltip>
+                      )}
                   </div>
                   <Tooltip title="Download files" arrow>
                     <Button
@@ -304,17 +355,17 @@ export default function ViewDetails(props) {
             </CardActions>
           </Card>
         ) : (
-          <div
-            style={{
-              position: "absolute",
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%, -50%)",
-            }}
-          >
-            <CircularProgress />
-          </div>
-        )}
+            <div
+              style={{
+                position: "absolute",
+                left: "50%",
+                top: "50%",
+                transform: "translate(-50%, -50%)",
+              }}
+            >
+              <CircularProgress />
+            </div>
+          )}
       </div>
     </div>
   );

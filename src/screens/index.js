@@ -26,13 +26,13 @@ const images = [
   },
   {
     url: image1,
-    title: "Dues",
+    title: "Tutor Dues",
     route: "/duesData",
     width: "30%",
   },
   {
     url: image1,
-    title: "Payment Collection",
+    title: "Student Payment Collection",
     route: "/paymentData",
     width: "30%",
   },
