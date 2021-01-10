@@ -28,7 +28,6 @@ import IndividualPaymentCollection from "./screens/IndividualPaymentCollection";
 import DuesTable from "./screens/DuesTable";
 import { createBrowserHistory } from "history";
 import Login from "./screens/Login";
-import Alert from '@material-ui/lab/Alert';
 import firebase from "firebase";
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
