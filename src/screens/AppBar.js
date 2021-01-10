@@ -372,7 +372,7 @@ export default function APPBar() {
             </Tooltip>
           </IconButton>
           <Button color="inherit" onClick = {onLogOut}>
-            Search
+            Logout
           </Button>
         </Toolbar>
       </AppBar>
