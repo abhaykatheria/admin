@@ -485,7 +485,7 @@ function AddAssignment(props) {
             let url = value;
             console.log(url);
             s += url
-            s += "\n"
+            s += " ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,, "
         }
 
         if (s != "") {
@@ -504,7 +504,7 @@ function AddAssignment(props) {
             let url = value;
             console.log(url);
             s += url
-            s += "                             "
+            s += " ............ "
         }
 
         console.log(s)
@@ -522,19 +522,27 @@ function AddAssignment(props) {
 
         console.log(message)
 
+        message=""
+        
         let templateParams = {
             to_name: tutor.email,
             from_name: 'chitransh.326@gmail.com',
             subject: "New Assignment Assigned",
             message: message,
+            student: student.label,
+            due_date: due_date.toLocaleString(),
+            type: 'general',
+            ass: subject,
+            comments: comments,
+            links: s
         }
 
         if (s != '') {
             emailjs.send(
-                'service_5x2bgwj',
-                'template_mdudrfo',
+                'service_gkjzrw9',
+                'template_n3ql3z5',
                 templateParams,
-                'user_2Mb02sYPwYBJT9hScfbBR'
+                'user_qXHvjLnbOETurGAvHuFye'
             )
             alert('Email sent successfully')
         }
