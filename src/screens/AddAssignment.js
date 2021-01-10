@@ -20,7 +20,7 @@ import 'firebase/firebase-storage'
 import { FilePond, } from 'react-filepond'
 import TimezoneSelect from 'react-timezone-select'
 import * as emailjs from 'emailjs-com'
-
+import moment from 'moment'
 
 const styles = (theme) => ({
     main: {
@@ -82,6 +82,80 @@ function AddAssignment(props) {
     const [selectedTimezone, setSelectedTimezone] = useState({})
     const [tutorEmail, setTutorEmail] = useState('')
     const [downloadLinks, setDownloadLinks] = useState([])
+    const [studentTimezone, setStudentTimezone] = useState('')
+
+    const map = {
+        'Pacific/ Honolulu': -10,
+        'America/Juneau': -9,
+        'America/Tijuana': -8,
+        'America/Boise': -7,
+        'America/Chihuahua': -7,
+        'America/Phoenix': -7,
+        'America/Chicago': -6,
+        'America/Regina': -6,
+        'America/Mexico_City': -6,
+        'America/Belize': -6,
+        'America/Detroit': -5,
+        'America/Bogota': -5,
+        'America/Caracas': -4,
+        'America/St_Johns': -3.50,
+        'America/Sao_Paulo': -3,
+        'America/Argentina/Buenos_Aires': -3,
+        'America/Godthab': -3,
+        'Atlantic/Azores': -1,
+        'Atlantic/Cape_Verde': -1,
+        GMT: 0,
+        'Africa/Casablanca': 0,
+        'Atlantic/Canary': 0,
+        'Europe/Belgrade': 1,
+        'Europe/Sarajevo': 1,
+        'Europe/Brussels': 1,
+        'Europe/Amsterdam': 1,
+        'Africa/Algiers': 1,
+        'Europe/Bucharest': 2,
+        'Africa/Cairo': 2,
+        'Europe/Helsinki': 2,
+        'Europe/Athens': 2,
+        'Asia/Jerusalem': 2,
+        'Africa/Harare': 2,
+        'Europe/Moscow': 3,
+        'Asia/Kuwait': 3,
+        'Africa/Nairobi': 3,
+        'Asia/Baghdad': 3,
+        'Asia/Tehran': 3.5,
+        'Asia/Dubai': 4,
+        'Asia/Baku': 4.5,
+        'Asia/Kabul': 4.5,
+        'Asia/Yekaterinburg': 5,
+        'Asia/Karachi': 5,
+        'Asia/Kolkata': 5.5,
+        'Asia/Kathmandu': 5.75,
+        'Asia/Dhaka': 6,
+        'Asia/Colombo': 5.5,
+        'Asia/Almaty': 6,
+        'Asia/Rangoon': 6.5,
+        'Asia/Bangkok': 7,
+        'Asia/Krasnoyarsk': 7,
+        'Asia/Shanghai': 8,
+        'Asia/Kuala_Lumpur': 8,
+        'Asia/Taipei': 8,
+        'Australia/Perth': 8,
+        'Asia/Irkutsk': 8,
+        'Asia/Seoul': 9,
+        'Asia/Tokyo': 9,
+        'Asia/Yakutsk': 10,
+        'Australia/Darwin': 9.5,
+        'Australia/Adelaide': 10.5,
+        'Australia/Sydney': 11,
+        'Australia/Brisbane': 10,
+        'Australia/Hobart': 11,
+        'Asia/Vladivostok': 10,
+        'Pacific/Guam': 10,
+        'Asia/Magadan': 11,
+        'Pacific/Fiji': 13,
+        'Pacific/Auckland': 13,
+        'Pacific/Tongatapu': 14,
+    }
 
     const changeTutorHandler = value => {
         setTutor(value)
@@ -90,9 +164,19 @@ function AddAssignment(props) {
         setTutorEmail(value.email)
     }
 
+
     const changeStudentHandler = value => {
         setstudent(value)
-        console.log({ value });
+        console.log({ value }, value.time_zone,5.5-map[value.time_zone]);
+
+        setStudentTimezone(value.time_zone)
+
+        let offset =5.5 - map[value.time_zone]
+        offset*=60
+        let dt=new Date()
+        dt.setMinutes(dt.getMinutes()+offset)
+        // console.log(dt)
+
     }
 
 
@@ -140,7 +224,7 @@ function AddAssignment(props) {
             // console.log(ids);
             let data1 = []
             for (var i = 0; i < data.length; i++) {
-                data1.push({ name: data[i].name, id: ids[i], collections: data[i].collections });
+                data1.push({ name: data[i].name, id: ids[i], collections: data[i].collections, time_zone: data[i].time_zone });
                 // console.log(data[i]);
             }
             data1 = data1.map((dat) => {
@@ -148,7 +232,8 @@ function AddAssignment(props) {
                     value: dat.id,
                     label: dat.name,
                     collections: dat.collections,
-                    id: dat.id
+                    id: dat.id,
+                    time_zone: dat.time_zone
                 }
             })
             // console.log(data1);
@@ -300,6 +385,11 @@ function AddAssignment(props) {
 
         console.log(student, tutor.label, subject, price, amount_paid, tutor_fee, comments, tutorId, tutorEmail);
 
+        let offset = 5.5 - map[studentTimezone]
+        offset *= 60
+        let dt = due_date
+        dt.setMinutes(dt.getMinutes() + offset)
+        setDueDate(dt)
         // console.log(name, email, country.label)
         try {
 

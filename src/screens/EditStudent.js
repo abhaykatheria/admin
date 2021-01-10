@@ -190,7 +190,7 @@ function EditStudent(props) {
         name: name,
         email: email,
         collections: collections,
-        time_zone: selectedTimezone,
+        time_zone: selectedTimezone.value,
         phone_number: value,
         comment: comment,
       }).then(function () {

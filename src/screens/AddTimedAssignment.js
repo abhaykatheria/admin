@@ -87,7 +87,81 @@ function AddTimedAssignment(props) {
     const [downloadLinks, setDownloadLinks] = useState([])
     const [startDate, setStartDate] = useState(new Date())
     const [duration, setDuration] = useState()
+    const [studentTimezone, setStudentTimezone] = useState('')
 
+
+    const map = {
+        'Pacific/ Honolulu': -10,
+        'America/Juneau': -9,
+        'America/Tijuana': -8,
+        'America/Boise': -7,
+        'America/Chihuahua': -7,
+        'America/Phoenix': -7,
+        'America/Chicago': -6,
+        'America/Regina': -6,
+        'America/Mexico_City': -6,
+        'America/Belize': -6,
+        'America/Detroit': -5,
+        'America/Bogota': -5,
+        'America/Caracas': -4,
+        'America/St_Johns': -3.50,
+        'America/Sao_Paulo': -3,
+        'America/Argentina/Buenos_Aires': -3,
+        'America/Godthab': -3,
+        'Atlantic/Azores': -1,
+        'Atlantic/Cape_Verde': -1,
+        GMT: 0,
+        'Africa/Casablanca': 0,
+        'Atlantic/Canary': 0,
+        'Europe/Belgrade': 1,
+        'Europe/Sarajevo': 1,
+        'Europe/Brussels': 1,
+        'Europe/Amsterdam': 1,
+        'Africa/Algiers': 1,
+        'Europe/Bucharest': 2,
+        'Africa/Cairo': 2,
+        'Europe/Helsinki': 2,
+        'Europe/Athens': 2,
+        'Asia/Jerusalem': 2,
+        'Africa/Harare': 2,
+        'Europe/Moscow': 3,
+        'Asia/Kuwait': 3,
+        'Africa/Nairobi': 3,
+        'Asia/Baghdad': 3,
+        'Asia/Tehran': 3.5,
+        'Asia/Dubai': 4,
+        'Asia/Baku': 4.5,
+        'Asia/Kabul': 4.5,
+        'Asia/Yekaterinburg': 5,
+        'Asia/Karachi': 5,
+        'Asia/Kolkata': 5.5,
+        'Asia/Kathmandu': 5.75,
+        'Asia/Dhaka': 6,
+        'Asia/Colombo': 5.5,
+        'Asia/Almaty': 6,
+        'Asia/Rangoon': 6.5,
+        'Asia/Bangkok': 7,
+        'Asia/Krasnoyarsk': 7,
+        'Asia/Shanghai': 8,
+        'Asia/Kuala_Lumpur': 8,
+        'Asia/Taipei': 8,
+        'Australia/Perth': 8,
+        'Asia/Irkutsk': 8,
+        'Asia/Seoul': 9,
+        'Asia/Tokyo': 9,
+        'Asia/Yakutsk': 10,
+        'Australia/Darwin': 9.5,
+        'Australia/Adelaide': 10.5,
+        'Australia/Sydney': 11,
+        'Australia/Brisbane': 10,
+        'Australia/Hobart': 11,
+        'Asia/Vladivostok': 10,
+        'Pacific/Guam': 10,
+        'Asia/Magadan': 11,
+        'Pacific/Fiji': 13,
+        'Pacific/Auckland': 13,
+        'Pacific/Tongatapu': 14,
+    }
 
     const changeTutorHandler = value => {
         setTutor(value)
@@ -99,6 +173,7 @@ function AddTimedAssignment(props) {
     const changeStudentHandler = value => {
         setstudent(value)
         console.log({ value });
+        setStudentTimezone(value.time_zone)
     }
 
 
@@ -146,7 +221,7 @@ function AddTimedAssignment(props) {
             // console.log(ids);
             let data1 = []
             for (var i = 0; i < data.length; i++) {
-                data1.push({ name: data[i].name, id: ids[i], collections: data[i].collections });
+                data1.push({ name: data[i].name, id: ids[i], collections: data[i].collections, time_zone: data[i].time_zone  });
                 // console.log(data[i]);
             }
             data1 = data1.map((dat) => {
@@ -154,7 +229,8 @@ function AddTimedAssignment(props) {
                     value: dat.id,
                     label: dat.name,
                     collections: dat.collections,
-                    id: dat.id
+                    id: dat.id,
+                    time_zone: dat.time_zone
                 }
             })
             // console.log(data1);
@@ -312,19 +388,23 @@ function AddTimedAssignment(props) {
 
 
         console.log(startDate)
-        // console.log(student.label, tutor.label, subject, price, amount_paid, tutor_fee, comments, new Date(), startDate, duration,due_date)
+
+        let offset = 5.5 - map[studentTimezone]
+        offset *= 60
         let dt = startDate
-        dt.setMinutes(dt.getMinutes() + duration.minutes)
-        dt.setHours(dt.getHours() + duration.hours)
+        dt.setMinutes(dt.getMinutes() + offset)
+        setStartDate(dt)
+
+        console.log(startDate)
+
         setDueDate(dt)
-        console.log(dt)
 
         let x = student.label + tutor.label + assigned_date.toISOString()
         setAssId(x)
 
         upload(tempar, x);
 
-        setDueDate(startDate)
+        console.log(startDate)
 
         // console.log(student, tutor.label, subject, price, amount_paid, tutor_fee, comments);
         console.log(allTutors);
@@ -346,7 +426,7 @@ function AddTimedAssignment(props) {
                     amount_paid: parseInt(amount_paid),
                     assigned_date: assigned_date,
                     comments: comments,
-                    due_date: dt,
+                    due_date: startDate,
                     start_date: startDate,
                     duration: duration,
                     payment_pending: payment_pending,
@@ -507,7 +587,7 @@ function AddTimedAssignment(props) {
             console.log(dues);
             app.firestore().collection("dues").add({
                 assg_id: x,
-                due_date: due_date,
+                due_date: startDate,
                 status: "pending",
                 tutor: tutor.label,
                 tutor_fee: parseInt(tutor_fee),
@@ -529,7 +609,7 @@ function AddTimedAssignment(props) {
             console.log(student);
             app.firestore().collection('payment_collection').add({
                 assg_id: x,
-                due_date: due_date,
+                due_date: startDate,
                 pending: price - amount_paid,
                 status: "pending",
                 student: student.label,
