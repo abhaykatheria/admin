@@ -684,42 +684,51 @@ function AddAssignment(props) {
   // updatePayment();
 
   function sendEmail() {
+
     let s = ""
     for (let [key, value] of Object.entries(downloadLinks)) {
       let url = value;
       console.log(url);
       s += url
-      s += "                             "
+      s += " ............ "
     }
 
     console.log(s)
 
 
-    console.log(tutorEmail)
+    console.log(tutor.email)
     let message = "You have been assigned a new lesson as a Tutor. Here are the additional details-" + "\n"
-      + "Due Status:       " + startDate + "\n"
-      + "Student Name:     " + student + "\n"
-      + "Type:             " + "General" + "\n"
+      + "Due Status:       " + due_date + "\n"
+      + "Student Name:     " + student.label + "\n"
+      + "Type:             " + "Timed" + "\n"
       + "Subject:          " + subject + "\n"
       + "Comments:         " + comments + "\n"
       + "The download links are:- " + "\n\n\n"
       + s
 
-    console.log(message, tutorEmail, props.location.state.data)
+    console.log(message)
+
+    message = "Duartion : " + duration.hours + " hours " + duration.minutes + " minutes "
 
     let templateParams = {
       to_name: tutorEmail,
       from_name: 'chitransh.326@gmail.com',
-      subject: "New Assignment Assigned",
+      subject: "Assignment Modified",
       message: message,
+      student: student,
+      due_date: due_date.toLocaleString(),
+      type: 'timed',
+      ass: subject,
+      comments: comments,
+      links: s
     }
 
     if (s != '') {
       emailjs.send(
-        'service_5x2bgwj',
-        'template_mdudrfo',
+        'service_gkjzrw9',
+        'template_n3ql3z5',
         templateParams,
-        'user_2Mb02sYPwYBJT9hScfbBR'
+        'user_qXHvjLnbOETurGAvHuFye'
       )
       alert('Email sent successfully')
     }
