@@ -64,7 +64,7 @@ export default function APPBar() {
       // console.log(data);
       var total = 0;
       for (var i = 0; i < data.length; i++) {
-        data1.push({...data})
+        data1.push({ ...data })
         var date = moment(data[i].due_date.toDate().toDateString()).format(
           "DD/MM/YYYY"
         );
@@ -84,7 +84,7 @@ export default function APPBar() {
       // console.log(data);
       var today = 0;
       var past = 0;
-      data1.push({...data})
+      data1.push({ ...data })
       for (var i = 0; i < data.length; i++) {
         var date = moment(data[i].due_date.toDate().toDateString()).format(
           "DD/MM/YYYY"
@@ -150,7 +150,7 @@ export default function APPBar() {
 
   }
 
-  
+
 
   return (
     <div className={classes.root}>
@@ -238,19 +238,27 @@ export default function APPBar() {
                         + "The download links are:- " + "\n\n\n"
                         + s
 
+                      message = ""
+
                       let templateParams = {
                         to_name: assignment.tutor_email,
                         from_name: 'chitransh.326@gmail.com',
-                        subject: "Assignment update email",
+                        subject: "Assignment Modified",
                         message: message,
+                        student: assignment.student,
+                        due_date: new Date(assignment.due_date.seconds * 1000).toLocaleString(),
+                        type: 'general',
+                        ass: assignment.subject,
+                        comments: assignment.comments,
+                        links: s
                       }
 
-                        emailjs.send(
-                          'service_5x2bgwj',
-                          'template_mdudrfo',
-                          templateParams,
-                          'user_2Mb02sYPwYBJT9hScfbBR'
-                        )
+                      emailjs.send(
+                        'service_gkjzrw9',
+                        'template_n3ql3z5',
+                        templateParams,
+                        'user_qXHvjLnbOETurGAvHuFye'
+                      )
 
                     }
                   })
@@ -274,18 +282,28 @@ export default function APPBar() {
                         + "The download links are:- " + "\n\n\n"
                         + s
 
+                      message = "Duartion : " + assignment.duration.hours + " hours " + assignment.duration.minutes + " minutes "
+
+
+
                       let templateParams = {
                         to_name: assignment.tutor_email,
                         from_name: 'chitransh.326@gmail.com',
-                        subject: "Assignment update email",
-                        message: message,
+                        subject: "Assignment Modified",
+                        message: assignment.message,
+                        student: assignment.student,
+                        due_date: new Date(assignment.due_date.seconds * 1000).toLocaleString(),
+                        type: 'timed',
+                        ass: assignment.subject,
+                        comments: assignment.comments,
+                        links: s
                       }
 
                       emailjs.send(
-                        'service_5x2bgwj',
-                        'template_mdudrfo',
+                        'service_gkjzrw9',
+                        'template_n3ql3z5',
                         templateParams,
-                        'user_2Mb02sYPwYBJT9hScfbBR'
+                        'user_qXHvjLnbOETurGAvHuFye'
                       )
 
                     }
