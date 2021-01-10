@@ -52,6 +52,7 @@ export default function APPBar() {
   const [dueToday, setDueToday] = useState();
   const [duePast, setDuePast] = useState();
   const [downloadLinks, setDownloadLinks] = useState([]);
+  const [flag,setFlag] = useState(false)
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -225,126 +226,135 @@ export default function APPBar() {
                 onClick={() => {
                   const db = app.firestore();
 
-                  db.collection("assignments").onSnapshot((snapshot) => {
-                    snapshot.forEach((doc) => {
-                      console.log(doc.data(), doc.id);
-                      let s = getDownloadLinks(doc.data().ass_id);
-                      if (s != undefined) {
-                        console.log(s);
+                  db.collection("assignments")
+                    .where("satus", "==", "ongoing")
+                    .onSnapshot((snapshot) => {
+                      snapshot.forEach((doc) => {
+                        console.log(doc.data(), doc.id);
+                        let s = getDownloadLinks(doc.data().ass_id);
+                        if (s != undefined) {
+                          console.log(s);
 
-                        let assignment = doc.data();
+                          let assignment = doc.data();
 
-                        let message =
-                          "You have been assigned a new lesson as a Tutor. Here are the additional details-" +
-                          "\n" +
-                          "Due Status:       " +
-                          assignment.due_date +
-                          "\n" +
-                          "Student Name:     " +
-                          assignment.student +
-                          "\n" +
-                          "Type:             " +
-                          "General" +
-                          "\n" +
-                          "Subject:          " +
-                          assignment.subject +
-                          "\n" +
-                          "Comments:         " +
-                          assignment.comments +
-                          "\n" +
-                          "The download links are:- " +
-                          "\n\n\n" +
-                          s;
+                          let message =
+                            "You have been assigned a new lesson as a Tutor. Here are the additional details-" +
+                            "\n" +
+                            "Due Status:       " +
+                            assignment.due_date +
+                            "\n" +
+                            "Student Name:     " +
+                            assignment.student +
+                            "\n" +
+                            "Type:             " +
+                            "General" +
+                            "\n" +
+                            "Subject:          " +
+                            assignment.subject +
+                            "\n" +
+                            "Comments:         " +
+                            assignment.comments +
+                            "\n" +
+                            "The download links are:- " +
+                            "\n\n\n" +
+                            s;
 
-                        message = "";
+                          message = "";
 
-                        let templateParams = {
-                          to_name: assignment.tutor_email,
-                          from_name: "chitransh.326@gmail.com",
-                          subject: "Assignment Modified",
-                          message: message,
-                          student: assignment.student,
-                          due_date: new Date(
-                            assignment.due_date.seconds * 1000
-                          ).toLocaleString(),
-                          type: "general",
-                          ass: assignment.subject,
-                          comments: assignment.comments,
-                          links: s,
-                        };
+                          let templateParams = {
+                            to_name: assignment.tutor_email,
+                            from_name: "chitransh.326@gmail.com",
+                            subject: "Assignment Update",
+                            message: message,
+                            student: assignment.student,
+                            due_date: new Date(
+                              assignment.due_date.seconds * 1000
+                            ).toLocaleString(),
+                            type: "general",
+                            ass: assignment.subject,
+                            comments: assignment.comments,
+                            links: s,
+                          };
 
-                        emailjs.send(
-                          "service_gkjzrw9",
-                          "template_n3ql3z5",
-                          templateParams,
-                          "user_qXHvjLnbOETurGAvHuFye"
-                        );
-                      }
+                          emailjs.send(
+                            "service_gkjzrw9",
+                            "template_n3ql3z5",
+                            templateParams,
+                            "user_qXHvjLnbOETurGAvHuFye"
+                          );
+                        }
+                      });
                     });
-                  });
 
-                  db.collection("timed").onSnapshot((snapshot) => {
-                    snapshot.forEach((doc) => {
-                      console.log(doc.data(), doc.id);
-                      let s = getDownloadLinks(doc.data().ass_id);
-                      if (s != undefined) {
-                        console.log(s);
+                  db.collection("timed")
+                    .where("satus", "==", "ongoing")
+                    .onSnapshot((snapshot) => {
+                      snapshot.forEach((doc) => {
+                        console.log(doc.data(), doc.id);
+                        let s = getDownloadLinks(doc.data().ass_id);
+                        if (s != undefined) {
+                          console.log(s);
 
-                        let assignment = doc.data();
+                          let assignment = doc.data();
 
-                        let message =
-                          "You have been assigned a new lesson as a Tutor. Here are the additional details-" +
-                          "\n" +
-                          "Due Status:       " +
-                          assignment.due_date +
-                          "\n" +
-                          "Student Name:     " +
-                          assignment.student +
-                          "\n" +
-                          "Type:             " +
-                          "General" +
-                          "\n" +
-                          "Subject:          " +
-                          assignment.subject +
-                          "\n" +
-                          "Comments:         " +
-                          assignment.comments +
-                          "\n" +
-                          "The download links are:- " +
-                          "\n\n\n" +
-                          s;
+                          let message =
+                            "You have been assigned a new lesson as a Tutor. Here are the additional details-" +
+                            "\n" +
+                            "Due Status:       " +
+                            assignment.due_date +
+                            "\n" +
+                            "Student Name:     " +
+                            assignment.student +
+                            "\n" +
+                            "Type:             " +
+                            "General" +
+                            "\n" +
+                            "Subject:          " +
+                            assignment.subject +
+                            "\n" +
+                            "Comments:         " +
+                            assignment.comments +
+                            "\n" +
+                            "The download links are:- " +
+                            "\n\n\n" +
+                            s;
 
-                        message =
-                          "Duartion : " +
-                          assignment.duration.hours +
-                          " hours " +
-                          assignment.duration.minutes +
-                          " minutes ";
+                          message =
+                            "Duartion : " +
+                            assignment.duration.hours +
+                            " hours " +
+                            assignment.duration.minutes +
+                            " minutes ";
 
-                        let templateParams = {
-                          to_name: assignment.tutor_email,
-                          from_name: "chitransh.326@gmail.com",
-                          subject: "Assignment Modified",
-                          message: assignment.message,
-                          student: assignment.student,
-                          due_date: new Date(
-                            assignment.due_date.seconds * 1000
-                          ).toLocaleString(),
-                          type: "timed",
-                          ass: assignment.subject,
-                          comments: assignment.comments,
-                          links: s,
-                        };
+                          let templateParams = {
+                            to_name: assignment.tutor_email,
+                            from_name: "chitransh.326@gmail.com",
+                            subject: "Assignment Update",
+                            message: message,
+                            student: assignment.student,
+                            due_date: new Date(
+                              assignment.due_date.seconds * 1000
+                            ).toLocaleString(),
+                            type: "timed",
+                            ass: assignment.subject,
+                            comments: assignment.comments,
+                            links: s,
+                          };
 
-                        emailjs.send(
-                          "service_gkjzrw9",
-                          "template_n3ql3z5",
-                          templateParams,
-                          "user_qXHvjLnbOETurGAvHuFye"
-                        );
-                      }
-                    });
-                  });
+                          emailjs.send(
+                            "service_gkjzrw9",
+                            "template_n3ql3z5",
+                            templateParams,
+                            "user_qXHvjLnbOETurGAvHuFye"
+                          );
+                        }
+                        setFlag(true)
+                      });
+                    })
+
+                    if(flag)
+                    alert('Emails sent successfully')
+
                 }}
               />
             </Tooltip>
@@ -371,7 +381,7 @@ export default function APPBar() {
               </Badge>
             </Tooltip>
           </IconButton>
-          <Button color="inherit" onClick = {onLogOut}>
+          <Button color="inherit" onClick={onLogOut}>
             Logout
           </Button>
         </Toolbar>

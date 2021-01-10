@@ -680,7 +680,7 @@ function AddAssignment(props) {
     console.log(s)
 
 
-    console.log(tutor.email)
+    console.log(tutorEmail)
     let message = "You have been assigned a new lesson as a Tutor. Here are the additional details-" + "\n"
       + "Due Status:       " + due_date + "\n"
       + "Student Name:     " + student.label + "\n"
@@ -700,7 +700,7 @@ function AddAssignment(props) {
       subject: "Assignment Modified",
       message: message,
       student: student,
-      due_date: new Date(due_date.seconds * 1000).toLocaleString(),
+      due_date: new Date(props.location.state.data.due_date.seconds * 1000).toLocaleString(),
       type: 'general',
       ass: subject,
       comments: comments,
