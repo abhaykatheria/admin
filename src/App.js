@@ -44,7 +44,7 @@ function App() {
       } else {
         console.log("user not signed");
       }
-    }
+      }
     });
   });
   return (
