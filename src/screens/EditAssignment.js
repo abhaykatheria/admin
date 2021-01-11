@@ -767,6 +767,7 @@ function AddAssignment(props) {
           status: "pending",
           student: student,
           id: studentId,
+          ass_type: 'general'
         });
     } catch (error) {
       alert(error.message);

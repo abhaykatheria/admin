@@ -419,16 +419,19 @@ function AddTimedAssignment(props) {
         // // console.log(name, email, country.label)
         try {
 
-
+            let s = duration.hours + ":" + duration.minutes + ":" + duration.seconds + "." + "000000"
+            console.log(s)
             const db = app.firestore()
             try {
+
+
                 await db.collection('timed').add({
                     amount_paid: parseInt(amount_paid),
                     assigned_date: assigned_date,
                     comments: comments,
                     due_date: startDate,
                     start_date: startDate,
-                    duration: duration,
+                    duration: s,
                     payment_pending: payment_pending,
                     price: parseInt(price),
                     satus: satus,
@@ -621,7 +624,8 @@ function AddTimedAssignment(props) {
                 pending: price - amount_paid,
                 status: "pending",
                 student: student.label,
-                studentId: student.id
+                studentId: student.id,
+                ass_type: 'timed'
             }).then((doc) => {
                 console.log(doc.id)
             })
