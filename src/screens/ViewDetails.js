@@ -84,6 +84,7 @@ export default function ViewDetails(props) {
   const [tutorId, setTutorId] = useState();
   const [tutorDues, setTutorDues] = useState();
   const [duesId, setDuesId] = useState();
+  const [ass_type,setAssType] = useState();
 
   console.log(startDate);
   console.log(assignment);
@@ -91,6 +92,13 @@ export default function ViewDetails(props) {
   const [ar, setAr] = useState([]);
 
   useEffect(() => {
+    console.log(props.location.state.data)
+    if ('duration' in props.location.state.data){
+      setAssType('timed')
+    }
+    else{
+      setAssType('general')
+    }
     const db = app.firestore();
     window.scrollTo(0, 0);
     db.collection("tutors")
@@ -138,7 +146,7 @@ export default function ViewDetails(props) {
                 <br />
                 <b>Status </b> = {assignment.satus}
                 <br />
-                {typeOfAssignment === "timed" ? (<div><b>Duration</b> = {assignment.duration.hours} hours {assignment.duration.minutes} minutes</div>) : <b></b>}
+                {typeOfAssignment === "timed" ? (<div><b>Duration</b> = {assignment.duration.split(":")[0]} hours {assignment.duration.split(":")[1]} minutes</div>) : <b></b>}
               </Typography>
             </CardContent>
             <CardActions>
@@ -167,6 +175,11 @@ export default function ViewDetails(props) {
                             pathname: "/editTimed",
                             state: {
                               data: assignment,
+                              duration: {
+                                hours: assignment.duration.split(":")[0],
+                                minutes: assignment.duration.split(":")[1],
+                                seconds: 0
+                              },
                               due_date: dueDate,
                               assigned_date: assignedDate,
                               start_date: startDate,
@@ -254,7 +267,8 @@ export default function ViewDetails(props) {
                                 tutorId: tutorId,
                                 student: assignment.student,
                                 assigned_date: assignment.assigned_date,
-                                subject: assignment.subject
+                                subject: assignment.subject,
+                                ass_type: ass_type
                               }).then(function (id) {
                                 console.log(id.id)
                                 if (id.id !== '') {

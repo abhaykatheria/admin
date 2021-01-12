@@ -94,7 +94,7 @@ function AddAssignment(props) {
   const [duesFlag, setDuesFlag] = useState(true)
   const [colFlag, setColFlag] = useState(true)
   const [startDate, setStartDate] = useState('')
-  const [duration, setDuration] = useState(props.location.state.data.duration)
+  const [duration, setDuration] = useState(props.location.state.duration)
   const [studentId, setStudentId] = useState('')
   const [downloadLinks, setDownloadLinks] = useState([])
   const [studentTimezone, setStudentTimezone] = useState('')
@@ -191,7 +191,7 @@ function AddAssignment(props) {
   };
 
   useEffect(() => {
-    console.log(duration)
+    
     console.log(startDate)
     if (props.location.state.data.price > 0 || props.location.state.data.amount_paid)
       setColFlag(false)
@@ -421,7 +421,7 @@ function AddAssignment(props) {
                 setDuration(duration)
               }
               }
-              initialDuration={props.location.state.data.duration}
+              initialDuration={props.location.state.duration}
               maxHours={24}
             />
 
@@ -787,6 +787,7 @@ function AddAssignment(props) {
           status: "pending",
           student: student,
           id: studentId,
+          ass_type: 'timed'
         });
     } catch (error) {
       alert(error.message);

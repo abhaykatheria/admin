@@ -595,7 +595,8 @@ function AddAssignment(props) {
                 pending: price - amount_paid,
                 status: "pending",
                 student: student.label,
-                studentId: student.id
+                studentId: student.id,
+                ass_type: 'general'
             }).then((doc) => {
                 console.log(doc.id)
             })
