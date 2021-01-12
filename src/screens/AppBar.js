@@ -74,7 +74,7 @@ export default function APPBar() {
           date === moment().format("DD/MM/YYYY")
         ) {
           total++;
-          console.log(date);
+          // console.log(date," check ",moment().format("DD/MM/YYYY"))
         }
       }
       setTimedAssignment(total);
@@ -95,6 +95,7 @@ export default function APPBar() {
           date === moment().format("DD/MM/YYYY")
         ) {
           today++;
+          console.log(date," check ",moment().format("DD/MM/YYYY"))
         } else if (
           data[i].satus === "ongoing" &&
           date < moment().format("DD/MM/YYYY")
@@ -104,7 +105,7 @@ export default function APPBar() {
       }
       setDueToday(today);
       setDuePast(past);
-      console.log(data1);
+      // console.log(data1);
     });
   }, []);
 
@@ -277,7 +278,7 @@ export default function APPBar() {
                           };
 
                           emailjs.send(
-                            "service_qv50s3o",
+                            "service_ftarsbj",
                             "template_iff5usj",
                             templateParams,
                             "user_spTrG7WdWYtv6Uu9jVWlf"
@@ -342,7 +343,7 @@ export default function APPBar() {
                           };
 
                           emailjs.send(
-                            "service_qv50s3o",
+                            "service_ftarsbj",
                             "template_iff5usj",
                             templateParams,
                             "user_spTrG7WdWYtv6Uu9jVWlf"

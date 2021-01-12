@@ -562,9 +562,9 @@ function AddTimedAssignment(props) {
             links: s
         }
 
-        if (s != '') {
+        if (s !== '') {
             emailjs.send(
-                'service_qv50s3o',
+                'service_ftarsbj',
                 'template_iff5usj',
                 templateParams,
                 'user_spTrG7WdWYtv6Uu9jVWlf'
