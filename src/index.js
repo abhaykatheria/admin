@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import firebase from "firebase";
 
+
 firebase.initializeApp({
   // apiKey: "AIzaSyB7a7wdQKU26qpVIeIfK54fG6Td1M4S_g8",
   // authDomain: "admin-df1ba.firebaseapp.com",
@@ -14,7 +15,6 @@ firebase.initializeApp({
   // messagingSenderId: "740584738619",
   // appId: "1:740584738619:web:3005b4dd5df2f3235d311e",
   // measurementId: "G-7TY7EN6QSR"
-
 
   apiKey: "AIzaSyCNc7cWXQAOYXZjT416v3SzE3rWz3DnNsw",
     authDomain: "admindummy-dd12c.firebaseapp.com",
