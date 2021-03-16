@@ -167,6 +167,7 @@ export default function ViewTutor() {
                         <br />
                         Dues: {tutor.dues}
                         <br />
+                        Phone: {tutor.phoneNumber}
                       </React.Fragment>
                     }
                   />

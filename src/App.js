@@ -40,7 +40,7 @@ function App() {
       if (user) {
         // if (user.email === "swarnsriv@gmail.com") {
         //   console.log("user signed");
-        //   setIsLogin(true);
+          setIsLogin(true);
       } else {
         console.log("user not signed");
       }
