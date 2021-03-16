@@ -413,17 +413,10 @@ function AddAssignment(props) {
               <DateTimePicker onChange={setStartDate} value={startDate} />
             </FormControl>
 
-            <DurationPicker
-              onChange={(duration) => {
-
-                // console.log(hours,minutes,seconds)
-
-                setDuration(duration)
-              }
-              }
-              initialDuration={props.location.state.duration}
-              maxHours={24}
-            />
+            <FormControl margin="normal" fullWidth>
+              <InputLabel htmlFor="name">Duration</InputLabel>
+              <Input id="name" name="name" autoComplete="off" autoFocus value={duration} onChange={e => setDuration(e.target.value)} />
+            </FormControl>
 
             <FilePond
               files={files}
@@ -544,7 +537,7 @@ function AddAssignment(props) {
   async function onRegister() {
 
     if (startDate === undefined || startDate == '' || startDate === null) {
-      alert('Fill due date and if its same as previous fill it again')
+      alert('Fill start date and if its same as previous fill it again')
       return
     }
 

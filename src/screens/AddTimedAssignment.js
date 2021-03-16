@@ -86,7 +86,7 @@ function AddTimedAssignment(props) {
     const [tutorEmail, setTutorEmail] = useState('')
     const [downloadLinks, setDownloadLinks] = useState([])
     const [startDate, setStartDate] = useState(new Date())
-    const [duration, setDuration] = useState()
+    const [duration, setDuration] = useState('')
     const [studentTimezone, setStudentTimezone] = useState('')
 
 
@@ -296,19 +296,11 @@ function AddTimedAssignment(props) {
                                 value={startDate}
                             />
                         </FormControl>
-                        <FormControl>
-                            <DurationPicker
-                                onChange={(duration) => {
-
-                                    // console.log(hours,minutes,seconds)
-
-                                    setDuration(duration)
-                                }
-                                }
-                                initialDuration={{ hours: 0, minutes: 0, seconds: 0 }}
-                                maxHours={24}
-                            />
+                        <FormControl margin="normal" fullWidth>
+                            <InputLabel htmlFor="name">Duration</InputLabel>
+                            <Input id="name" name="name" autoComplete="off" autoFocus value={duration} onChange={e => setDuration(e.target.value)} />
                         </FormControl>
+
                         <FilePond
                             files={files}
                             allowMultiple={true}
@@ -419,7 +411,7 @@ function AddTimedAssignment(props) {
         // // console.log(name, email, country.label)
         try {
 
-            let s = duration.hours + ":" + duration.minutes + ":" + duration.seconds + "." + "000000"
+            let s = duration
             console.log(s)
             const db = app.firestore()
             try {
@@ -637,7 +629,6 @@ function AddTimedAssignment(props) {
 
     async function updateStudentCollection() {
         try {
-            // console.log(dues);
             await app.firestore().collection('students').doc(student.value).update({
                 collections: parseInt(student.collections) + parseInt(price - amount_paid)
             })
