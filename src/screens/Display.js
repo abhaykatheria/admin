@@ -247,7 +247,7 @@ function Display(props) {
                   <br />
                   <b>Price</b> = {assignment.price}$<br />
                   <b>Amount Paid</b> = {assignment.amount_paid}$<br />
-                  <b>Tutor fee</b> = {assignment.tutor_fee}$<br />
+                  <b>Tutor fee</b> = ₹ {assignment.tutor_fee}<br />
                   <b>Assigned Date</b> ={" "}
                   {assignment.assigned_date.toDate().toDateString()} at{" "}
                   {assignment.assigned_date.toDate().toLocaleTimeString()}

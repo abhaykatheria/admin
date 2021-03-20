@@ -4,14 +4,13 @@ import { useState } from "react";
 import app from "firebase/app";
 import "firebase/firebase-firestore";
 import moment from "moment";
-import Display from "./Display";
 import { CircularProgress } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import TabularDisplay from "./TabularDisplay";
 import DetailsRoundedIcon from "@material-ui/icons/DetailsRounded";
 
-function DueToday() {
+function DuePast() {
   const [assignments, setAssignments] = useState();
 
   useEffect(() => {
@@ -26,7 +25,7 @@ function DueToday() {
         if (
           moment(data[i].due_date.toDate().toDateString()).format(
             "DD/MM/YYYY"
-          ) === moment().format("DD/MM/YYYY")
+          ) < moment().format("DD/MM/YYYY")
         ) {
           data1.push([
             data[i].student,
@@ -155,4 +154,4 @@ function DueToday() {
   );
 }
 
-export default DueToday;
+export default DuePast;

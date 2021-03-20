@@ -22,10 +22,13 @@ import EditStudent from "./screens/EditStudent";
 import EditTimedAssignment from "./screens/EditTimedAssignment";
 import EditAssignment from "./screens/EditAssignment";
 import DuesData from "./screens/DuesData";
+import DuePast from "./screens/DuePast";
 import PaymentData from "./screens/PaymentData";
 import IndividualDue from "./screens/IndividualDue";
 import IndividualPaymentCollection from "./screens/IndividualPaymentCollection";
 import DuesTable from "./screens/DuesTable";
+import DueToday from "./screens/DueToday";
+import DueTodayTimed from "./screens/DueTodayTimed";
 import { createBrowserHistory } from "history";
 import Login from "./screens/Login";
 import firebase from "firebase";
@@ -38,7 +41,7 @@ function App() {
   useEffect(() => {
     firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
-        if (user.email === "swarnsriv@gmail.com") {
+        if (user.email === "shubhamtiwari.tiwari84@gmail.com") {
           console.log("user signed");
           setIsLogin(true);
       } else {
@@ -68,6 +71,9 @@ function App() {
               <Route exact path="/dis" component={DisplayIndividual} />
               <Route exact path="/addTimeAss" component={AddTimedAssignment} />
               <Route exact path="/display" component={Display} />
+              <Route exact path="/dueToday" component={DueToday} />
+              <Route exact path="/duePast" component={DuePast} />
+              <Route exact path="/dueTodayTimed" component={DueTodayTimed} />
               <Route exact path="/timedAss" component={TimedAssignment} />
               <Route exact path="/payCol" component={PaymentCollection} />
               <Route exact path="/dues" component={Dues} />
