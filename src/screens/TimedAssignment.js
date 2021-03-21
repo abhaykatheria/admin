@@ -33,7 +33,7 @@ function AllAssignments() {
           moment(data[i].due_date.toDate()).format(
             "hh:mm a"
           ),
-          String(data[i].duration.split(":")[0]) + " hrs " + String(data[i].duration.split(":")[1]) + " mins",
+          (data[i].duration) + " mins ",
           data[i].satus,
           data[i].id,
           <Link

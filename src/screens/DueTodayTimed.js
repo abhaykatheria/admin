@@ -26,47 +26,42 @@ function DueTodayTimed() {
             "DD/MM/YYYY"
           ) === moment().format("DD/MM/YYYY") && data[i].satus !== "completed"
         )
-          data1.push([
-            data[i].student,
-            data[i].subject,
-            data[i].tutor,
-            data[i].price,
-            data[i].amount_paid,
-            data[i].tutor_fee,
-            moment(data[i].assigned_date.toDate().toDateString()).format(
-              "DD/MM/YYYY"
-            ),
-            moment(data[i].due_date.toDate().toDateString()).format(
-              "DD/MM/YYYY"
-            ),
-            String(data[i].duration.split(":")[0]) +
-              " hrs " +
-              String(data[i].duration.split(":")[1]) +
-              " mins",
-            data[i].satus,
-            data[i].id,
-            <Link
-              to={{
-                pathname: "/viewDetails",
-                state: {
-                  data: data[i],
-                  type: "timed",
-                  assigned_date: moment(
+        data1.push([
+          data[i].student,
+          data[i].subject,
+          data[i].tutor,
+          data[i].price,
+          data[i].amount_paid,
+          data[i].tutor_fee,
+          moment(data[i].due_date.toDate().toDateString()).format("DD/MM/YYYY"),
+          moment(data[i].due_date.toDate()).format(
+            "hh:mm a"
+          ),
+          (data[i].duration) + " mins ",
+          data[i].satus,
+          data[i].id,
+          <Link
+            to={{
+              pathname: "/viewDetails",
+              state: {
+                data: data[i],
+                type: "timed",
+                assigned_date: moment(
                     data[i].assigned_date.toDate().toDateString()
                   ).format("DD/MM/YYYY"),
                   due_date: moment(
                     data[i].due_date.toDate().toDateString()
                   ).format("DD/MM/YYYY"),
-                },
-              }}
-            >
-              <Button
-                variant="contained"
-                color="secondary"
-                children={<DetailsRoundedIcon />}
-              ></Button>
-            </Link>,
-          ]);
+              },
+            }}
+          >
+            <Button
+              variant="contained"
+              color="secondary"
+              children={<DetailsRoundedIcon />}
+            ></Button>
+          </Link>,
+        ]);
       }
 
       setAssignments(data1);
@@ -99,12 +94,12 @@ function DueTodayTimed() {
       label: "Tutor Fee",
     },
     {
-      assigned_date: "assigned_date",
-      label: "Assigned Date",
+      assigned_date: "due_date",
+      label: "Start Date",
     },
     {
       due_date: "due_date",
-      label: "Start Date",
+      label: "Start Time",
     },
     {
       duration: "duration",
