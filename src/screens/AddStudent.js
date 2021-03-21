@@ -50,7 +50,7 @@ function AddStudent(props) {
     const [time_zone, setTime_Zone] = useState('')
     const [selectedTimezone, setSelectedTimezone] = useState({})
     const [comment, setComment] = useState('')
-    const [value,setValue] = useState('')
+    const [phoneNumber, setPhoneNumber] = useState('')
 
     const [allStudents, setAllStudents] = useState([])
 
@@ -68,7 +68,6 @@ function AddStudent(props) {
             let data1 = []
             for (var i = 0; i < data.length; i++) {
                 data1.push(data[i].name);
-                // console.log(data[i]);
             }
             console.log(data1);
             setAllStudents(data1);
@@ -90,7 +89,7 @@ function AddStudent(props) {
                         <InputLabel htmlFor="name">Name</InputLabel>
                         <Input id="name" name="name" autoComplete="off" autoFocus value={name} onChange={e => setName(e.target.value)} />
                     </FormControl>
-                    <FormControl margin="normal" required fullWidth>
+                    <FormControl margin="normal"  fullWidth>
                         <InputLabel htmlFor="email">Email Address</InputLabel>
                         <Input id="email" name="email" autoComplete="off" value={email} onChange={e => setEmail(e.target.value)} />
                     </FormControl>
@@ -105,10 +104,16 @@ function AddStudent(props) {
                         <InputLabel htmlFor="comment">Comments</InputLabel>
                         <Input id="comment" name="comment" autoComplete="off" autoFocus value={comment} onChange={e => setComment(e.target.value)} />
                     </FormControl>
-                    <PhoneInput
-                        placeholder="Enter phone number"
-                        value={value}
-                        onChange={setValue} />
+                    <FormControl margin="normal" required fullWidth>
+                        <InputLabel htmlFor="phoneNumber">Phone number</InputLabel>
+                        <Input
+                            id="phoneNumber"
+                            name="phoneNumber"
+                            autoComplete="off"
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)}
+                        />
+                    </FormControl>
                     <Button
                         type="submit"
                         fullWidth
@@ -132,9 +137,7 @@ function AddStudent(props) {
 
     async function onRegister() {
 
-        console.log(value)
-
-        if (name == '' || selectedTimezone == '' || selectedTimezone == {}) {
+        if (name == '' || selectedTimezone == '' || selectedTimezone == {} || phoneNumber == '') {
             return
         }
 
@@ -160,7 +163,7 @@ function AddStudent(props) {
                 time_zone: selectedTimezone.value,
                 collections: 0,
                 comment: comment,
-                phone_number: value
+                phone_number: phoneNumber
             }).then(function (id) {
                 console.log(id.id)
                 if (id.id != '') {
@@ -168,7 +171,7 @@ function AddStudent(props) {
                     setName('')
                     setEmail('')
                     setComment('')
-                    setValue('')
+                    setPhoneNumber('')
                 }
                 else
                     alert('Some error occured, try again')

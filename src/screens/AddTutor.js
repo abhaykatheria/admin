@@ -54,6 +54,7 @@ function AddTutor(props) {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -94,6 +95,16 @@ function AddTutor(props) {
               onChange={(e) => setEmail(e.target.value)}
             />
           </FormControl>
+          <FormControl margin="normal" required fullWidth>
+            <InputLabel htmlFor="phoneNumber">Phone number</InputLabel>
+            <Input
+              id="phoneNumber"
+              name="phoneNumber"
+              autoComplete="off"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+            />
+          </FormControl>
           <Button
             type="submit"
             fullWidth
@@ -117,7 +128,7 @@ function AddTutor(props) {
   }
 
   async function onRegister() {
-    if (name=== "" ||email==="") {
+    if (name=== "" ||email==="" || phoneNumber === "" ) {
       alert("Please Fill All Required Field");
       return;
     }
@@ -134,12 +145,14 @@ function AddTutor(props) {
         name: name,
         email: email,
         dues: 0,
+        phoneNumber: phoneNumber
       }).then(function (id) {
         console.log(id.id)
         if(id.id!=''){
         alert('Tutor added succesfully')
           setName('')
           setEmail('')
+          setPhoneNumber('')
       }
         else
         alert('Some error occured, try again')

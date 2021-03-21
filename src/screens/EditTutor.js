@@ -34,9 +34,8 @@ const styles = (theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${
-      theme.spacing.unit * 3
-    }px`,
+    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3
+      }px`,
   },
   avatar: {
     margin: theme.spacing.unit,
@@ -58,8 +57,9 @@ function EditTutor(props) {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [docId,setDocId] = useState("")
-  const [dues,setDues] = useState("")
+  const [docId, setDocId] = useState("")
+  const [dues, setDues] = useState("")
+  const [phoneNumber, setPhoneNumber] = useState("")
 
   const options = countryList().getData();
   useEffect(() => {
@@ -68,7 +68,8 @@ function EditTutor(props) {
     setEmail(props.location.state.data.email)
     setDocId(props.location.state.data.id)
     setDues(props.location.state.data.dues)
-  },[props]);
+    setPhoneNumber(props.location.state.data.phoneNumber)
+  }, [props]);
 
   return (
     <main className={classes.main}>
@@ -104,6 +105,16 @@ function EditTutor(props) {
               onChange={(e) => setEmail(e.target.value)}
             />
           </FormControl>
+          <FormControl margin="normal" required fullWidth>
+            <InputLabel htmlFor="phoneNumber">Phone Number</InputLabel>
+            <Input
+              id="phoneNumber"
+              name="phoneNumber"
+              autoComplete="off"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+            />
+          </FormControl>
           <Button
             type="submit"
             fullWidth
@@ -127,7 +138,7 @@ function EditTutor(props) {
   }
 
   async function onRegister() {
-    
+
     if (name === "" || email === "") {
       alert("Please Fill All Required Field");
       return;
@@ -138,13 +149,14 @@ function EditTutor(props) {
       return
     }
 
-    console.log(name, email,docId);
+    console.log(name, email, docId);
     try {
       const db = app.firestore();
       db.collection("tutors").doc(docId).set({
         name: name,
         email: email,
-        dues: dues
+        dues: dues,
+        phoneNumber: phoneNumber
       }).then(function (id) {
         alert('Details modified successfully')
       });

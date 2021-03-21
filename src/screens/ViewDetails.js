@@ -175,11 +175,7 @@ export default function ViewDetails(props) {
                             pathname: "/editTimed",
                             state: {
                               data: assignment,
-                              duration: {
-                                hours: assignment.duration.split(":")[0],
-                                minutes: assignment.duration.split(":")[1],
-                                seconds: 0
-                              },
+                              duration: assignment.duration,
                               due_date: dueDate,
                               assigned_date: assignedDate,
                               start_date: startDate,
