@@ -14,15 +14,18 @@ import "./tutor.css";
 
 export default function PaymentCollection(props) {
   const [students, setStudents] = useState();
+  const [totalCollection, setTotalCollection] = useState(0);
 
   useEffect(() => {
     const db = app.firestore();
     const data1 = [];
+    var collections = 0;
     window.scrollTo(0, 0);
     return db.collection("students").onSnapshot((snapshot) => {
       const data = [];
       snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
       for (var i = 0; i < data.length; i++) {
+        collections+=data[i].collections
         data1.push(
           [data[i].name, data[i].collections,
           <Link
@@ -43,6 +46,7 @@ export default function PaymentCollection(props) {
       }
       console.log(data1); // <------
       setStudents(data1);
+      setTotalCollection(collections);
     });
   }, []);
 
@@ -64,7 +68,12 @@ export default function PaymentCollection(props) {
   return (
     <div className="body">
       {students !== undefined ? (
+        <div>
+        <div style = {{ float:"right",padding:"20px"}}>
+          <b>Collection: {totalCollection}</b>
+        </div>
         <TabularDisplay title={"Details"} data={students} columns={columns} />
+        </div>
       ) : (
         <div
           style={{

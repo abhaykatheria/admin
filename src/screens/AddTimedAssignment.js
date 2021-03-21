@@ -381,7 +381,7 @@ function AddTimedAssignment(props) {
 
 
 
-        if (tutor == '' || student == '' || duration == '' || startDate == '') {
+        if (tutor === '' || student === '' || duration === '' || startDate === '') {
             alert("Please Fill All Required Field");
             return;
         }
@@ -409,7 +409,7 @@ function AddTimedAssignment(props) {
         // console.log(student, tutor.label, subject, price, amount_paid, tutor_fee, comments);
         console.log(allTutors);
         for (var i = 0; i < allTutors.length; i++) {
-            if (allTutors[i].label == tutor.label) {
+            if (allTutors[i].label === tutor.label) {
                 setTutorId(allTutors[i].value)
                 console.log(tutorId);
                 break
@@ -500,7 +500,7 @@ function AddTimedAssignment(props) {
             .catch(function (error) {
                 // Handle any errors
             });
-        if (temp != [])
+        if (temp !== [])
             setDownloadLinks(temp)
         let s = ""
         for (let [key, value] of Object.entries(downloadLinks)) {
@@ -510,7 +510,7 @@ function AddTimedAssignment(props) {
             s += "\n"
         }
 
-        if (s != "") {
+        if (s !== "") {
             console.log(s)
             sendEmail()
         }
@@ -519,7 +519,7 @@ function AddTimedAssignment(props) {
     }
 
     function checkValid(x) {
-        if (isNaN(parseInt(x)) || parseInt(x) == 0)
+        if (isNaN(parseInt(x)) || parseInt(x) === 0)
             return false
         return true
     }
@@ -581,7 +581,7 @@ function AddTimedAssignment(props) {
     async function updateDues() {
         console.log(tutor.dues)
         try {
-            if (tutorId != "") {
+            if (tutorId !== "") {
                 console.log(tutor);
                 let dues = tutor.dues + parseInt(tutor_fee)
                 await app.firestore().collection("tutors").doc(tutor.id).update({

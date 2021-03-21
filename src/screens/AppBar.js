@@ -77,6 +77,13 @@ export default function APPBar() {
         ) {
           total++;
           // console.log(date," check ",moment().format("DD/MM/YYYY"))
+        } else if (
+          data[i].satus === "ongoing" &&
+          date < moment().format("DD/MM/YYYY")
+        ) {
+          dbTimedRef.doc(data[i].id).update({
+            satus: "completed",
+          });
         }
       }
       setTimedAssignment(total);
@@ -100,10 +107,10 @@ export default function APPBar() {
         } else if (
           (data[i].satus === "ongoing" &&
             date < moment().format("DD/MM/YYYY")) ||
-          data[i].satus === "due"
+          data[i].satus === "late"
         ) {
           dbRef.doc(data[i].id).update({
-            satus: "due",
+            satus: "late",
           });
           past++;
         }

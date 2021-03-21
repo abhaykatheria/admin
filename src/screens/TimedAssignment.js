@@ -21,6 +21,7 @@ function AllAssignments() {
       snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
       const data1 = [];
       for (var i = 0; i < data.length; i++) {
+        console.log(data[i].due_date.toDate().toDateString())
         data1.push([
           data[i].student,
           data[i].subject,
@@ -28,10 +29,10 @@ function AllAssignments() {
           data[i].price,
           data[i].amount_paid,
           data[i].tutor_fee,
-          moment(data[i].assigned_date.toDate().toDateString()).format(
-            "DD/MM/YYYY"
-          ),
           moment(data[i].due_date.toDate().toDateString()).format("DD/MM/YYYY"),
+          moment(data[i].due_date.toDate()).format(
+            "hh:mm a"
+          ),
           String(data[i].duration.split(":")[0]) + " hrs " + String(data[i].duration.split(":")[1]) + " mins",
           data[i].satus,
           data[i].id,
@@ -89,12 +90,12 @@ function AllAssignments() {
       label: "Tutor Fee",
     },
     {
-      assigned_date: "assigned_date",
-      label: "Assigned Date",
+      assigned_date: "due_date",
+      label: "Start Date",
     },
     {
       due_date: "due_date",
-      label: "Start Date",
+      label: "Start Time",
     },
     {
       duration: "duration",
