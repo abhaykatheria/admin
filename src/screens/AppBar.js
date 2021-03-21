@@ -52,11 +52,13 @@ export default function APPBar() {
   const [dueToday, setDueToday] = useState();
   const [duePast, setDuePast] = useState();
   const [downloadLinks, setDownloadLinks] = useState([]);
-  const [flag, setFlag] = useState(false)
+  const [flag, setFlag] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
     const db = app.firestore();
+    var dbRef = firebase.firestore().collection("/assignments");
+    var dbTimedRef = firebase.firestore().collection("/timed");
     // console.log(new Date().toString());
     const data1 = [];
     db.collection("timed").onSnapshot((snapshot) => {
@@ -82,7 +84,7 @@ export default function APPBar() {
     db.collection("assignments").onSnapshot((snapshot) => {
       const data = [];
       snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
-      // console.log(data);
+      // snapshot.forEach((doc) => console.log(doc.update({satus:"due"})));
       var today = 0;
       var past = 0;
       data1.push({ ...data });
@@ -95,11 +97,14 @@ export default function APPBar() {
           date === moment().format("DD/MM/YYYY")
         ) {
           today++;
-          console.log(date," check ",moment().format("DD/MM/YYYY"))
         } else if (
-          data[i].satus === "ongoing" &&
-          date < moment().format("DD/MM/YYYY")
+          (data[i].satus === "ongoing" &&
+            date < moment().format("DD/MM/YYYY")) ||
+          data[i].satus === "due"
         ) {
+          dbRef.doc(data[i].id).update({
+            satus: "due",
+          });
           past++;
         }
       }
@@ -349,37 +354,63 @@ export default function APPBar() {
                             "user_spTrG7WdWYtv6Uu9jVWlf"
                           );
                         }
-                        setFlag(true)
+                        setFlag(true);
                       });
-                    })
+                    });
 
-                  if (flag)
-                    alert('Emails sent successfully')
-
+                  if (flag) alert("Emails sent successfully");
                 }}
               />
             </Tooltip>
           </IconButton>
           <IconButton aria-label="Total Assignment" color="inherit">
             <Tooltip title="Timed Assignment" arrow>
-              <Badge badgeContent={timedAssignment} max={999} color="secondary">
-                {" "}
-                <AccessAlarmIcon />
-              </Badge>
+              <IconButton
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                component={Link}
+                to={"/dueTodayTimed"}
+              >
+                <Badge
+                  badgeContent={timedAssignment}
+                  max={999}
+                  color="secondary"
+                >
+                  {" "}
+                  <AccessAlarmIcon />
+                </Badge>
+              </IconButton>
             </Tooltip>
           </IconButton>
           <IconButton aria-label="Due Today" color="inherit">
             <Tooltip title="Due Today" arrow>
-              <Badge badgeContent={dueToday} max={999} color="secondary">
-                <AssignmentRoundedIcon className={classes.grey} />
-              </Badge>
+              <IconButton
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                component={Link}
+                to={"/dueToday"}
+              >
+                <Badge badgeContent={dueToday} max={999} color="secondary">
+                  <AssignmentRoundedIcon className={classes.red} />
+                </Badge>
+              </IconButton>
             </Tooltip>
           </IconButton>
           <IconButton aria-label="Due Past" color="inherit">
             <Tooltip title="Due Past" arrow>
-              <Badge badgeContent={duePast} max={999} color="secondary">
-                <AssignmentRoundedIcon className={classes.red} />
-              </Badge>
+              <IconButton
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                component={Link}
+                to={"/duePast"}
+              >
+                <Badge badgeContent={duePast} max={999} color="secondary">
+                  <AssignmentRoundedIcon className={classes.grey} />
+                </Badge>
+              </IconButton>
             </Tooltip>
           </IconButton>
           <Button color="inherit" onClick={onLogOut}>

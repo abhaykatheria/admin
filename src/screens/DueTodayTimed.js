@@ -1,33 +1,31 @@
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import app from "firebase/app";
+import firebase from "firebase";
 import "firebase/firebase-firestore";
 import moment from "moment";
-import Display from "./Display";
 import { CircularProgress } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import TabularDisplay from "./TabularDisplay";
 import DetailsRoundedIcon from "@material-ui/icons/DetailsRounded";
 
-function DueToday() {
+function DueTodayTimed() {
   const [assignments, setAssignments] = useState();
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    const data1 = [];
-    const db = app.firestore();
-    return db.collection("assignments").onSnapshot((snapshot) => {
+    var dbRef = firebase.firestore().collection("/timed");
+    return dbRef.get().then((snapshot) => {
       const data = [];
       snapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
+      const data1 = [];
       for (var i = 0; i < data.length; i++) {
-        console.log(new Date(data[i].due_date.seconds * 1000));
         if (
           moment(data[i].due_date.toDate().toDateString()).format(
             "DD/MM/YYYY"
-          ) === moment().format("DD/MM/YYYY")
-        ) {
+          ) === moment().format("DD/MM/YYYY") && data[i].satus !== "completed"
+        )
           data1.push([
             data[i].student,
             data[i].subject,
@@ -35,13 +33,16 @@ function DueToday() {
             data[i].price,
             data[i].amount_paid,
             data[i].tutor_fee,
-            "General",
             moment(data[i].assigned_date.toDate().toDateString()).format(
               "DD/MM/YYYY"
             ),
             moment(data[i].due_date.toDate().toDateString()).format(
               "DD/MM/YYYY"
             ),
+            String(data[i].duration.split(":")[0]) +
+              " hrs " +
+              String(data[i].duration.split(":")[1]) +
+              " mins",
             data[i].satus,
             data[i].id,
             <Link
@@ -49,25 +50,25 @@ function DueToday() {
                 pathname: "/viewDetails",
                 state: {
                   data: data[i],
+                  type: "timed",
                   assigned_date: moment(
                     data[i].assigned_date.toDate().toDateString()
                   ).format("DD/MM/YYYY"),
                   due_date: moment(
                     data[i].due_date.toDate().toDateString()
                   ).format("DD/MM/YYYY"),
-                  type: "assignments",
                 },
               }}
             >
               <Button
                 variant="contained"
-                color="primary"
+                color="secondary"
                 children={<DetailsRoundedIcon />}
               ></Button>
             </Link>,
           ]);
-        }
       }
+
       setAssignments(data1);
     });
   }, []);
@@ -98,16 +99,16 @@ function DueToday() {
       label: "Tutor Fee",
     },
     {
-      type: "type",
-      label: "Type",
-    },
-    {
       assigned_date: "assigned_date",
       label: "Assigned Date",
     },
     {
       due_date: "due_date",
-      label: "Due Date",
+      label: "Start Date",
+    },
+    {
+      duration: "duration",
+      label: "Duration",
     },
     {
       satus: "satus",
@@ -123,7 +124,7 @@ function DueToday() {
     },
     {
       icon: "icon",
-      label: "Edit",
+      label: "View",
       options: {
         sort: false,
         filter: false,
@@ -155,4 +156,4 @@ function DueToday() {
   );
 }
 
-export default DueToday;
+export default DueTodayTimed;

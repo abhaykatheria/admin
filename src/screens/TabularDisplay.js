@@ -19,6 +19,7 @@ function TabularDisplay(props) {
     filter: true,
     filterType: "dropdown",
     selectableRows: false, 
+    rowsPerPage:100,
     onRowClick: (rowData, rowMeta) => {
       console.log(rowData);
     },
