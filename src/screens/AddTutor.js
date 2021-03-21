@@ -152,6 +152,7 @@ function AddTutor(props) {
         alert('Tutor added succesfully')
           setName('')
           setEmail('')
+          setPhoneNumber('')
       }
         else
         alert('Some error occured, try again')

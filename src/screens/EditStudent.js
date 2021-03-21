@@ -61,7 +61,7 @@ function EditStudent(props) {
   const [docId,setDocId] = useState(props.location.state.data.id);
   const [collections, setCollections] = useState(props.location.state.data.collections);
   const [comment, setComment] = useState(props.location.state.data.comment)
-  const [value, setValue] = useState(props.location.state.data.phone_number)
+  const [phoneNumber, setPhoneNumber] = useState(props.location.state.data.phone_number)
 
   const [time_zone, setTime_Zone] = useState(
     props.location.state.data.time_zone
@@ -70,7 +70,6 @@ function EditStudent(props) {
     props.location.state.data.time_zone
   );
   
-  console.log(docId,collections)
 
   const [allStudents, setAllStudents] = useState([]);
 
@@ -139,10 +138,16 @@ function EditStudent(props) {
             <InputLabel htmlFor="comment">Comments</InputLabel>
             <Input id="comment" name="comment" autoComplete="off" autoFocus value={comment} onChange={e => setComment(e.target.value)} />
           </FormControl>
-          <PhoneInput
-            placeholder="Enter phone number"
-            value={value}
-            onChange={setValue} />
+          <FormControl margin="normal" required fullWidth>
+            <InputLabel htmlFor="phoneNumber">Phone number</InputLabel>
+            <Input
+              id="phoneNumber"
+              name="phoneNumber"
+              autoComplete="off"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+            />
+          </FormControl>
           <Button
             type="submit"
             fullWidth
@@ -191,7 +196,7 @@ function EditStudent(props) {
         email: email,
         collections: collections,
         time_zone: selectedTimezone.value,
-        phone_number: value,
+        phone_number: phoneNumber,
         comment: comment,
       }).then(function () {
         alert('Details modified successfully')
