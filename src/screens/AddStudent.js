@@ -90,7 +90,7 @@ function AddStudent(props) {
                         <InputLabel htmlFor="name">Name</InputLabel>
                         <Input id="name" name="name" autoComplete="off" autoFocus value={name} onChange={e => setName(e.target.value)} />
                     </FormControl>
-                    <FormControl margin="normal" required fullWidth>
+                    <FormControl margin="normal"  fullWidth>
                         <InputLabel htmlFor="email">Email Address</InputLabel>
                         <Input id="email" name="email" autoComplete="off" value={email} onChange={e => setEmail(e.target.value)} />
                     </FormControl>
