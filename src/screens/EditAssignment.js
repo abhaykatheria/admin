@@ -22,7 +22,6 @@ import TimezoneSelect from "react-timezone-select";
 import * as emailjs from "emailjs-com";
 import moment from "moment";
 
-
 const styles = (theme) => ({
   main: {
     width: "auto",
@@ -40,8 +39,9 @@ const styles = (theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: `${theme.spacing.unit * 5}px ${theme.spacing.unit * 2}px ${theme.spacing.unit * 3
-      }px ${theme.spacing.unit * 3}px`,
+    padding: `${theme.spacing.unit * 5}px ${theme.spacing.unit * 2}px ${
+      theme.spacing.unit * 3
+    }px ${theme.spacing.unit * 3}px`,
   },
   avatar: {
     margin: theme.spacing.unit,
@@ -72,7 +72,7 @@ function AddAssignment(props) {
   const [tutor_fee, setTutorFee] = useState(
     props.location.state.data.tutor_fee
   );
-  const [due_date, setDueDate] = useState('');
+  const [due_date, setDueDate] = useState("");
 
   const [comments, setComments] = useState(props.location.state.data.comments);
   const [assigned_date, setAssignedDate] = useState(
@@ -90,93 +90,90 @@ function AddAssignment(props) {
   const [studentCollections, setStudentCollections] = useState("");
   const [files, setFiles] = useState([]);
   const [fileAr, setFileAr] = useState([]);
-  const [docId, setDocId] = useState(props.location.state.data.id)
-  const [duesFlag, setDuesFlag] = useState(true)
-  const [colFlag, setColFlag] = useState(true)
-  const [studentId, setStudentId] = useState('')
-  const [studentDues, setStudentDues] = useState('')
-  const [downloadLinks, setDownloadLinks] = useState([])
-  const [studentTimezone, setStudentTimezone] = useState('')
-
+  const [docId, setDocId] = useState(props.location.state.data.id);
+  const [duesFlag, setDuesFlag] = useState(true);
+  const [colFlag, setColFlag] = useState(true);
+  const [studentId, setStudentId] = useState("");
+  const [studentDues, setStudentDues] = useState("");
+  const [downloadLinks, setDownloadLinks] = useState([]);
+  const [studentTimezone, setStudentTimezone] = useState("");
 
   const map = {
-    'Pacific/ Honolulu': -10,
-    'America/Juneau': -9,
-    'America/Tijuana': -8,
-    'America/Boise': -7,
-    'America/Chihuahua': -7,
-    'America/Phoenix': -7,
-    'America/Chicago': -6,
-    'America/Regina': -6,
-    'America/Mexico_City': -6,
-    'America/Belize': -6,
-    'America/Detroit': -5,
-    'America/Bogota': -5,
-    'America/Caracas': -4,
-    'America/St_Johns': -3.50,
-    'America/Sao_Paulo': -3,
-    'America/Argentina/Buenos_Aires': -3,
-    'America/Godthab': -3,
-    'Atlantic/Azores': -1,
-    'Atlantic/Cape_Verde': -1,
+    "Pacific/ Honolulu": -10,
+    "America/Juneau": -9,
+    "America/Tijuana": -8,
+    "America/Boise": -7,
+    "America/Chihuahua": -7,
+    "America/Phoenix": -7,
+    "America/Chicago": -6,
+    "America/Regina": -6,
+    "America/Mexico_City": -6,
+    "America/Belize": -6,
+    "America/Detroit": -5,
+    "America/Bogota": -5,
+    "America/Caracas": -4,
+    "America/St_Johns": -3.5,
+    "America/Sao_Paulo": -3,
+    "America/Argentina/Buenos_Aires": -3,
+    "America/Godthab": -3,
+    "Atlantic/Azores": -1,
+    "Atlantic/Cape_Verde": -1,
     GMT: 0,
-    'Africa/Casablanca': 0,
-    'Atlantic/Canary': 0,
-    'Europe/Belgrade': 1,
-    'Europe/Sarajevo': 1,
-    'Europe/Brussels': 1,
-    'Europe/Amsterdam': 1,
-    'Africa/Algiers': 1,
-    'Europe/Bucharest': 2,
-    'Africa/Cairo': 2,
-    'Europe/Helsinki': 2,
-    'Europe/Athens': 2,
-    'Asia/Jerusalem': 2,
-    'Africa/Harare': 2,
-    'Europe/Moscow': 3,
-    'Asia/Kuwait': 3,
-    'Africa/Nairobi': 3,
-    'Asia/Baghdad': 3,
-    'Asia/Tehran': 3.5,
-    'Asia/Dubai': 4,
-    'Asia/Baku': 4.5,
-    'Asia/Kabul': 4.5,
-    'Asia/Yekaterinburg': 5,
-    'Asia/Karachi': 5,
-    'Asia/Kolkata': 5.5,
-    'Asia/Kathmandu': 5.75,
-    'Asia/Dhaka': 6,
-    'Asia/Colombo': 5.5,
-    'Asia/Almaty': 6,
-    'Asia/Rangoon': 6.5,
-    'Asia/Bangkok': 7,
-    'Asia/Krasnoyarsk': 7,
-    'Asia/Shanghai': 8,
-    'Asia/Kuala_Lumpur': 8,
-    'Asia/Taipei': 8,
-    'Australia/Perth': 8,
-    'Asia/Irkutsk': 8,
-    'Asia/Seoul': 9,
-    'Asia/Tokyo': 9,
-    'Asia/Yakutsk': 10,
-    'Australia/Darwin': 9.5,
-    'Australia/Adelaide': 10.5,
-    'Australia/Sydney': 11,
-    'Australia/Brisbane': 10,
-    'Australia/Hobart': 11,
-    'Asia/Vladivostok': 10,
-    'Pacific/Guam': 10,
-    'Asia/Magadan': 11,
-    'Pacific/Fiji': 13,
-    'Pacific/Auckland': 13,
-    'Pacific/Tongatapu': 14,
-  }
+    "Africa/Casablanca": 0,
+    "Atlantic/Canary": 0,
+    "Europe/Belgrade": 1,
+    "Europe/Sarajevo": 1,
+    "Europe/Brussels": 1,
+    "Europe/Amsterdam": 1,
+    "Africa/Algiers": 1,
+    "Europe/Bucharest": 2,
+    "Africa/Cairo": 2,
+    "Europe/Helsinki": 2,
+    "Europe/Athens": 2,
+    "Asia/Jerusalem": 2,
+    "Africa/Harare": 2,
+    "Europe/Moscow": 3,
+    "Asia/Kuwait": 3,
+    "Africa/Nairobi": 3,
+    "Asia/Baghdad": 3,
+    "Asia/Tehran": 3.5,
+    "Asia/Dubai": 4,
+    "Asia/Baku": 4.5,
+    "Asia/Kabul": 4.5,
+    "Asia/Yekaterinburg": 5,
+    "Asia/Karachi": 5,
+    "Asia/Kolkata": 5.5,
+    "Asia/Kathmandu": 5.75,
+    "Asia/Dhaka": 6,
+    "Asia/Colombo": 5.5,
+    "Asia/Almaty": 6,
+    "Asia/Rangoon": 6.5,
+    "Asia/Bangkok": 7,
+    "Asia/Krasnoyarsk": 7,
+    "Asia/Shanghai": 8,
+    "Asia/Kuala_Lumpur": 8,
+    "Asia/Taipei": 8,
+    "Australia/Perth": 8,
+    "Asia/Irkutsk": 8,
+    "Asia/Seoul": 9,
+    "Asia/Tokyo": 9,
+    "Asia/Yakutsk": 10,
+    "Australia/Darwin": 9.5,
+    "Australia/Adelaide": 10.5,
+    "Australia/Sydney": 11,
+    "Australia/Brisbane": 10,
+    "Australia/Hobart": 11,
+    "Asia/Vladivostok": 10,
+    "Pacific/Guam": 10,
+    "Asia/Magadan": 11,
+    "Pacific/Fiji": 13,
+    "Pacific/Auckland": 13,
+    "Pacific/Tongatapu": 14,
+  };
 
-
-
-
-
-  const [tutorEmail, setTutorEmail] = useState(props.location.state.data.tutor_email);
+  const [tutorEmail, setTutorEmail] = useState(
+    props.location.state.data.tutor_email
+  );
 
   const changeTutorHandler = (value) => {
     setTutor(value);
@@ -190,23 +187,18 @@ function AddAssignment(props) {
   };
 
   useEffect(() => {
-
-
-
-
-
-
-
     // console.log({ assignmentRef }, props.location.state.data.ass_id)
-    if (props.location.state.data.price > 0 || props.location.state.data.amount_paid)
-      setColFlag(false)
+    if (
+      props.location.state.data.price > 0 ||
+      props.location.state.data.amount_paid
+    )
+      setColFlag(false);
 
-    if (props.location.state.data.tutor_fee)
-      setDuesFlag(false)
+    if (props.location.state.data.tutor_fee) setDuesFlag(false);
 
-    setDuesFlag(true)
+    setDuesFlag(true);
 
-    console.log(assId, docId)
+    console.log(assId, docId);
     const db = app.firestore();
     window.scrollTo(0, 0);
     db.collection("tutors").onSnapshot((snapshot) => {
@@ -214,8 +206,8 @@ function AddAssignment(props) {
       const ids = [];
       snapshot.forEach((doc) => {
         if (doc.data().name == tutor) {
-          setTutorId(doc.id)
-          setDues(doc.data().dues)
+          setTutorId(doc.id);
+          setDues(doc.data().dues);
         }
         data.push({ ...doc.data() });
         ids.push(doc.id);
@@ -247,12 +239,8 @@ function AddAssignment(props) {
       snapshot.forEach((doc) => {
         if (doc.data().name == student) {
           setStudentId(doc.id);
-          setStudentCollections(doc.data().collections)
-          setStudentTimezone(doc.data().time_zone)
-
-
-
-
+          setStudentCollections(doc.data().collections);
+          setStudentTimezone(doc.data().time_zone);
         }
         data.push({ ...doc.data() });
         ids.push(doc.id);
@@ -282,19 +270,23 @@ function AddAssignment(props) {
   }, []);
 
   useEffect(() => {
-    const assignmentRef = firebase.firestore().collection("/assignments").doc(docId).get().then((snapshot) => {
-      if(studentTimezone !== ''){
-      let offset = 5.5 - map[studentTimezone]
-      offset *= 60
-      let dt = snapshot.data().due_date.toDate()
-      console.log(studentId)
-      dt.setMinutes(dt.getMinutes() - offset)
-      console.log(typeof dt)
-      setDueDate(dt)
-      }
-    })
-  },[studentTimezone])
-
+    const assignmentRef = firebase
+      .firestore()
+      .collection("/assignments")
+      .doc(docId)
+      .get()
+      .then((snapshot) => {
+        if (studentTimezone !== "") {
+          let offset = 5.5 - map[studentTimezone];
+          offset *= 60;
+          let dt = snapshot.data().due_date.toDate();
+          console.log(studentId);
+          dt.setMinutes(dt.getMinutes() - offset);
+          console.log(typeof dt);
+          setDueDate(dt);
+        }
+      });
+  }, [studentTimezone]);
 
   return (
     <div style={{ backgroundColor: "#dee4e3" }}>
@@ -351,29 +343,31 @@ function AddAssignment(props) {
             </FormControl>
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="name">Price</InputLabel>
-              {colFlag && <Input
-                id="name"
-                name="name"
-                autoComplete="off"
-                autoFocus
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-              />
-              }
-              {!colFlag && <Input
-                id="name"
-                name="name"
-                autoComplete="off"
-                autoFocus
-                disabled
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-              />
-              }
+              {colFlag && (
+                <Input
+                  id="name"
+                  name="name"
+                  autoComplete="off"
+                  autoFocus
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                />
+              )}
+              {!colFlag && (
+                <Input
+                  id="name"
+                  name="name"
+                  autoComplete="off"
+                  autoFocus
+                  disabled
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                />
+              )}
             </FormControl>
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="name">Amount Paid</InputLabel>
-              {colFlag &&
+              {colFlag && (
                 <Input
                   id="name"
                   name="name"
@@ -382,8 +376,8 @@ function AddAssignment(props) {
                   value={amount_paid}
                   onChange={(e) => setAmountPaid(e.target.value)}
                 />
-              }
-              {!colFlag &&
+              )}
+              {!colFlag && (
                 <Input
                   id="name"
                   name="name"
@@ -393,11 +387,11 @@ function AddAssignment(props) {
                   value={amount_paid}
                   onChange={(e) => setAmountPaid(e.target.value)}
                 />
-              }
+              )}
             </FormControl>
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="name">Tutor Fee</InputLabel>
-              {duesFlag &&
+              {duesFlag && (
                 <Input
                   id="name"
                   name="name"
@@ -406,8 +400,8 @@ function AddAssignment(props) {
                   value={tutor_fee}
                   onChange={(e) => setTutorFee(e.target.value)}
                 />
-              }
-              {!duesFlag &&
+              )}
+              {!duesFlag && (
                 <Input
                   id="name"
                   name="name"
@@ -417,7 +411,7 @@ function AddAssignment(props) {
                   value={tutor_fee}
                   onChange={(e) => setTutorFee(e.target.value)}
                 />
-              }
+              )}
             </FormControl>
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="name">Comments</InputLabel>
@@ -459,14 +453,15 @@ function AddAssignment(props) {
               variant="contained"
               color="primary"
               onClick={() => {
-                let x = assId
-                let s = getDownloadLinks(x)
+                let x = assId;
+                let s = getDownloadLinks(x);
               }}
               // component={Link}
               // to="/register"
-              className={classes.submit}>
+              className={classes.submit}
+            >
               Send email
-          			</Button>
+            </Button>
           </form>
         </Paper>
       </main>
@@ -474,9 +469,8 @@ function AddAssignment(props) {
   );
 
   function checkValid(x) {
-    if (isNaN(parseInt(x)) || parseInt(x) == 0)
-      return false
-    return true
+    if (isNaN(parseInt(x)) || parseInt(x) == 0) return false;
+    return true;
   }
 
   async function upload(tempar, x) {
@@ -506,8 +500,7 @@ function AddAssignment(props) {
   }
 
   async function getDownloadLinks(x) {
-    let location =
-      "/files/" + x.toString();
+    let location = "/files/" + x.toString();
     var temp = [];
     var storageRef = app.storage().ref(location);
     // console.log(storageRef)
@@ -520,7 +513,7 @@ function AddAssignment(props) {
             .getDownloadURL()
             .then(function (url) {
               temp.push(url.toString());
-              console.log(temp)
+              console.log(temp);
               // console.log(ar)
             })
             .catch(function (error) {
@@ -531,36 +524,32 @@ function AddAssignment(props) {
       .catch(function (error) {
         // Handle any errors
       });
-    if (temp != [])
-      setDownloadLinks(temp)
-    let s = ""
+    if (temp != []) setDownloadLinks(temp);
+    let s = "";
     for (let [key, value] of Object.entries(downloadLinks)) {
       let url = value;
       console.log(url);
-      s += url
-      s += "\n"
+      s += url;
+      s += "\n";
     }
 
     if (s != "") {
-      console.log(s)
-      sendEmail()
+      console.log(s);
+      sendEmail();
     }
 
-    return s
-
+    return s;
   }
 
-
   async function onRegister() {
+    console.log({ due_date });
 
-    console.log({ due_date })
-
-    if (due_date === undefined || due_date === '' || due_date === null) {
-      alert('Fill due date and if its same as previous fill it again')
-      return
+    if (due_date === undefined || due_date === "" || due_date === null) {
+      alert("Fill due date and if its same as previous fill it again");
+      return;
     }
 
-    console.log(duesFlag, colFlag)
+    console.log(duesFlag, colFlag);
     // console.log(selectedTimezone);
     const tempar = [];
     for (let i = 0; i < files.length; i++) {
@@ -606,26 +595,21 @@ function AddAssignment(props) {
       }
     }
 
+    let offset = 5.5 - map[studentTimezone];
+    offset *= 60;
+    let dt = due_date;
+    if (offset !== 0) dt.setMinutes(dt.getMinutes() + offset);
+    setDueDate(dt);
 
-
-    let offset = 5.5 - map[studentTimezone]
-    offset *= 60
-    let dt = due_date
-    if (offset !== 0)
-      dt.setMinutes(dt.getMinutes() + offset)
-    setDueDate(dt)
-
-    console.log(offset, due_date)
+    console.log(offset, due_date);
 
     try {
-
-
       const db = app.firestore();
       try {
-
         if (due_date === undefined) {
           await db
-            .collection("assignments").doc(docId)
+            .collection("assignments")
+            .doc(docId)
             .update({
               amount_paid: parseInt(amount_paid),
               // assigned_date: props.location.state.data.assigned_date,
@@ -641,12 +625,12 @@ function AddAssignment(props) {
               // time_zone: selectedTimezone.value,
             })
             .then((doc) => {
-              alert("Assignment updated successfully")
+              alert("Assignment updated successfully");
             });
-        }
-        else {
+        } else {
           await db
-            .collection("assignments").doc(docId)
+            .collection("assignments")
+            .doc(docId)
             .update({
               amount_paid: parseInt(amount_paid),
               // assigned_date: props.location.state.data.assigned_date,
@@ -663,24 +647,22 @@ function AddAssignment(props) {
               // time_zone: selectedTimezone.value,
             })
             .then((doc) => {
-              alert("Assignment updated successfully")
+              alert("Assignment updated successfully");
             });
         }
-
-
       } catch (error) {
         alert(error.message);
       }
 
       if (duesFlag && checkValid(tutor_fee)) {
-        console.log(due_date)
+        console.log(due_date);
         // updateDues();
         // updateDuesCollection(x);
       }
-      console.log('huehue')
+      console.log("huehue");
 
       if (colFlag && checkValid(amount_paid) && checkValid(price)) {
-        console.log('huehue')
+        console.log("huehue");
         updatePayment(x);
         updateStudentCollection();
       }
@@ -696,61 +678,73 @@ function AddAssignment(props) {
   // updatePayment();
 
   function sendEmail() {
-
-    let s = ""
+    let s = "";
     for (let [key, value] of Object.entries(downloadLinks)) {
       let url = value;
       console.log(url);
-      s += url
-      s += " ............ "
+      s += url;
+      s += " ............ ";
     }
 
-    console.log(s)
+    console.log(s);
 
+    console.log(tutorEmail);
+    let message =
+      "You have been assigned a new lesson as a Tutor. Here are the additional details-" +
+      "\n" +
+      "Due Status:       " +
+      due_date +
+      "\n" +
+      "Student Name:     " +
+      student.label +
+      "\n" +
+      "Type:             " +
+      "General" +
+      "\n" +
+      "Subject:          " +
+      subject +
+      "\n" +
+      "Comments:         " +
+      comments +
+      "\n" +
+      "The download links are:- " +
+      "\n\n\n" +
+      s;
 
-    console.log(tutorEmail)
-    let message = "You have been assigned a new lesson as a Tutor. Here are the additional details-" + "\n"
-      + "Due Status:       " + due_date + "\n"
-      + "Student Name:     " + student.label + "\n"
-      + "Type:             " + "General" + "\n"
-      + "Subject:          " + subject + "\n"
-      + "Comments:         " + comments + "\n"
-      + "The download links are:- " + "\n\n\n"
-      + s
+    console.log(message);
 
-    console.log(message)
-
-    message = ""
+    message = "";
 
     let templateParams = {
       to_name: tutorEmail,
-      from_name: 'chitransh.326@gmail.com',
+      from_name: "chitransh.326@gmail.com",
       subject: "Assignment Modified",
       message: message,
       student: student,
-      due_date: new Date(props.location.state.data.due_date.seconds * 1000).toLocaleString(),
-      type: 'general',
+      due_date: new Date(
+        props.location.state.data.due_date.seconds * 1000
+      ).toLocaleString(),
+      type: "general",
       ass: subject,
       comments: comments,
-      links: s
-    }
+      links: s,
+    };
 
-    if (s !== '') {
+    if (s !== "") {
       emailjs.send(
-        'service_ftarsbj',
-        'template_iff5usj',
+        "service_ftarsbj",
+        "template_iff5usj",
         templateParams,
-        'user_spTrG7WdWYtv6Uu9jVWlf'
-      )
-      alert('Email sent successfully')
+        "user_spTrG7WdWYtv6Uu9jVWlf"
+      );
+      alert("Email sent successfully");
     }
   }
 
   async function updateDues() {
     try {
       if (tutorId != "") {
-
-        setDues(dues + parseInt(tutor_fee))
+        setDues(dues + parseInt(tutor_fee));
         await app.firestore().collection("tutors").doc(tutorId).update({
           dues: dues,
         });
@@ -774,7 +768,7 @@ function AddAssignment(props) {
           tutorId: tutorId,
           student: student,
           assigned_date: assigned_date,
-          subject: subject
+          subject: subject,
         });
     } catch (error) {
       alert(error.message);
@@ -783,8 +777,7 @@ function AddAssignment(props) {
 
   async function updatePayment(x) {
     try {
-
-      console.log(x, due_date,);
+      console.log(x, due_date);
       await app
         .firestore()
         .collection("payment_collection")
@@ -795,7 +788,7 @@ function AddAssignment(props) {
           status: "pending",
           student: student,
           id: studentId,
-          ass_type: 'general'
+          ass_type: "general",
         });
     } catch (error) {
       alert(error.message);
