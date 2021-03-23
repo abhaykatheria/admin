@@ -73,6 +73,7 @@ function AddAssignment(props) {
     props.location.state.data.tutor_fee
   );
   const [due_date, setDueDate] = useState('');
+
   const [comments, setComments] = useState(props.location.state.data.comments);
   const [assigned_date, setAssignedDate] = useState(
     props.location.state.assigned_date
@@ -174,9 +175,7 @@ function AddAssignment(props) {
 
 
 
-  // const [selectedTimezone, setSelectedTimezone] = useState(
-  //   props.location.state.data.time_zone
-  // );
+
   const [tutorEmail, setTutorEmail] = useState(props.location.state.data.tutor_email);
 
   const changeTutorHandler = (value) => {
@@ -191,7 +190,14 @@ function AddAssignment(props) {
   };
 
   useEffect(() => {
-    console.log(tutor)
+
+
+
+
+
+
+
+    // console.log({ assignmentRef }, props.location.state.data.ass_id)
     if (props.location.state.data.price > 0 || props.location.state.data.amount_paid)
       setColFlag(false)
 
@@ -243,6 +249,10 @@ function AddAssignment(props) {
           setStudentId(doc.id);
           setStudentCollections(doc.data().collections)
           setStudentTimezone(doc.data().time_zone)
+
+
+
+
         }
         data.push({ ...doc.data() });
         ids.push(doc.id);
@@ -270,6 +280,21 @@ function AddAssignment(props) {
       setAllStudents(data1);
     });
   }, []);
+
+  useEffect(() => {
+    const assignmentRef = firebase.firestore().collection("/assignments").doc(docId).get().then((snapshot) => {
+      if(studentTimezone !== ''){
+      let offset = 5.5 - map[studentTimezone]
+      offset *= 60
+      let dt = snapshot.data().due_date.toDate()
+      console.log(studentId)
+      dt.setMinutes(dt.getMinutes() - offset)
+      console.log(typeof dt)
+      setDueDate(dt)
+      }
+    })
+  },[studentTimezone])
+
 
   return (
     <div style={{ backgroundColor: "#dee4e3" }}>
@@ -408,7 +433,6 @@ function AddAssignment(props) {
 
             <FormControl margin="normal" required fullWidth>
               <p>Due Date</p>
-              <p>{props.location.state.due_date}</p>
               <DateTimePicker onChange={setDueDate} value={due_date} />
             </FormControl>
             <FilePond
@@ -529,8 +553,9 @@ function AddAssignment(props) {
 
   async function onRegister() {
 
-    console.log(typeof due_date, due_date)
-    if (due_date === undefined || due_date == '' || due_date === null) {
+    console.log({ due_date })
+
+    if (due_date === undefined || due_date === '' || due_date === null) {
       alert('Fill due date and if its same as previous fill it again')
       return
     }
@@ -581,12 +606,15 @@ function AddAssignment(props) {
       }
     }
 
+
+
     let offset = 5.5 - map[studentTimezone]
     offset *= 60
     let dt = due_date
     if (offset !== 0)
       dt.setMinutes(dt.getMinutes() + offset)
     setDueDate(dt)
+
     console.log(offset, due_date)
 
     try {

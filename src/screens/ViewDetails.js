@@ -146,7 +146,7 @@ export default function ViewDetails(props) {
                 <br />
                 <b>Status </b> = {assignment.satus}
                 <br />
-                {typeOfAssignment === "timed" ? (<div><b>Duration</b> = {assignment.duration.split(":")[0]} hours {assignment.duration.split(":")[1]} minutes</div>) : <b></b>}
+                {typeOfAssignment === "timed" ? (<div><b>Duration</b> = {assignment.duration} minutes</div>) : <b></b>}
               </Typography>
             </CardContent>
             <CardActions>

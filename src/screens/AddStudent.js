@@ -156,6 +156,11 @@ function AddStudent(props) {
 
         console.log(name, email, time_zone)
         try {
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            var yyyy = today.getFullYear();
+
             const db = app.firestore()
             db.collection("students").add({
                 name: name,
@@ -163,7 +168,8 @@ function AddStudent(props) {
                 time_zone: selectedTimezone.value,
                 collections: 0,
                 comment: comment,
-                phone_number: phoneNumber
+                phone_number: phoneNumber,
+                date: dd + "/" + mm + "/" + yyyy
             }).then(function (id) {
                 console.log(id.id)
                 if (id.id != '') {
@@ -177,6 +183,7 @@ function AddStudent(props) {
                     alert('Some error occured, try again')
             });
         } catch (error) {
+            console.log(error)
             alert('Some error occured, try again')
         }
     }

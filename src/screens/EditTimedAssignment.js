@@ -191,7 +191,16 @@ function AddAssignment(props) {
   };
 
   useEffect(() => {
-    
+
+    const assignmentRef = firebase.firestore().collection("/timed").doc(docId).get().then((snapshot) => {
+      let offset = 5.5 - map[studentTimezone]
+      offset *= 60
+      let dt = snapshot.data().due_date.toDate()
+      console.log(dt)
+      dt.setMinutes(dt.getMinutes() - offset)
+      setDueDate(dt)
+    })
+
     console.log(startDate)
     if (props.location.state.data.price > 0 || props.location.state.data.amount_paid)
       setColFlag(false)
@@ -408,9 +417,7 @@ function AddAssignment(props) {
             </FormControl>
 
             <FormControl margin="normal" required fullWidth>
-              <p>Start Date</p>
-              <p>{props.location.state.due_date}</p>
-              <DateTimePicker onChange={setStartDate} value={startDate} />
+              <DateTimePicker onChange={setDueDate} value={due_date} />
             </FormControl>
 
             <FormControl margin="normal" fullWidth>
@@ -532,14 +539,11 @@ function AddAssignment(props) {
     if (isNaN(parseInt(x)) || parseInt(x) == 0)
       return false
     return true
-  }
+  } 
 
   async function onRegister() {
 
-    if (startDate === undefined || startDate == '' || startDate === null) {
-      alert('Fill start date and if its same as previous fill it again')
-      return
-    }
+
 
     console.log(duesFlag, colFlag)
     // console.log(selectedTimezone);
@@ -588,10 +592,10 @@ function AddAssignment(props) {
 
     let offset = 5.5 - map[studentTimezone]
     offset *= 60
-    let dt = startDate
+    let dt = due_date
     if (offset !== 0)
       dt.setMinutes(dt.getMinutes() + offset)
-    setStartDate(dt)
+    setDueDate(dt)
 
     // con sole.log(name, email, country.label)
     try {
@@ -603,7 +607,7 @@ function AddAssignment(props) {
 
         }
 
-        setDueDate(startDate)
+
 
         if (startDate === undefined || startDate === '') {
           await db
@@ -621,7 +625,7 @@ function AddAssignment(props) {
               duration: duration,
               tutor_fee: parseInt(tutor_fee),
               ass_id: x,
-              start_date: props.location.state.data.start_date,
+              start_date: due_date,
               // time_zone: selectedTimezone.value,
             })
             .then((doc) => {
@@ -635,8 +639,8 @@ function AddAssignment(props) {
               amount_paid: parseInt(amount_paid),
               // assigned_date: props.location.state.data.assigned_date,
               comments: comments,
-              start_date: startDate,
-              due_date: startDate,
+              start_date: due_date,
+              due_date: due_date,
               duration: duration,
               payment_pending: payment_pending,
               price: parseInt(price),

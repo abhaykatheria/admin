@@ -191,17 +191,18 @@ function EditStudent(props) {
     console.log(name, email, time_zone);
     try {
       const db = app.firestore();
-      db.collection("students").doc(docId).set({
+      db.collection("students").doc(docId).update({
         name: name,
         email: email,
         collections: collections,
-        time_zone: selectedTimezone.value,
+        time_zone: typeof selectedTimezone === Object ? selectedTimezone.vlue : selectedTimezone,
         phone_number: phoneNumber,
         comment: comment,
       }).then(function () {
         alert('Details modified successfully')
       });
     } catch (error) {
+      console.log(error)
       alert("Some error occured, try again");
     }
   }
