@@ -542,7 +542,7 @@ function AddTimedAssignment(props) {
 
         console.log(message)
 
-        message = "Duartion : " + duration.hours + " hours " + duration.minutes + " minutes "
+        message = "duration : " + duration + " minutes "
 
         let templateParams = {
             to_name: tutor.email,

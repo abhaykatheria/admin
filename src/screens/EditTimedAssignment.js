@@ -539,7 +539,7 @@ function AddAssignment(props) {
     if (isNaN(parseInt(x)) || parseInt(x) == 0)
       return false
     return true
-  } 
+  }
 
   async function onRegister() {
 
@@ -707,7 +707,8 @@ function AddAssignment(props) {
 
     console.log(message)
 
-    message = "Duartion : " + duration.hours + " hours " + duration.minutes + " minutes "
+    message = "duration : " + duration + " minutes "
+
 
     let templateParams = {
       to_name: tutorEmail,

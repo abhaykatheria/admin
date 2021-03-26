@@ -332,12 +332,7 @@ export default function APPBar() {
                             "\n\n\n" +
                             s;
 
-                          message =
-                            "Duartion : " +
-                            assignment.duration.hours +
-                            " hours " +
-                            assignment.duration.minutes +
-                            " minutes ";
+                          message = "duration : " + assignment.duration + " minutes "
 
                           let templateParams = {
                             to_name: assignment.tutor_email,
