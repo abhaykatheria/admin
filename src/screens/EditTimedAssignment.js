@@ -192,15 +192,6 @@ function AddAssignment(props) {
 
   useEffect(() => {
 
-    const assignmentRef = firebase.firestore().collection("/timed").doc(docId).get().then((snapshot) => {
-      let offset = 5.5 - map[studentTimezone]
-      offset *= 60
-      let dt = snapshot.data().due_date.toDate()
-      console.log(dt)
-      dt.setMinutes(dt.getMinutes() - offset)
-      setDueDate(dt)
-    })
-
     console.log(startDate)
     if (props.location.state.data.price > 0 || props.location.state.data.amount_paid)
       setColFlag(false)
@@ -280,6 +271,26 @@ function AddAssignment(props) {
       setAllStudents(data1);
     });
   }, []);
+
+  useEffect(() => {
+    const assignmentRef = firebase
+      .firestore()
+      .collection("/timed")
+      .doc(docId)
+      .get()
+      .then((snapshot) => {
+        if (studentTimezone !== "") {
+          let offset = 5.5 - map[studentTimezone];
+          offset *= 60;
+          console.log(snapshot.data())
+          let dt = snapshot.data().due_date.toDate();
+          console.log(studentId);
+          dt.setMinutes(dt.getMinutes() - offset);
+          console.log(typeof dt);
+          setDueDate(dt);
+        }
+      });
+  }, [studentTimezone]);
 
   return (
     <div style={{ backgroundColor: "#dee4e3" }}>
